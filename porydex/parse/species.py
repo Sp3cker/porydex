@@ -173,94 +173,6 @@ def parse_mon(struct_init: NamedInitializer,
                 mon['items']['R'] = item_names[extract_int(field_expr)]
             case 'itemUncommon':
                 mon['items']['U'] = item_names[extract_int(field_expr)]
-            case 'formSpeciesIdTable':
-                # The base form keeps a formeOrder field that specifies the order in
-                # which forms are shown as well as an otherFormes field which lists
-                # the full name of each other forme. Alternate formes only specify
-                # their respective base form, their own form name, and their full
-                # conjuncted name as species+form.
-                table = form_tables[extract_id(field_expr)]
-
-                # If there is only one entry in the table, don't bother
-                if len(table.keys()) == 1:
-                    continue
-
-                if list(table.keys())[0] == mon['num']:
-                    table_vals = list(table.values())
-                    if table_vals[0] != 'Base':
-                        mon['baseForme'] = table_vals[0]
-
-                    # Ugly Urshifu hack
-                    if mon['name'] == 'Urshifu':
-                        mon['formeOrder'] = [mon['name'] + (f'-{table_vals[i].replace("-Style", "")}' if i > 0 else '') for i in range(len(table.keys()))]
-                    # Ugly Xerneas hack
-                    elif mon['name'] == 'Xerneas':
-                        mon['formeOrder'] = ['Xerneas', 'Xerneas-Neutral']
-                        mon['baseForme'] = 'Active'
-                    # Ugly Vivillon hack
-                    elif mon['name'] == 'Vivillon':
-                        # expansion stores vivillon icy snow as the default form; showdown expects meadow to be the default
-                        mon['formeOrder'] = [f'{mon["name"]}', f'{mon["name"]}-Icy-Snow']
-                        mon['formeOrder'].extend([
-                            f'{mon["name"]}-{table_vals[i]}'
-                            for i in range(len(table.keys()))
-                            if table_vals[i] not in ('Base', COSMETIC_FORME_SPECIES[mon['name']].base)
-                        ])
-                    # Ugly Minior hack
-                    elif mon['name'] == 'Minior':
-                        # expansion stores minior-meteor-red as the default form; showdown indexes core-red as the default
-                        mon['formeOrder'] = [f'{mon["name"]}', f'{mon["name"]}-Meteor']
-                        mon['formeOrder'].extend([
-                            f'{mon["name"]}-{table_vals[i]}'
-                            for i in range(len(table.keys()))
-                            if table_vals[i] not in ('Base', COSMETIC_FORME_SPECIES[mon['name']].base) and 'Meteor' not in table_vals[i]
-                        ])
-                    # Ugly Zygarde hack
-                    elif mon['name'] == 'Zygarde':
-                        mon['formeOrder'] = ['Zygarde', 'Zygarde-10%', 'Zygarde-Complete']
-                        mon['baseForme'] = '50%'
-                    # Ugly Greninja hack
-                    elif mon['name'] == 'Greninja':
-                        mon['formeOrder'] = ['Greninja', 'Greninja-Ash']
-                        mon['baseForme'] = 'Base'
-                    else:
-                        mon['formeOrder'] = [
-                            mon['name'] + (f'-{table_vals[i]}' if i > 0 else '')
-                            for i in range(len(table.keys()))
-                        ]
-
-                    # Cosmetic Formes
-                    cosmetics = COSMETIC_FORME_SPECIES.get(mon['name'], None)
-                    if cosmetics:
-                        if cosmetics.alts is not None:
-                            mon['cosmeticFormes'] = [
-                                f'{mon["name"]}-{table_vals[i]}'
-                                for i in range(len(table.keys()))
-                                if table_vals[i] not in ('Base', '', cosmetics.base) \
-                                    and table_vals[i] not in cosmetics.alts \
-                                    and (cosmetics.exclude_pattern is None or not re.match(cosmetics.exclude_pattern, table_vals[i]))
-                            ]
-                            mon['baseForme'] = cosmetics.base
-
-                            if cosmetics.alts:
-                                mon['otherFormes'] = list(map(lambda alt: f'{mon["name"]}-{alt}', cosmetics.alts))
-                    else:
-                        mon['otherFormes'] = mon['formeOrder'][1:]
-                else:
-                    # ugly ogerpon tera forms hack
-                    if mon['name'] == 'Ogerpon' and mon['num'] not in table:
-                        form_name = f'{table[mon["num"] - 4]}-Tera'
-                    # ugly xerneas neutral-active swap
-                    elif mon['name'] == 'Xerneas':
-                        form_name = 'Neutral'
-                    # ugly urshifu forms hack
-                    elif mon['name'] == 'Urshifu':
-                        form_name = table[mon['num']].replace('-Style', '')
-                    else:
-                        form_name = table[mon['num']]
-                    mon['baseSpecies'] = mon['name']
-                    mon['forme'] = form_name
-                    mon['name'] = f'{mon["name"]}-{form_name}'
             case 'evolutions':
                 # general schema from expansion: [method_id, method_param, target_species]
                 for i, evo_method in enumerate(field_expr.init.exprs):
@@ -281,6 +193,14 @@ def parse_mon(struct_init: NamedInitializer,
                         continue
                     evos.append([ExpansionEvoMethod(method_id), extract_int(evo_method.exprs[1]), extract_int(evo_method.exprs[2])])
                 evos.sort(key=lambda evo: evo[2])
+            case 'formChangeTable':
+                # Extract form change table reference and look up the actual form change data
+                form_change_table_name = extract_id(field_expr)
+                if form_change_table_name in form_changes:
+                    # Get the form change data for this species
+                    form_change_data = form_changes[form_change_table_name]
+                    # Create forms array with [method, targetSpecies, paramToMethod] format
+                    mon['forms'] = form_change_data
             case 'levelUpLearnset':
                 lvlup_learnset = level_up_learnsets.get(extract_id(field_expr), {})
             case 'teachableLearnset':

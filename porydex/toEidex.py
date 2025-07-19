@@ -37,6 +37,17 @@ def eiDexSpecies(abilities, items, move_names, forms, form_changes, level_up_lea
     try:
         print("Processing species data...")
         
+        # Debug: Log form_changes data
+        print(f"DEBUG: form_changes type: {type(form_changes)}")
+        print(f"DEBUG: form_changes keys count: {len(form_changes) if form_changes else 0}")
+        if form_changes:
+            print("DEBUG: Sample form_changes keys:")
+            sample_keys = list(form_changes.keys())[:5]  # Show first 5 keys
+            for key in sample_keys:
+                print(f"  - {key}: {form_changes[key]}")
+            if len(form_changes) > 5:
+                print(f"  ... and {len(form_changes) - 5} more keys")
+        
         # Parse all species data using our new species object parser with pre-parsed data
         species_data = parse_all_generations_with_data(
             abilities, items, move_names, forms, form_changes, 
@@ -106,6 +117,18 @@ def eiDex(moves: dict, trainer_parties: dict, export_species: bool = True,
         national_dex: Pre-parsed national dex data (required if export_species=True)
     """
     try:
+        # Debug: Log form_changes data at entry point
+        print(f"DEBUG: eiDex entry - form_changes type: {type(form_changes)}")
+        print(f"DEBUG: eiDex entry - form_changes is None: {form_changes is None}")
+        if form_changes:
+            print(f"DEBUG: eiDex entry - form_changes keys count: {len(form_changes)}")
+            print("DEBUG: eiDex entry - Sample form_changes entries:")
+            sample_items = list(form_changes.items())[:3]  # Show first 3 entries
+            for key, value in sample_items:
+                print(f"  {key}: {value}")
+            if len(form_changes) > 3:
+                print(f"  ... and {len(form_changes) - 3} more entries")
+        
         # Export species data if requested
         if export_species:
             print("=== Exporting Species Data ===")

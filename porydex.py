@@ -11,6 +11,7 @@ from porydex.parse.abilities import parse_abilities
 from porydex.parse.encounters import parse_encounters
 from porydex.parse.form_tables import parse_form_tables
 from porydex.parse.form_change_tables import parse_form_change_tables
+from porydex.parse.form_change_constants import export_form_change_constants
 from porydex.parse.items import parse_items
 from porydex.parse.learnsets import parse_level_up_learnsets, parse_teachable_learnsets
 from porydex.parse.maps import parse_maps
@@ -79,28 +80,55 @@ def config_clear(_):
 
 
 def extract(args):
+    """Extract all data from the expansion."""
+    print("DEBUG: extract() function called")
+    
     if args.reload:
         for f in PICKLE_PATH.glob("*"):
             os.remove(f)
-
+    
     porydex.config.load()
+    print("DEBUG: Config loaded")
 
     [
         path.mkdir(parents=True) if not path.exists() else ()
         for path in (PICKLE_PATH, porydex.config.output)
     ]
+    print("DEBUG: Directories created")
 
     expansion_data = porydex.config.expansion / "src" / "data"
+    print(f"DEBUG: expansion_data path: {expansion_data}")
+    
     custom_headers = pathlib.Path("custom_headers")
     moves = parse_moves(expansion_data / "moves_info.h")
+    print("DEBUG: Moves parsed")
+    
     move_names = [
         move["name"] for move in sorted(moves.values(), key=lambda m: m["num"])
     ]
+    print("DEBUG: Move names extracted")
 
     abilities = parse_abilities(expansion_data / "abilities.h")
+    print("DEBUG: Abilities parsed")
+    
     items = parse_items(expansion_data / "items.h")
+    print("DEBUG: Items parsed")
+    
     forms = parse_form_tables(expansion_data / "pokemon" / "form_species_tables.h")
+    print("DEBUG: Form tables parsed")
+    
+    # Parse form change tables
+    print(f"DEBUG: About to parse form change tables from {expansion_data / 'pokemon' / 'form_change_tables.h'}")
     form_changes = parse_form_change_tables(expansion_data / "pokemon" / "form_change_tables.h")
+    print(f"DEBUG: Form changes parsing result: {len(form_changes)} tables found")
+    if form_changes:
+        print(f"DEBUG: Form change table names: {list(form_changes.keys())}")
+    else:
+        print(f"DEBUG: No form change tables found!")
+    
+    # Export form change constants as JSON maps
+    print("DEBUG: Exporting form change constants...")
+    export_form_change_constants(porydex.config.output)
     map_sections = parse_maps(expansion_data / "region_map" / "region_map_entries.h")
     lvlup_learnsets = parse_level_up_learnsets(
         custom_headers / "level_up_learnsets.h", move_names

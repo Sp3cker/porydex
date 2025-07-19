@@ -345,6 +345,13 @@ def create_species_object(mon: Dict[str, Any],
     # Convert forms from names to form change requirements if available
     forms_list = None
     
+    # Debug: Log form_changes processing
+    print(f"DEBUG: Processing forms for species '{species_full_name}' (base: '{base_species_name}')")
+    print(f"DEBUG: form_changes available: {form_changes is not None}")
+    if form_changes:
+        print(f"DEBUG: form_changes keys count: {len(form_changes)}")
+        print(f"DEBUG: Available form change table names: {list(form_changes.keys())}")
+
     # For MVP: Only use form change data if it's available and not empty
     if form_changes:
         # Look for form change table for this species
@@ -358,23 +365,38 @@ def create_species_object(mon: Dict[str, Any],
             species_full_name
         ]
         
+        print(f"DEBUG: Looking for form change table with possible names: {possible_names}")
+        
         for name in possible_names:
             if name in form_changes:
                 form_change_table_name = name
+                print(f"DEBUG: Found form change table '{name}'")
                 break
         
         if form_change_table_name and form_changes[form_change_table_name]:
             # Convert form change entries to the required format: [method, parameterToMethod, targetSpecies]
             forms_list = form_changes[form_change_table_name]
+            print(f"DEBUG: Using form change data: {forms_list}")
+        else:
+            print(f"DEBUG: No form change data found for any of the possible names")
+            # Let's also check if there are any close matches
+            for fc_name in form_changes.keys():
+                if base_species_name.lower() in fc_name.lower() or fc_name.lower() in base_species_name.lower():
+                    print(f"DEBUG: Potential close match found: '{fc_name}' for '{base_species_name}'")
     
     # Fallback to legacy behavior if no form change data available
     if forms_list is None:
+        print(f"DEBUG: Falling back to legacy forms behavior")
         if 'formeOrder' in mon and len(mon['formeOrder']) > 1:
             # Fallback: use forme order as simple array (legacy behavior)
             forms_list = mon['formeOrder']
+            print(f"DEBUG: Using formeOrder fallback: {forms_list}")
         elif 'otherFormes' in mon:
             # Fallback: use other formes (legacy behavior)
             forms_list = [mon['name']] + mon['otherFormes']
+            print(f"DEBUG: Using otherFormes fallback: {forms_list}")
+    
+    print(f"DEBUG: Final forms_list for '{species_full_name}': {forms_list}")
     
     # Create the final object
     species_object = {
@@ -504,9 +526,16 @@ def parse_all_generations(expansion_path: Optional[pathlib.Path] = None) -> Dict
         form_tables_file = expansion_path / "src" / "data" / "pokemon" / "form_species_tables.h"
         forms = parse_form_tables(form_tables_file) if form_tables_file.exists() else {}
         
-        # Load form change tables  
+        # Load form change tables if available
         form_change_tables_file = expansion_path / "src" / "data" / "pokemon" / "form_change_tables.h"
+        print(f"DEBUG: species_object.py - Checking for form change tables at: {form_change_tables_file}")
+        print(f"DEBUG: species_object.py - File exists: {form_change_tables_file.exists()}")
         form_changes = parse_form_change_tables(form_change_tables_file) if form_change_tables_file.exists() else {}
+        print(f"DEBUG: species_object.py - Form changes result: {len(form_changes)} tables found")
+        if form_changes:
+            print(f"DEBUG: species_object.py - Form change table names: {list(form_changes.keys())}")
+        else:
+            print(f"DEBUG: species_object.py - No form change tables found!")
         
         # Load learnsets
         learnsets_file = expansion_path / "src" / "data" / "pokemon" / "learnsets.h"

@@ -132,8 +132,11 @@ def load_table_set(fname: pathlib.Path,
                    minimal_preprocess: bool=False) -> list[Decl]:
     include_dirs = [f'-I{porydex.config.expansion / dir}' for dir in EXPANSION_INCLUDES]
 
+    print(f"DEBUG: load_table_set called for {fname} with minimal_preprocess={minimal_preprocess}")
+
     if minimal_preprocess:
         # do NOT dump this version
+        print(f"DEBUG: Using minimal preprocessing for {fname}")
         exts = parse_file(
             fname,
             use_cpp=True,
@@ -152,6 +155,7 @@ def load_table_set(fname: pathlib.Path,
         exts = _load_pickled(fname)
 
     if not exts:
+        print(f"DEBUG: No pickled data found, parsing {fname} with full preprocessing")
         exts = parse_file(
             fname,
             use_cpp=True,
@@ -166,6 +170,7 @@ def load_table_set(fname: pathlib.Path,
         ).ext
         _dump_pickled(fname, exts)
 
+    print(f"DEBUG: load_table_set returning {len(exts)} extensions")
     return exts
 
 def load_data_and_start(fname: pathlib.Path,
