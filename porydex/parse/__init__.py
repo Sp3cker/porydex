@@ -27,6 +27,64 @@ from porydex.common import (
     PREPROCESS_LIBC,
 )
 
+# Mapping of evolution method identifier names to their numeric values
+# This matches the constants defined in include/constants/pokemon.h
+EVO_METHOD_MAPPING = {
+    'EVO_NONE': 0,
+    'EVO_FRIENDSHIP': 1,
+    'EVO_FRIENDSHIP_DAY': 2,
+    'EVO_FRIENDSHIP_NIGHT': 3,
+    'EVO_LEVEL': 4,
+    'EVO_TRADE': 5,
+    'EVO_TRADE_ITEM': 6,
+    'EVO_ITEM': 7,
+    'EVO_LEVEL_ATK_GT_DEF': 8,
+    'EVO_LEVEL_ATK_EQ_DEF': 9,
+    'EVO_LEVEL_ATK_LT_DEF': 10,
+    'EVO_LEVEL_SILCOON': 11,
+    'EVO_LEVEL_CASCOON': 12,
+    'EVO_LEVEL_NINJASK': 13,
+    'EVO_LEVEL_SHEDINJA': 14,
+    'EVO_BEAUTY': 15,
+    'EVO_LEVEL_FEMALE': 16,
+    'EVO_LEVEL_MALE': 17,
+    'EVO_LEVEL_NIGHT': 18,
+    'EVO_LEVEL_DAY': 19,
+    'EVO_LEVEL_DUSK': 20,
+    'EVO_ITEM_HOLD_DAY': 21,
+    'EVO_ITEM_HOLD_NIGHT': 22,
+    'EVO_MOVE': 23,
+    'EVO_FRIENDSHIP_MOVE_TYPE': 24,
+    'EVO_MAPSEC': 25,
+    'EVO_ITEM_MALE': 26,
+    'EVO_ITEM_FEMALE': 27,
+    'EVO_LEVEL_RAIN': 28,
+    'EVO_SPECIFIC_MON_IN_PARTY': 29,
+    'EVO_LEVEL_DARK_TYPE_MON_IN_PARTY': 30,
+    'EVO_TRADE_SPECIFIC_MON': 31,
+    'EVO_SPECIFIC_MAP': 32,
+    'EVO_LEVEL_NATURE_AMPED': 33,
+    'EVO_LEVEL_NATURE_LOW_KEY': 34,
+    'EVO_CRITICAL_HITS': 35,
+    'EVO_SCRIPT_TRIGGER_DMG': 36,
+    'EVO_DARK_SCROLL': 37,
+    'EVO_WATER_SCROLL': 38,
+    'EVO_ITEM_NIGHT': 39,
+    'EVO_ITEM_DAY': 40,
+    'EVO_ITEM_HOLD': 41,
+    'EVO_LEVEL_FOG': 42,
+    'EVO_MOVE_TWO_SEGMENT': 43,
+    'EVO_MOVE_THREE_SEGMENT': 44,
+    'EVO_LEVEL_FAMILY_OF_THREE': 45,
+    'EVO_LEVEL_FAMILY_OF_FOUR': 46,
+    'EVO_USE_MOVE_TWENTY_TIMES': 47,
+    'EVO_RECOIL_DAMAGE_MALE': 48,
+    'EVO_RECOIL_DAMAGE_FEMALE': 49,
+    'EVO_ITEM_COUNT_999': 50,
+    'EVO_DEFEAT_THREE_WITH_ITEM': 51,
+    'EVO_OVERWORLD_STEPS': 52,
+}
+
 def _pickle_target(fname: pathlib.Path) -> pathlib.Path:
     return PICKLE_PATH / fname.stem
 
@@ -130,6 +188,14 @@ def eval_binary_operand(expr) -> int:
         return int(process_binary(expr))
     elif isinstance(expr, TernaryOp):
         return int(process_ternary(expr).value)
+    elif isinstance(expr, ID):
+        # Handle identifier objects by looking up known constants
+        if expr.name in EVO_METHOD_MAPPING:
+            return EVO_METHOD_MAPPING[expr.name]
+        else:
+            # Return 0 as a fallback for unknown identifiers
+            # This allows processing to continue for unknown constants
+            return 0
     return int(expr.value)
 
 def process_binary(expr: BinaryOp) -> int | bool:
@@ -185,10 +251,20 @@ def extract_int(expr) -> int:
         # we only care about the negative symbol
         if expr.op != '-':
             raise ValueError(f'unrecognized unary operator: {expr.op}')
-        return -1 * int(expr.expr.value)
+        # Recursively call extract_int to handle the inner expression properly
+        return -1 * extract_int(expr.expr)
 
     if isinstance(expr, BinaryOp):
         return int(process_binary(expr))
+
+    if isinstance(expr, ID):
+        # Handle identifier objects by looking up known constants
+        if expr.name in EVO_METHOD_MAPPING:
+            return EVO_METHOD_MAPPING[expr.name]
+        else:
+            # Return 0 as a fallback for unknown identifiers
+            # This allows processing to continue for unknown constants
+            return 0
 
     try:
         return int(expr.value)

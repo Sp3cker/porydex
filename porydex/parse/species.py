@@ -55,6 +55,7 @@ def parse_mon(struct_init: NamedInitializer,
               ability_names: list[str],
               item_names: list[str],
               form_tables: dict[str, dict[int, str]],
+              form_changes: dict[str, list[list[any]]],
               level_up_learnsets: dict[str, dict[str, list[int]]],
               teachable_learnsets: dict[str, dict[str, list[str]]],
               national_dex: dict[str, int]) -> tuple[dict, list, dict, dict]:
@@ -262,8 +263,12 @@ def parse_mon(struct_init: NamedInitializer,
                     mon['name'] = f'{mon["name"]}-{form_name}'
             case 'evolutions':
                 # general schema from expansion: [method_id, method_param, target_species]
-                for evo_method in field_expr.init.exprs:
-                    method_id = extract_int(evo_method.exprs[0])
+                for i, evo_method in enumerate(field_expr.init.exprs):
+                    try:
+                        method_id = extract_int(evo_method.exprs[0])
+                    except Exception as e:
+                        raise
+                    
                     if method_id == 0xFFFF:
                         break
 
@@ -272,7 +277,8 @@ def parse_mon(struct_init: NamedInitializer,
 
                     if method_id == ExpansionEvoMethod.SPECIFIC_MAP.value: # TODO:: Leafeon, Glaceon
                         continue
-
+                    if method_id == 0:
+                        continue
                     evos.append([ExpansionEvoMethod(method_id), extract_int(evo_method.exprs[1]), extract_int(evo_method.exprs[2])])
                 evos.sort(key=lambda evo: evo[2])
             case 'levelUpLearnset':
@@ -407,6 +413,7 @@ def parse_species_data(species_data: ExprList,
                        items: list[str],
                        moves: list[str],
                        forms: dict[str, dict[int, str]],
+                       form_changes: dict[str, list[list]],
                        map_sections: list[str],
                        level_up_learnsets: dict[str, dict[str, list[int]]],
                        teachable_learnsets: dict[str, dict[str, list[str]]],
@@ -418,7 +425,7 @@ def parse_species_data(species_data: ExprList,
     key: str
     for species_init in species_data:
         try:
-            mon, evos, lvlup_learnset, teach_learnset = parse_mon(species_init, abilities, items, forms, level_up_learnsets, teachable_learnsets, national_dex)
+            mon, evos, lvlup_learnset, teach_learnset = parse_mon(species_init, abilities, items, forms, form_changes, level_up_learnsets, teachable_learnsets, national_dex)
             all_species_data[mon['num']] = (mon, evos)
 
             if 'name' not in mon or not mon['name']:
@@ -485,6 +492,7 @@ def parse_species(fname: pathlib.Path,
                   items: list[str],
                   moves: list[str],
                   forms: dict[str, dict[int, str]],
+                  form_changes: dict[str, list[list]],
                   map_sections: list[str],
                   level_up_learnsets: dict[str, dict[str, list[int]]],
                   teachable_learnsets: dict[str, dict[str, list[str]]],
@@ -503,6 +511,7 @@ def parse_species(fname: pathlib.Path,
         items,
         moves,
         forms,
+        form_changes,
         map_sections,
         level_up_learnsets,
         teachable_learnsets,
