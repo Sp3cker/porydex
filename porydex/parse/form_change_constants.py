@@ -16,7 +16,6 @@ def parse_form_change_constants(fname: pathlib.Path) -> Dict[str, Any]:
     
     Returns a dictionary with form change method mappings and parameter descriptions.
     """
-    print(f"DEBUG: Parsing form change constants from {fname}")
     
     include_dirs = [f'-I{porydex.config.expansion / dir}' for dir in EXPANSION_INCLUDES]
     

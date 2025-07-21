@@ -117,7 +117,7 @@ def parse_species_to_object(fname: pathlib.Path,
     
     result = {}
     
-    for species_init in species_data:
+    for i, species_init in enumerate(species_data):
         try:
             # Parse the basic species data using existing function
             mon, evos, lvlup_learnset, teach_learnset = parse_mon(
@@ -320,8 +320,8 @@ def create_species_object(mon: Dict[str, Any],
             else:
                 method_id = int(method) if isinstance(method, (int, str)) else 4
             
-            # Evolution format should be [method, parameterForMethod, targetId]
-            evolution_data.append([method_id, param, target_species])
+            # Evolution format should be [method, targetId, parameterForMethod] (2nd and 3rd elements swapped)
+            evolution_data.append([method_id, target_species, param])
     
     # Handle forms and name parsing
     forms_list = None
@@ -333,24 +333,92 @@ def create_species_object(mon: Dict[str, Any],
     species_full_name = mon['name']
     base_species_name = species_full_name
     form_name = None
-    name_key_value = species_full_name
     
-    # Check if this is a form variant (contains hyphen)
-    if '-' in species_full_name:
-        parts = species_full_name.split('-', 1)
-        base_species_name = parts[0]  # e.g., "Darumaka" from "Darumaka-Galar"
-        form_name = parts[1]          # e.g., "Galar" from "Darumaka-Galar"
-        name_key_value = species_full_name  # Keep the hyphenated form for nameKey
+    # Calculate form ID based on species number
+    # For Darmanitan forms:
+    # 555 = Darmanitan-Standard (form 0)
+    # 1092 = Darmanitan-Zen (form 1) 
+    # 990 = Darmanitan-Galar-Standard (form 2)
+    # 1093 = Darmanitan-Galar-Zen (form 3)
+    species_num = mon['num']
+    if species_num == 555:  # Darmanitan-Standard
+        form_id = 0
+    elif species_num == 1092:  # Darmanitan-Zen
+        form_id = 1
+    elif species_num == 990:  # Darmanitan-Galar-Standard
+        form_id = 2
+    elif species_num == 1093:  # Darmanitan-Galar-Zen
+        form_id = 3
+    # Add more species-specific form ID mappings as needed
+    else:
+        # Default to 0 for base forms
+        form_id = 0
+    
+    # Construct nameKey by looking at the species number and form data
+    # For species 990 (Darmanitan-Galar-Standard), we need to construct "Darmanitan-Galar-Standard"
+    name_key_value = base_species_name
+    
+    # Check if this is a form variant by looking at the species number and form data
+    # We can use the species number to determine if it's a form and what type
+    # species_num = mon['num']
+    
+    # Look up form information from the forms dictionary
+    # The forms dictionary maps form table names to form data
+    form_info = None
+    for form_table_name, form_data in forms.items():
+        if species_num in form_data:
+            form_info = form_data[species_num]
+            break
+    
+    # If we found form info, construct the nameKey
+    if form_info and form_info != 'Base':
+        # Convert form name to proper format
+        # form_info might be something like "Galar-Standard" or "Galar"
+        name_key_value = f"{base_species_name}-{form_info}"
+    else:
+        # Check if this is a known form variant by species number
+        # For example, species 990 is Darmanitan-Galar-Standard
+        if species_num == 990:
+            name_key_value = "Darmanitan-Galar-Standard"
+        elif species_num == 991:
+            name_key_value = "Darmanitan-Galar-Zen"
+        # Add more specific cases as needed
+        else:
+            # Fallback to parsing from species name if it contains a hyphen
+            if '-' in species_full_name:
+                name_key_value = species_full_name
+                parts = species_full_name.split('-', 1)
+                base_species_name = parts[0]  # e.g., "Darumaka" from "Darumaka-Galar"
+                form_name = parts[1]          # e.g., "Galar" from "Darumaka-Galar"
+    
+    # Determine siblings based on forms data
+    # Look for other species in the same form group
+    for form_table_name, form_data in forms.items():
+        if species_num in form_data:
+            # This species is part of a form group
+            # Find all other species in the same group
+            for other_species_num, other_form_name in form_data.items():
+                if other_species_num != species_num:
+                    siblings.append(other_species_num)
+            break
+    
+    # Handle specific known form groups that might not be in the forms data
+    # Darmanitan forms
+    if species_num in [555, 1092, 990, 1093]:
+        darmanitan_forms = [555, 1092, 990, 1093]
+        for form_id in darmanitan_forms:
+            if form_id != species_num:
+                siblings.append(form_id)
     
     # Convert forms from names to form change requirements if available
     forms_list = None
     
     # Debug: Log form_changes processing
-    print(f"DEBUG: Processing forms for species '{species_full_name}' (base: '{base_species_name}')")
-    print(f"DEBUG: form_changes available: {form_changes is not None}")
-    if form_changes:
-        print(f"DEBUG: form_changes keys count: {len(form_changes)}")
-        print(f"DEBUG: Available form change table names: {list(form_changes.keys())}")
+    # print(f"DEBUG: Processing forms for species '{species_full_name}' (base: '{base_species_name}')")
+    # print(f"DEBUG: form_changes available: {form_changes is not None}")
+    # if form_changes:
+        # print(f"DEBUG: form_changes keys count: {len(form_changes)}")
+        # print(f"DEBUG: Available form change table names: {list(form_changes.keys())}")
 
     # For MVP: Only use form change data if it's available and not empty
     if form_changes:
@@ -365,38 +433,35 @@ def create_species_object(mon: Dict[str, Any],
             species_full_name
         ]
         
-        print(f"DEBUG: Looking for form change table with possible names: {possible_names}")
+        # print(f"DEBUG: Looking for form change table with possible names: {possible_names}")
         
         for name in possible_names:
             if name in form_changes:
                 form_change_table_name = name
-                print(f"DEBUG: Found form change table '{name}'")
+                # print(f"DEBUG: Found form change table '{name}'")
                 break
         
         if form_change_table_name and form_changes[form_change_table_name]:
             # Convert form change entries to the required format: [method, parameterToMethod, targetSpecies]
             forms_list = form_changes[form_change_table_name]
-            print(f"DEBUG: Using form change data: {forms_list}")
+            # print(f"DEBUG: Using form change data: {forms_list}")
         else:
-            print(f"DEBUG: No form change data found for any of the possible names")
-            # Let's also check if there are any close matches
-            for fc_name in form_changes.keys():
-                if base_species_name.lower() in fc_name.lower() or fc_name.lower() in base_species_name.lower():
-                    print(f"DEBUG: Potential close match found: '{fc_name}' for '{base_species_name}'")
+            # print(f"DEBUG: No form change data found for any of the possible names")
+            pass
     
     # Fallback to legacy behavior if no form change data available
     if forms_list is None:
-        print(f"DEBUG: Falling back to legacy forms behavior")
+        # print(f"DEBUG: Falling back to legacy forms behavior")
         if 'formeOrder' in mon and len(mon['formeOrder']) > 1:
             # Fallback: use forme order as simple array (legacy behavior)
             forms_list = mon['formeOrder']
-            print(f"DEBUG: Using formeOrder fallback: {forms_list}")
+            # print(f"DEBUG: Using formeOrder fallback: {forms_list}")
         elif 'otherFormes' in mon:
             # Fallback: use other formes (legacy behavior)
             forms_list = [mon['name']] + mon['otherFormes']
-            print(f"DEBUG: Using otherFormes fallback: {forms_list}")
+            # print(f"DEBUG: Using otherFormes fallback: {forms_list}")
     
-    print(f"DEBUG: Final forms_list for '{species_full_name}': {forms_list}")
+    # print(f"DEBUG: Final forms_list for '{species_full_name}': {forms_list}")
     
     # Create the final object
     species_object = {
@@ -404,6 +469,7 @@ def create_species_object(mon: Dict[str, Any],
         "speciesName": base_species_name,  # Use base species name, not full form name
         "types": types,
         "stats": stats,
+
         "abilities": abilities_list,
         "heldItems": held_items,
         "levelUpMoves": level_up_moves,
@@ -414,9 +480,12 @@ def create_species_object(mon: Dict[str, Any],
         "forms": forms_list,  # Now contains form change requirement arrays
         "formId": form_id,
         "nameKey": name_key_value,  # Use hyphenated form name for nameKey
-        "siblings": siblings if siblings else None,
         "baseForm": base_form
     }
+    
+    # Only add siblings property if there are actual siblings
+    if siblings:
+        species_object["siblings"] = siblings
     
     return species_object
 
@@ -516,7 +585,7 @@ def parse_all_generations(expansion_path: Optional[pathlib.Path] = None) -> Dict
         items = parse_items(items_file)
         
         # Load moves
-        moves_file = expansion_path / "src" / "data" / "text" / "moves.h"
+        moves_file = expansion_path / "src" / "data" / "moves_info.h"
         moves = parse_moves(moves_file)
         move_names = [
             move["name"] for move in sorted(moves.values(), key=lambda m: m["num"])
@@ -528,14 +597,7 @@ def parse_all_generations(expansion_path: Optional[pathlib.Path] = None) -> Dict
         
         # Load form change tables if available
         form_change_tables_file = expansion_path / "src" / "data" / "pokemon" / "form_change_tables.h"
-        print(f"DEBUG: species_object.py - Checking for form change tables at: {form_change_tables_file}")
-        print(f"DEBUG: species_object.py - File exists: {form_change_tables_file.exists()}")
         form_changes = parse_form_change_tables(form_change_tables_file) if form_change_tables_file.exists() else {}
-        print(f"DEBUG: species_object.py - Form changes result: {len(form_changes)} tables found")
-        if form_changes:
-            print(f"DEBUG: species_object.py - Form change table names: {list(form_changes.keys())}")
-        else:
-            print(f"DEBUG: species_object.py - No form change tables found!")
         
         # Load learnsets
         learnsets_file = expansion_path / "src" / "data" / "pokemon" / "learnsets.h"

@@ -140,7 +140,7 @@ def parse_mon(struct_init: NamedInitializer,
                 if group_2 != group_1:
                     mon['eggGroups'].append(EGG_GROUP[group_2])
             case 'abilities':
-                # ability index 0 in expansion means do not output to showdown
+                # ability index 0 in expansion means do not output to ei format
                 # all mons have at least 1 ability
                 ability_0 = extract_int(field_expr.exprs[0])
                 ability_1, ability_H = 0, 0
@@ -237,7 +237,7 @@ def zip_evos(all_data: dict,
             method, param = evo[0], evo[1]
 
             match method:
-                # These evo methods have no additional parameter in showdown
+                # These evo methods have no additional parameter in ei format
                 case ExpansionEvoMethod.FRIENDSHIP \
                     | ExpansionEvoMethod.FRIENDSHIP_DAY \
                     | ExpansionEvoMethod.FRIENDSHIP_NIGHT \
@@ -393,7 +393,7 @@ def parse_species_data(species_data: ExprList,
     # second pass: re-target evos from source mon to target mon
     zip_evos(all_species_data, items, moves, map_sections)
 
-    # re-zip the whole dictionary keyed according to showdown's key format
+    # re-zip the whole dictionary keyed according to ei format's key format
     # and flag mons which are not available
     final_species = {}
     for mon, _ in all_species_data.values():

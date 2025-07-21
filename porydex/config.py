@@ -6,7 +6,6 @@ import os
 
 class OutputFormat(enum.Enum):
     json = enum.auto()
-    showdown = enum.auto()
     ei = enum.auto()
 
     def __str__(self) -> str:
@@ -26,7 +25,7 @@ class OutputFormat(enum.Enum):
 compiler: pathlib.Path = pathlib.Path("gcc")
 expansion: pathlib.Path = pathlib.Path("../pokeemerald-expansion").resolve()
 output: pathlib.Path = pathlib.Path("./site/data").resolve()
-format: OutputFormat = OutputFormat.showdown
+format: OutputFormat = OutputFormat.ei
 included_mons_file: pathlib.Path | None = None
 custom_ability_defs: pathlib.Path | None = None
 

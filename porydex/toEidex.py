@@ -3,6 +3,7 @@ import pathlib
 import porydex.config
 from porydex.move_descriptions import enrich_moves_with_descriptions
 from porydex.parse.species_object import parse_all_generations_with_data
+from porydex.parse.moves import parse_move_constants
 
 vanilla_data_dir = pathlib.Path("vanilla")
 typeData = json.load(open(vanilla_data_dir / "typeData.json", "r", encoding="utf-8"))
@@ -37,16 +38,7 @@ def eiDexSpecies(abilities, items, move_names, forms, form_changes, level_up_lea
     try:
         print("Processing species data...")
         
-        # Debug: Log form_changes data
-        print(f"DEBUG: form_changes type: {type(form_changes)}")
-        print(f"DEBUG: form_changes keys count: {len(form_changes) if form_changes else 0}")
-        if form_changes:
-            print("DEBUG: Sample form_changes keys:")
-            sample_keys = list(form_changes.keys())[:5]  # Show first 5 keys
-            for key in sample_keys:
-                print(f"  - {key}: {form_changes[key]}")
-            if len(form_changes) > 5:
-                print(f"  ... and {len(form_changes) - 5} more keys")
+
         
         # Parse all species data using our new species object parser with pre-parsed data
         species_data = parse_all_generations_with_data(
@@ -117,17 +109,6 @@ def eiDex(moves: dict, trainer_parties: dict, export_species: bool = True,
         national_dex: Pre-parsed national dex data (required if export_species=True)
     """
     try:
-        # Debug: Log form_changes data at entry point
-        print(f"DEBUG: eiDex entry - form_changes type: {type(form_changes)}")
-        print(f"DEBUG: eiDex entry - form_changes is None: {form_changes is None}")
-        if form_changes:
-            print(f"DEBUG: eiDex entry - form_changes keys count: {len(form_changes)}")
-            print("DEBUG: eiDex entry - Sample form_changes entries:")
-            sample_items = list(form_changes.items())[:3]  # Show first 3 entries
-            for key, value in sample_items:
-                print(f"  {key}: {value}")
-            if len(form_changes) > 3:
-                print(f"  ... and {len(form_changes) - 3} more entries")
         
         # Export species data if requested
         if export_species:
@@ -181,6 +162,7 @@ def eiDex(moves: dict, trainer_parties: dict, export_species: bool = True,
                 transformed.append(
                     {
                         "id": move_num,
+                        "moveId": m.get("moveId", move_num),  # Include the moveId from parsing
                         "name": m["name"],
                         "type": type_id,
                         "desc": description,
@@ -222,6 +204,33 @@ def eiDex(moves: dict, trainer_parties: dict, export_species: bool = True,
             json.dump(move_constants, outf, indent=4, ensure_ascii=False)
 
         print(f"Successfully wrote move_constants.json with {len(move_constants)} entries")
+        
+        # Export move constants from header file
+        print("=== Exporting Move Constants from Header ===")
+        try:
+            move_constants_from_header = parse_move_constants(porydex.config.expansion)
+            
+            # Convert to the format you requested: {MOVE_HIGH_HORSEPOWER: 632}
+            constants_dict = {}
+            for constant_name, value in move_constants_from_header.items():
+                if isinstance(value, int):
+                    constants_dict[constant_name] = value
+            
+            # Write move constants from header file
+            header_constants_path = porydex.config.output / "move_constants_from_header.json"
+            print(f"Writing {len(constants_dict)} move constants from header to {header_constants_path}")
+            
+            with open(header_constants_path, "w+", encoding="utf-8") as outf:
+                json.dump(constants_dict, outf, indent=4, ensure_ascii=False)
+            
+            print(f"Successfully wrote move_constants_from_header.json with {len(constants_dict)} entries")
+            print("=== Move Constants from Header Export Complete ===")
+            
+        except Exception as e:
+            print(f"Error exporting move constants from header: {e}")
+            import traceback
+            traceback.print_exc()
+        
         print("=== Moves Export Complete ===")
 
     except Exception as e:
