@@ -346,7 +346,7 @@ def parse_moves(fname: pathlib.Path) -> dict:
 
     return parse_moves_data(moves_data, move_constants, description_constants)
 
-
+# used in toEidex?
 def parse_move_constants(expansion_path: pathlib.Path) -> dict:
     """
     Parse move constants from the moves.h header file.
