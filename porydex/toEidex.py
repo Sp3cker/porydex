@@ -193,11 +193,9 @@ def eiDex(
                 transformed.append(
                     {
                         "id": move_num,
-                        "moveId": m.get(
-                            "moveId", move_num
-                        ),  # Include the moveId from parsing
                         "name": m["name"],
                         "type": type_id,
+                        "pp": int(m['pp']),
                         "desc": description,
                         "power": int(m.get("basePower", 0) or 0),
                         "acc": int(m.get("accuracy", 0) or 0),
