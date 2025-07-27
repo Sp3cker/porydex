@@ -21,53 +21,9 @@ Example usage:
     # ... load dependencies (abilities, items, moves, etc.) ...
     species_data = parse_species_to_object(species_file, abilities, items, moves, ...)
 """
-#Below is a reference target species object
-#1. Ignore the order of the stats array. We have achieved proper parsing of that ✅
-#2. The evolution parameters are [method, parameterForMethod, targetId] ✅ FIXED
-#3. The current implementation does not parse `tmMoves` correctly. Note the full `tmMoves` array below. ✅ FIXED
-#4. The siblings property is an array of ids for forms. We will handle this later. ✅ ADDED (placeholder)
-#5. Missing baseForm property has been added ✅ ADDED
-#6. speciesName should be base name (e.g., "Darumaka"), nameKey should be hyphenated form (e.g., "Darumaka-Galar") ✅ FIXED
-#7. forms should contain species IDs, not names 🟡 MVP (form change parser added, falls back to legacy)
-#  "989": {
-#     "speciesId": 989,
-#     "speciesName": "Darumaka",
-#     "types": [16],
-#     "stats": [70, 90, 45, 50, 15, 45],
-#     "abilities": [55, 0, 39],
-#     "heldItems": [0, 0],
-#     "levelUpMoves": [
-#       [181, 1],
-#       [33, 1],
-#       [269, 4],
-#       [44, 8],
-#       [419, 12],
-#       [526, 16],
-#       [423, 20],
-#       [29, 24],
-#       [8, 28],
-#       [253, 32],
-#       [187, 36],
-#       [59, 40],
-#       [37, 44],
-#       [276, 48]
-#     ],
-#     "tmMoves": [
-#       257, 428, 269, 58, 59, 91, 280, 53, 126, 317, 168, 315, 360, 157, 447,
-#       369, 7, 8, 276, 526, 612, 423, 424, 241, 394, 264, 117, 218, 237, 102,
-#       363, 182, 99, 216, 290, 164, 779, 92, 263, 156, 214
-#     ],
-#     "eggMoves": [172, 264, 573, 359, 510, 612, 36, 281],
-#     "dexId": 554,
-#     "evolutions": [[7, 990, 215]],
-#     "forms": [["FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM", "ITEM_VENUSAURITE", "SPECIES_VENUSAUR_MEGA"]],
-#     "formId": 1,
-#     "nameKey": "Darumaka-Galar",
-#     "siblings": [554],
-#     "baseForm": 554
-#   },
+
 import pathlib
-from collections import defaultdict
+
 from typing import Dict, List, Any, Optional
 
 from yaspin import yaspin
@@ -76,7 +32,28 @@ from pycparser.c_ast import ExprList
 from porydex.common import name_key
 from porydex.model import DAMAGE_TYPE
 from porydex.parse import load_truncated, extract_int, extract_id, extract_u8_str
-from porydex.parse.species import parse_mon
+from porydex.parse.species import parse_mon, PokemonData
+from typing import TypedDict, NotRequired
+
+
+class SpeciesObject(TypedDict):
+    """Type definition for the species object returned by create_species_object"""
+    speciesId: int
+    speciesName: str
+    types: list[int]
+    stats: list[int]
+    abilities: list[int]
+    levelUpMoves: list[list[int]]  # [[moveId, level], ...]
+    tmMoves: list[int]
+    eggMoves: NotRequired[list[int]]
+    dexId: int
+    evolutions: NotRequired[list[list[int]]]  # [[method, targetId, param], ...]
+    forms: NotRequired[list[list[str]]]  # Form change requirements
+    formId: int
+    nameKey: str
+    baseForm: int
+    heldItems: NotRequired[list[int]]  # [uncommon, rare]
+    siblings: NotRequired[list[int]]
 
 
 def parse_species_to_object(fname: pathlib.Path,
@@ -88,7 +65,7 @@ def parse_species_to_object(fname: pathlib.Path,
                            level_up_learnsets: Dict[str, Dict[str, List[int]]],
                            teachable_learnsets: Dict[str, Dict[str, List[str]]],
                            national_dex: Dict[str, int],
-                           tm_moves: List[str]) -> Dict[str, Dict[str, Any]]:
+                           tm_moves: List[str]) -> Dict[str, SpeciesObject]:
     """
     Parse species data and return it in a structured object format.
     
@@ -146,7 +123,7 @@ def parse_species_to_object(fname: pathlib.Path,
     return result
 
 
-def create_species_object(mon: Dict[str, Any],
+def create_species_object(mon: PokemonData,
                          evos: List[Any],
                          lvlup_learnset: Dict[str, List[int]],
                          teach_learnset: Dict[str, List[str]],
@@ -155,7 +132,7 @@ def create_species_object(mon: Dict[str, Any],
                          move_names: List[str],
                          forms: Dict[str, Dict[int, str]],
                          form_changes: Dict[str, List[List[Any]]],
-                         tm_moves: List[str]) -> Optional[Dict[str, Any]]:
+                         tm_moves: List[str]) -> Optional[SpeciesObject]:
     """
     Create a species object in the desired format.
     
@@ -331,8 +308,16 @@ def create_species_object(mon: Dict[str, Any],
     
     # Extract base species name and form name
     species_full_name = mon['name']
-    base_species_name = species_full_name
-    form_name = None
+    
+    # Check if this is a form variant by looking for baseSpecies and forme fields
+    if 'baseSpecies' in mon and 'forme' in mon:
+        # This is a form variant - use the base species name and form name
+        base_species_name = mon['baseSpecies']
+        form_name = mon['forme']
+    else:
+        # This is the base form - no form name
+        base_species_name = species_full_name
+        form_name = None
     
     # Calculate form ID based on species number
     # For Darmanitan forms:
@@ -354,42 +339,13 @@ def create_species_object(mon: Dict[str, Any],
         # Default to 0 for base forms
         form_id = 0
     
-    # Construct nameKey by looking at the species number and form data
-    # For species 990 (Darmanitan-Galar-Standard), we need to construct "Darmanitan-Galar-Standard"
-    name_key_value = base_species_name
-    
-    # Check if this is a form variant by looking at the species number and form data
-    # We can use the species number to determine if it's a form and what type
-    # species_num = mon['num']
-    
-    # Look up form information from the forms dictionary
-    # The forms dictionary maps form table names to form data
-    form_info = None
-    for form_table_name, form_data in forms.items():
-        if species_num in form_data:
-            form_info = form_data[species_num]
-            break
-    
-    # If we found form info, construct the nameKey
-    if form_info and form_info != 'Base':
-        # Convert form name to proper format
-        # form_info might be something like "Galar-Standard" or "Galar"
-        name_key_value = f"{base_species_name}-{form_info}"
+    # Construct nameKey using the correct base and form names
+    if form_name:
+        # This is a form variant - construct the full name
+        name_key_value = f"{base_species_name}-{form_name}"
     else:
-        # Check if this is a known form variant by species number
-        # For example, species 990 is Darmanitan-Galar-Standard
-        if species_num == 990:
-            name_key_value = "Darmanitan-Galar-Standard"
-        elif species_num == 991:
-            name_key_value = "Darmanitan-Galar-Zen"
-        # Add more specific cases as needed
-        else:
-            # Fallback to parsing from species name if it contains a hyphen
-            if '-' in species_full_name:
-                name_key_value = species_full_name
-                parts = species_full_name.split('-', 1)
-                base_species_name = parts[0]  # e.g., "Darumaka" from "Darumaka-Galar"
-                form_name = parts[1]          # e.g., "Galar" from "Darumaka-Galar"
+        # This is the base form - use the base name
+        name_key_value = base_species_name
     
     # Determine siblings based on forms data
     # Look for other species in the same form group
@@ -471,7 +427,6 @@ def create_species_object(mon: Dict[str, Any],
         "stats": stats,
 
         "abilities": abilities_list,
-        "heldItems": held_items,
         "levelUpMoves": level_up_moves,
         "tmMoves": tm_move_ids,
         "eggMoves": egg_move_ids if egg_move_ids else None,
@@ -482,6 +437,10 @@ def create_species_object(mon: Dict[str, Any],
         "nameKey": name_key_value,  # Use hyphenated form name for nameKey
         "baseForm": base_form
     }
+    
+    # Only add heldItems property if one of the two values is not 0
+    if held_items[0] != 0 or held_items[1] != 0:
+        species_object["heldItems"] = held_items
     
     # Only add siblings property if there are actual siblings
     if siblings:
@@ -498,7 +457,7 @@ def parse_all_generations_with_data(abilities: List[str],
                                    level_up_learnsets: Dict[str, Dict[str, List[int]]],
                                    teachable_learnsets: Dict[str, Dict[str, List[str]]],
                                    national_dex: Dict[str, int],
-                                   expansion_path: Optional[pathlib.Path] = None) -> Dict[str, Dict[str, Any]]:
+                                   expansion_path: Optional[pathlib.Path] = None) -> Dict[str, SpeciesObject]:
     """
     Parse all generation species files using pre-parsed dependency data.
     This is more efficient than parse_all_generations() as it reuses already-parsed data.
@@ -538,7 +497,7 @@ def parse_all_generations_with_data(abilities: List[str],
     )
 
 
-def parse_all_generations(expansion_path: Optional[pathlib.Path] = None) -> Dict[str, Dict[str, Any]]:
+def parse_all_generations(expansion_path: Optional[pathlib.Path] = None) -> Dict[str, SpeciesObject]:
     """
     Convenience function to parse all generation species files from the expansion.
     

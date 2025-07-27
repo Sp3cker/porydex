@@ -1,5 +1,6 @@
 from collections import defaultdict
 from dataclasses import dataclass
+from typing import TypedDict, NotRequired, Union
 
 import pathlib
 import re
@@ -14,6 +15,91 @@ from porydex.parse import load_truncated, extract_id, extract_int, extract_u8_st
 EXPANSION_GEN9_START = 1289
 VANILLA_GEN9_START = 906
 EXPANSION_GEN9_OFFSET = EXPANSION_GEN9_START - VANILLA_GEN9_START
+
+class BaseStats(TypedDict):
+    hp: int
+    atk: int
+    def_: int
+    spa: int
+    spd: int
+    spe: int
+
+class EvYields(TypedDict):
+    hp: NotRequired[int]
+    atk: NotRequired[int]
+    def_: NotRequired[int]
+    spa: NotRequired[int]
+    spd: NotRequired[int]
+    spe: NotRequired[int]
+
+class Items(TypedDict):
+    R: NotRequired[str]  # Rare item
+    U: NotRequired[str]  # Uncommon item
+
+class Abilities(TypedDict):
+    # The actual dict will have string keys '0', '1', 'H', 'S'
+    # but TypedDict doesn't support string literal keys in annotations
+    pass
+
+class GenderRatio(TypedDict):
+    M: float
+    F: float
+
+class PokemonData(TypedDict):
+    # Core identification
+    num: int
+    name: NotRequired[str]
+    
+    # Base stats and characteristics
+    baseStats: BaseStats
+    types: list[str]
+    evYields: EvYields
+    items: Items
+    eggGroups: list[str]
+    
+    # Catch and experience
+    catchRate: NotRequired[int]
+    expYield: NotRequired[int]
+    
+    # Gender and appearance
+    genderRatio: NotRequired[GenderRatio]
+    gender: NotRequired[str]  # 'N' for genderless
+    color: NotRequired[str]
+    
+    # Abilities
+    abilities: NotRequired[Abilities]
+    
+    # National dex
+    nationalDex: NotRequired[int]
+    
+    # Physical characteristics
+    heightm: NotRequired[float]
+    weightkg: NotRequired[float]
+    
+    # Form-related fields
+    baseForme: NotRequired[str]
+    formeOrder: NotRequired[list[str]]
+    otherFormes: NotRequired[list[str]]
+    cosmeticFormes: NotRequired[list[str]]
+    baseSpecies: NotRequired[str]
+    forme: NotRequired[str]
+    
+    # Evolution fields (added by zip_evos)
+    evos: NotRequired[list[str]]
+    prevo: NotRequired[str]
+    evoLevel: NotRequired[int]
+    evoItem: NotRequired[str]
+    evoMove: NotRequired[str]
+    evoSpecies: NotRequired[str]
+    evoMap: NotRequired[str]
+    evoType: NotRequired[str]
+    evoCondition: NotRequired[str]
+    
+    # Tier information
+    tier: NotRequired[str]  # 'obtainable' or 'unobtainable'
+    
+    # Special flags
+    cosmetic: NotRequired[bool]
 
 @dataclass
 class CosmeticFormes:
@@ -58,9 +144,9 @@ def parse_mon(struct_init: NamedInitializer,
               form_changes: dict[str, list[list[any]]],
               level_up_learnsets: dict[str, dict[str, list[int]]],
               teachable_learnsets: dict[str, dict[str, list[str]]],
-              national_dex: dict[str, int]) -> tuple[dict, list, dict, dict]:
+              national_dex: dict[str, int]) -> tuple[PokemonData, list, dict, dict]:
     init_list = struct_init.expr.exprs
-    mon = {}
+    mon: PokemonData = {}
     mon['num'] = extract_int(struct_init.name[0])
     mon['baseStats'] = {}
     mon['types'] = []
@@ -140,7 +226,7 @@ def parse_mon(struct_init: NamedInitializer,
                 if group_2 != group_1:
                     mon['eggGroups'].append(EGG_GROUP[group_2])
             case 'abilities':
-                # ability index 0 in expansion means do not output to ei format
+                # ability index 0 in expansion means do not output to showdown
                 # all mons have at least 1 ability
                 ability_0 = extract_int(field_expr.exprs[0])
                 ability_1, ability_H = 0, 0
@@ -173,6 +259,94 @@ def parse_mon(struct_init: NamedInitializer,
                 mon['items']['R'] = item_names[extract_int(field_expr)]
             case 'itemUncommon':
                 mon['items']['U'] = item_names[extract_int(field_expr)]
+            case 'formSpeciesIdTable':
+                # The base form keeps a formeOrder field that specifies the order in
+                # which forms are shown as well as an otherFormes field which lists
+                # the full name of each other forme. Alternate formes only specify
+                # their respective base form, their own form name, and their full
+                # conjuncted name as species+form.
+                table = form_tables[extract_id(field_expr)]
+
+                # If there is only one entry in the table, don't bother
+                if len(table.keys()) == 1:
+                    continue
+
+                if list(table.keys())[0] == mon['num']:
+                    table_vals = list(table.values())
+                    if table_vals[0] != 'Base':
+                        mon['baseForme'] = table_vals[0]
+
+                    # Ugly Urshifu hack
+                    if mon['name'] == 'Urshifu':
+                        mon['formeOrder'] = [mon['name'] + (f'-{table_vals[i].replace("-Style", "")}' if i > 0 else '') for i in range(len(table.keys()))]
+                    # Ugly Xerneas hack
+                    elif mon['name'] == 'Xerneas':
+                        mon['formeOrder'] = ['Xerneas', 'Xerneas-Neutral']
+                        mon['baseForme'] = 'Active'
+                    # Ugly Vivillon hack
+                    elif mon['name'] == 'Vivillon':
+                        # expansion stores vivillon icy snow as the default form; showdown expects meadow to be the default
+                        mon['formeOrder'] = [f'{mon["name"]}', f'{mon["name"]}-Icy-Snow']
+                        mon['formeOrder'].extend([
+                            f'{mon["name"]}-{table_vals[i]}'
+                            for i in range(len(table.keys()))
+                            if table_vals[i] not in ('Base', COSMETIC_FORME_SPECIES[mon['name']].base)
+                        ])
+                    # Ugly Minior hack
+                    elif mon['name'] == 'Minior':
+                        # expansion stores minior-meteor-red as the default form; showdown indexes core-red as the default
+                        mon['formeOrder'] = [f'{mon["name"]}', f'{mon["name"]}-Meteor']
+                        mon['formeOrder'].extend([
+                            f'{mon["name"]}-{table_vals[i]}'
+                            for i in range(len(table.keys()))
+                            if table_vals[i] not in ('Base', COSMETIC_FORME_SPECIES[mon['name']].base) and 'Meteor' not in table_vals[i]
+                        ])
+                    # Ugly Zygarde hack
+                    elif mon['name'] == 'Zygarde':
+                        mon['formeOrder'] = ['Zygarde', 'Zygarde-10%', 'Zygarde-Complete']
+                        mon['baseForme'] = '50%'
+                    # Ugly Greninja hack
+                    elif mon['name'] == 'Greninja':
+                        mon['formeOrder'] = ['Greninja', 'Greninja-Ash']
+                        mon['baseForme'] = 'Base'
+                    else:
+                        mon['formeOrder'] = [
+                            mon['name'] + (f'-{table_vals[i]}' if i > 0 else '')
+                            for i in range(len(table.keys()))
+                        ]
+
+                    # Cosmetic Formes
+                    cosmetics = COSMETIC_FORME_SPECIES.get(mon['name'], None)
+                    if cosmetics:
+                        if cosmetics.alts is not None:
+                            mon['cosmeticFormes'] = [
+                                f'{mon["name"]}-{table_vals[i]}'
+                                for i in range(len(table.keys()))
+                                if table_vals[i] not in ('Base', '', cosmetics.base) \
+                                    and table_vals[i] not in cosmetics.alts \
+                                    and (cosmetics.exclude_pattern is None or not re.match(cosmetics.exclude_pattern, table_vals[i]))
+                            ]
+                            mon['baseForme'] = cosmetics.base
+
+                            if cosmetics.alts:
+                                mon['otherFormes'] = list(map(lambda alt: f'{mon["name"]}-{alt}', cosmetics.alts))
+                    else:
+                        mon['otherFormes'] = mon['formeOrder'][1:]
+                else:
+                    # ugly ogerpon tera forms hack
+                    if mon['name'] == 'Ogerpon' and mon['num'] not in table:
+                        form_name = f'{table[mon["num"] - 4]}-Tera'
+                    # ugly xerneas neutral-active swap
+                    elif mon['name'] == 'Xerneas':
+                        form_name = 'Neutral'
+                    # ugly urshifu forms hack
+                    elif mon['name'] == 'Urshifu':
+                        form_name = table[mon['num']].replace('-Style', '')
+                    else:
+                        form_name = table[mon['num']]
+                    mon['baseSpecies'] = mon['name']
+                    mon['forme'] = form_name
+                    mon['name'] = f'{mon["name"]}-{form_name}'
             case 'evolutions':
                 # general schema from expansion: [method_id, method_param, target_species]
                 for i, evo_method in enumerate(field_expr.init.exprs):
@@ -193,14 +367,6 @@ def parse_mon(struct_init: NamedInitializer,
                         continue
                     evos.append([ExpansionEvoMethod(method_id), extract_int(evo_method.exprs[1]), extract_int(evo_method.exprs[2])])
                 evos.sort(key=lambda evo: evo[2])
-            case 'formChangeTable':
-                # Extract form change table reference and look up the actual form change data
-                form_change_table_name = extract_id(field_expr)
-                if form_change_table_name in form_changes:
-                    # Get the form change data for this species
-                    form_change_data = form_changes[form_change_table_name]
-                    # Create forms array with [method, targetSpecies, paramToMethod] format
-                    mon['forms'] = form_change_data
             case 'levelUpLearnset':
                 lvlup_learnset = level_up_learnsets.get(extract_id(field_expr), {})
             case 'teachableLearnset':
@@ -208,7 +374,7 @@ def parse_mon(struct_init: NamedInitializer,
 
     return mon, evos, lvlup_learnset, teach_learnset
 
-def zip_evos(all_data: dict,
+def zip_evos(all_data: dict[int, tuple[PokemonData, list]],
              items: list[str],
              moves: list[str],
              map_sections: list[str]):
@@ -237,7 +403,7 @@ def zip_evos(all_data: dict,
             method, param = evo[0], evo[1]
 
             match method:
-                # These evo methods have no additional parameter in ei format
+                # These evo methods have no additional parameter in showdown
                 case ExpansionEvoMethod.FRIENDSHIP \
                     | ExpansionEvoMethod.FRIENDSHIP_DAY \
                     | ExpansionEvoMethod.FRIENDSHIP_NIGHT \
@@ -338,9 +504,9 @@ def parse_species_data(species_data: ExprList,
                        level_up_learnsets: dict[str, dict[str, list[int]]],
                        teachable_learnsets: dict[str, dict[str, list[str]]],
                        national_dex: dict[str, int],
-                       included_mons: list[str]) -> tuple[dict, dict]:
+                       included_mons: list[str]) -> tuple[dict[str, PokemonData], dict]:
     # first pass: raw AST parse, build evolutions table
-    all_species_data = {}
+    all_species_data: dict[int, tuple[PokemonData, list]] = {}
     all_learnsets = {}
     key: str
     for species_init in species_data:
@@ -393,9 +559,9 @@ def parse_species_data(species_data: ExprList,
     # second pass: re-target evos from source mon to target mon
     zip_evos(all_species_data, items, moves, map_sections)
 
-    # re-zip the whole dictionary keyed according to ei format's key format
+    # re-zip the whole dictionary keyed according to showdown's key format
     # and flag mons which are not available
-    final_species = {}
+    final_species: dict[str, PokemonData] = {}
     for mon, _ in all_species_data.values():
         if 'name' not in mon or not mon['name']: # egg has no name; don't try
             continue
@@ -417,7 +583,7 @@ def parse_species(fname: pathlib.Path,
                   level_up_learnsets: dict[str, dict[str, list[int]]],
                   teachable_learnsets: dict[str, dict[str, list[str]]],
                   national_dex: dict[str, int],
-                  included_mons: list[str]) -> tuple[dict, dict]:
+                  included_mons: list[str]) -> tuple[dict[str, PokemonData], dict]:
     species_data: ExprList
     with yaspin(text=f'Loading species data: {fname}', color='cyan') as spinner:
         species_data = load_truncated(fname, extra_includes=[

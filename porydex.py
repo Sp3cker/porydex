@@ -2,6 +2,7 @@ import argparse
 import json
 import pathlib
 import os
+import sys
 
 import porydex.config
 from porydex.toEidex import eiDex
@@ -22,7 +23,7 @@ from porydex.parse.moves import parse_moves
 from porydex.parse.national_dex import parse_national_dex_enum
 from porydex.parse.species import parse_species
 from porydex.parse.trainer_parties import parse_trainer_parties
-
+from porydex.parse.trainers import parse_trainers
 MAX_SPECIES_EXPANSION = 1560 + 1
 
 
@@ -82,7 +83,11 @@ def config_clear(_):
     porydex.config.clear()
 
 
-def extract(args):
+
+    
+
+
+def extract(args: argparse.Namespace):
     """Extract all data from the expansion."""
 
     if args.reload:
@@ -97,8 +102,12 @@ def extract(args):
     ]
 
     expansion_data = porydex.config.expansion / "src" / "data"
-
-    custom_headers = pathlib.Path("custom_headers")
+    
+    # Handle trainers subcommand
+    if args.command == 'trainers':
+        parse_trainers(expansion_data)
+        return
+    # custom_headers = pathlib.Path("custom_headers")
     moves = parse_moves(expansion_data / "moves_info.h")
     # import pprint
 
@@ -322,24 +331,36 @@ def main():
         type=porydex.config.OutputFormat.argparse,
         choices=list(porydex.config.OutputFormat),
     )
-    config_set_p.add_argument(
-        "-i",
-        "--included-species-file",
-        help="text file describing species to be included in the pokedex",
-        type=pathlib.Path,
-    )
-    config_set_p.add_argument(
-        "-a",
-        "--custom-ability-defs",
-        help="JSON file describing custom ability definitions and descriptions",
-        type=pathlib.Path,
-    )
+    # config_set_p.add_argument(
+    #     "-i",
+    #     "--included-species-file",
+    #     help="text file describing species to be included in the pokedex",
+    #     type=pathlib.Path,
+    # )
+    # config_set_p.add_argument(
+    #     "-a",
+    #     "--custom-ability-defs",
+    #     help="JSON file describing custom ability definitions and descriptions",
+    #     type=pathlib.Path,
+    # )
     config_set_p.set_defaults(func=config_set)
 
     config_clear_p = config_subp.add_parser("clear", help="clear configured options")
     config_clear_p.set_defaults(func=config_clear)
 
     extract_p = subp.add_parser("extract", help="run data extraction")
+    extract_subp = extract_p.add_subparsers(dest="command", help="extraction subcommands")
+    
+    # Add trainers subcommand
+    trainers_p = extract_subp.add_parser("trainers", help="extract trainer data only")
+    trainers_p.add_argument(
+        "--reload",
+        action="store_true",
+        help="if specified, flush the cache of parsed data and reload from expansion",
+    )
+    trainers_p.set_defaults(func=extract)
+    
+    # Add default extract subcommand (for when no subcommand is specified)
     extract_p.add_argument(
         "--reload",
         action="store_true",
@@ -350,7 +371,7 @@ def main():
         action="store_true",
         help="if specified, skip species data export (for ei format only)",
     )
-    extract_p.set_defaults(func=extract)
+    extract_p.set_defaults(func=extract, command=None)
 
     args = argp.parse_args()
     args.func(args)
