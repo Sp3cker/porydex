@@ -6,6 +6,44 @@ from yaspin import yaspin
 
 from porydex.parse import load_truncated, extract_int, extract_u8_str
 
+
+def get_hidden_power_type(ivs: List[int]) -> str:
+    """Calculate Hidden Power type from IVs using the same algorithm as the JavaScript function."""
+    if not isinstance(ivs, list) or len(ivs) != 6:
+        return "Normal"  # Default to Normal type
+
+    # Get LSB for each IV
+    hp = ivs[0] & 1
+    atk = ivs[1] & 1
+    def_iv = ivs[2] & 1
+    spa = ivs[5] & 1
+    spd = ivs[3] & 1
+    spe = ivs[4] & 1
+
+    value = hp + 2 * atk + 4 * def_iv + 8 * spe + 16 * spa + 32 * spd
+    hp_type_num = (value * 15) // 63
+    # Type order: Fighting, Flying, Poison, Ground, Rock, Bug, Ghost, Steel, Fire, Water, Grass, Electric, Psychic, Ice, Dragon, Dark
+    type_names = [
+        "Fighting",
+        "Flying",
+        "Poison",
+        "Ground",
+        "Rock",
+        "Bug",
+        "Ghost",
+        "Steel",
+        "Fire",
+        "Water",
+        "Grass",
+        "Electric",
+        "Psychic",
+        "Ice",
+        "Dragon",
+        "Dark",
+    ]
+    return type_names[hp_type_num] if hp_type_num < len(type_names) else "Normal"
+
+
 evMap = {
     "TRAINER_PARTY_EVS_TIMID": [6, 0, 0, 252, 0, 252],
     "TRAINER_PARTY_EVS_MODEST": [6, 0, 0, 252, 0, 252],
@@ -19,173 +57,6 @@ evMap = {
     "TRAINER_PARTY_EVS_QUIET": [252, 6, 0, 252, 0, 0],
     "TRAINER_PARTY_EVS_CALM": [252, 0, 0, 6, 252, 0],
 }
-
-
-# def extract_trainer_mon(struct_init: NamedInitializer) -> Dict[str, Any]:
-#     """Extract a single TrainerMon struct into a dictionary."""
-#     mon_data = {}
-
-#     for field_init in struct_init.expr.exprs:
-#         field_name = field_init.name[0].name
-
-#         if field_name == "iv":
-#             # Handle TRAINER_PARTY_IVS macro call
-#             if hasattr(field_init.expr, "args") and field_init.expr.args:
-#                 iv_values = [extract_int(arg) for arg in field_init.expr.args.exprs]
-#                 mon_data["iv"] = {
-#                     "hp": iv_values[0],
-#                     "atk": iv_values[1],
-#                     "def": iv_values[2],
-#                     "spa": iv_values[3],
-#                     "spd": iv_values[4],
-#                     "spe": iv_values[5],
-#                 }
-#                 # Also add a boolean flag for "perfect IVs"
-#                 mon_data["iv_perfect"] = all(iv == 31 for iv in iv_values)
-#             else:
-#                 iv_val = extract_int(field_init.expr)
-#                 mon_data["iv"] = iv_val
-#                 mon_data["iv_perfect"] = iv_val == 31
-
-#         elif field_name == "ev":
-#             # Handle TRAINER_PARTY_EVS macro call or function name
-#             if hasattr(field_init.expr, "name"):
-#                 # Check for predefined EV spread macros
-#                 if field_init.expr.name in evMap:
-#                     mon_data["ev"] = evMap[field_init.expr.name]
-#                 else:
-#                     # Unknown predefined macro, use default
-#                     mon_data["ev"] = [6, 252, 0, 0, 0, 252]  # Default
-#                     print(
-#                         f"Warning: Unknown EV spread macro '{field_init.expr.name}', using default"
-#                     )
-#             elif hasattr(field_init.expr, "args") and field_init.expr.args:
-#                 import pprint
-
-#                 pprint.pprint(evMap)
-#                 import sys
-
-#                 sys.exit(0)
-#                 # Direct TRAINER_PARTY_EVS(hp, atk, def, spatk, spdef, speed) call
-#                 ev_values = [extract_int(arg) for arg in field_init.expr.args.exprs]
-#                 if len(ev_values) == 6:
-#                     mon_data["ev"] = ev_values
-#                 # else:
-#                 #     print(f"Warning: Expected 6 EV values, got {len(ev_values)}")
-#                 #     mon_data["ev"] = ev_values + [0] * (
-#                 #         6 - len(ev_values)
-#                 #     )  # Pad with zeros
-#             else:
-#                 # Single EV value or NULL
-#                 ev_val = extract_int(field_init.expr)
-#                 if ev_val == 0:
-#                     mon_data["ev"] = [0, 0, 0, 0, 0, 0]  # No EVs
-#                 else:
-#                     mon_data["ev"] = [ev_val] * 6  # Apply to all stats
-
-#         elif field_name == "lvl":
-#             mon_data["lvl"] = extract_int(field_init.expr)
-
-#         elif field_name == "species":
-#             # Extract species constant (e.g., SPECIES_GLAMEOW)
-#             if hasattr(field_init.expr, "name"):
-#                 mon_data["species"] = field_init.expr.name
-#             else:
-#                 mon_data["species"] = extract_int(field_init.expr)
-
-#         elif field_name == "moves":
-#             # Handle moves array
-#             moves = []
-#             if hasattr(field_init.expr, "exprs"):
-#                 for move_expr in field_init.expr.exprs:
-#                     if hasattr(move_expr, "name"):
-#                         moves.append(move_expr.name)
-#                     else:
-#                         moves.append(extract_int(move_expr))
-#             mon_data["moves"] = moves
-
-#         elif field_name == "ability":
-#             # Extract ability constant (e.g., ABILITY_OWN_TEMPO)
-#             if hasattr(field_init.expr, "name"):
-#                 mon_data["ability"] = field_init.expr.name
-#             else:
-#                 mon_data["ability"] = extract_int(field_init.expr)
-
-#         elif field_name == "nature":
-#             # Extract nature constant (e.g., NATURE_JOLLY)
-#             # if hasattr(field_init.expr, "name"):
-#             #     mon_data["nature"] = field_init.expr.name
-#             # else:
-#             mon_data["nature"] = extract_int(field_init.expr)
-
-#         elif field_name == "heldItem" or field_name == "item":
-#             # Extract item constant (e.g., ITEM_SILK_SCARF)
-#             # if hasattr(field_init.expr, "name"):
-#             #     item_name = field_init.expr.name
-#             #     mon_data["item"] = item_name
-#             # else:
-#             mon_data["item"] = extract_int(field_init.expr)
-
-#         elif field_name == "nickname":
-#             # Extract nickname string
-#             if hasattr(field_init.expr, "name"):
-#                 mon_data["nickname"] = field_init.expr.name
-#             else:
-#                 mon_data["nickname"] = extract_u8_str(field_init.expr)
-
-#         elif field_name == "ball":
-#             # Extract ball constant
-#             if hasattr(field_init.expr, "name"):
-#                 mon_data["ball"] = field_init.expr.name
-#             else:
-#                 mon_data["ball"] = extract_int(field_init.expr)
-
-#         elif field_name == "friendship":
-#             mon_data["friendship"] = extract_int(field_init.expr)
-
-#         elif field_name == "gender":
-#             # Extract gender constant
-#             if hasattr(field_init.expr, "name"):
-#                 mon_data["gender"] = field_init.expr.name
-#             else:
-#                 mon_data["gender"] = extract_int(field_init.expr)
-
-#         elif field_name == "isShiny":
-#             mon_data["isShiny"] = extract_int(field_init.expr)
-
-#         elif field_name == "teraType":
-#             # Extract tera type constant
-#             if hasattr(field_init.expr, "name"):
-#                 mon_data["teraType"] = field_init.expr.name
-#             else:
-#                 mon_data["teraType"] = extract_int(field_init.expr)
-
-#         elif field_name == "gigantamaxFactor":
-#             mon_data["gigantamaxFactor"] = extract_int(field_init.expr)
-
-#         elif field_name == "shouldUseDynamax":
-#             mon_data["shouldUseDynamax"] = extract_int(field_init.expr)
-
-#         elif field_name == "dynamaxLevel":
-#             mon_data["dynamaxLevel"] = extract_int(field_init.expr)
-
-#     return mon_data
-
-
-# def extract_trainer_party(party_init: NamedInitializer) -> Dict[str, Any]:
-#     """Extract a complete trainer party array."""
-#     party_name = party_init.name[0].name  # e.g., "sParty_GruntRusturfTunnel"
-
-#     party_data = {"name": party_name, "party": []}
-
-#     # Handle the array initializer
-#     if hasattr(party_init.expr, "exprs"):
-#         for mon_init in party_init.expr.exprs:
-#             if isinstance(mon_init, NamedInitializer):
-#                 mon_data = extract_trainer_mon(mon_init)
-#                 party_data["party"].append(mon_data)
-
-#     return party_data
 
 
 def convert_to_consistent_format(
@@ -231,6 +102,7 @@ def convert_to_consistent_format(
     item_id_to_name = {v: k for k, v in item_constants.items()}
 
     for party_name, party_data in parties_data.items():
+        print(f"Processing party: {party_name}")
         party_list = []
 
         if "party" in party_data:
@@ -256,16 +128,17 @@ def convert_to_consistent_format(
                         # This is a fallback if the constant mapping doesn't work
                         consistent_mon["id"] = species_constant
 
-                # Only include other fields if they exist and are meaningful
-                # Handle IVs - if any IVs are set (not all 0), mark as true
-                if "iv_perfect" in mon and mon["iv_perfect"]:
-                    consistent_mon["iv"] = True
-                elif "iv" in mon:
+                # Handle IVs - store the actual IV values as an array
+                if "iv" in mon:
                     if isinstance(mon["iv"], list):
-                        if any(iv != 0 for iv in mon["iv"]):
-                            consistent_mon["iv"] = True
+                        # Store the IV array directly
+                        consistent_mon["iv"] = mon["iv"]
                     elif isinstance(mon["iv"], int) and mon["iv"] > 0:
-                        consistent_mon["iv"] = True
+                        # If it's a single IV value, convert to array format
+                        consistent_mon["iv"] = [mon["iv"]] * 6
+                    elif isinstance(mon["iv"], bool) and mon["iv"]:
+                        # If it's just a boolean true, use perfect IVs
+                        consistent_mon["iv"] = [31, 31, 31, 31, 31, 31]
 
                 if "nature" in mon and mon["nature"] is not None:
                     nature_val = mon["nature"]
@@ -321,15 +194,32 @@ def convert_to_consistent_format(
 
                 if "moves" in mon and mon["moves"]:
                     move_ids = []
+                    has_hidden_power = False
                     for move in mon["moves"]:
                         if isinstance(move, str) and move in move_constants:
                             move_id = move_constants[move]
                             if move_id != 0:  # Skip MOVE_NONE
                                 move_ids.append(move_id)
+                                # Check if this is Hidden Power
+                                if move == "MOVE_HIDDEN_POWER" or move_id == 237:
+                                    has_hidden_power = True
                         elif isinstance(move, int) and move != 0:
                             move_ids.append(move)
+                            # Check if this is Hidden Power (move ID 237)
+                            if move == 237:  # MOVE_HIDDEN_POWER
+                                has_hidden_power = True
                     if move_ids:
                         consistent_mon["moves"] = move_ids
+
+                        # Calculate Hidden Power type if the Pokémon has Hidden Power and IVs
+                        if (
+                            has_hidden_power
+                            and "iv" in consistent_mon
+                            and isinstance(consistent_mon["iv"], list)
+                        ):
+                            consistent_mon["hpType"] = get_hidden_power_type(
+                                consistent_mon["iv"]
+                            )
 
                 if "ev" in mon and mon["ev"]:
                     if isinstance(mon["ev"], list):
@@ -338,6 +228,14 @@ def convert_to_consistent_format(
                         # If it's a single EV value, convert to array format
                         consistent_mon["ev"] = [mon["ev"]] * 6
 
+                if "preStatus" in mon and mon["preStatus"] is not None:
+                    consistent_mon["preStatus"] = mon["preStatus"]
+                    print(f"Added preStatus to consistent_mon: {mon['preStatus']} for party {party_name}")
+                elif "preStatus" in mon:
+                    print(f"preStatus found but is None: {mon['preStatus']} for party {party_name}")
+                else:
+                    print(f"No preStatus found in mon for party {party_name}, available keys: {list(mon.keys())}")
+        
                 party_list.append(consistent_mon)
 
         consistent_parties[party_name] = party_list
@@ -364,6 +262,8 @@ def parse_trainer_parties(fname: pathlib.Path) -> Dict[str, Dict[str, Any]]:
                 r"constants/items.h",
                 r"-include",
                 r"constants/trainers.h",
+                # r"-include",
+                # r"constants/battle.h",
             ],
         )
         spinner.ok("✅")
@@ -390,6 +290,15 @@ def parse_trainer_parties(fname: pathlib.Path) -> Dict[str, Dict[str, Any]]:
                                     and len(field_init.name) > 0
                                 ):
                                     field_name = field_init.name[0].name
+                                    # Debug: print field names to see what's being parsed
+                                    if field_name in [
+                                        "preStatus",
+                                        "prestatus",
+                                        "status",
+                                    ]:
+                                        print(
+                                            f"Found status field: {field_name} in {decl.name}"
+                                        )
 
                                     if field_name == "lvl":
                                         mon_data["lvl"] = extract_int(field_init.expr)
@@ -414,11 +323,10 @@ def parse_trainer_parties(fname: pathlib.Path) -> Dict[str, Dict[str, Any]]:
                                                 extract_int(arg)
                                                 for arg in field_init.expr.args.exprs
                                             ]
+                                            mon_data["iv"] = iv_values
                                             mon_data["iv_perfect"] = all(
                                                 iv >= 31 for iv in iv_values
                                             )
-                                            if not mon_data["iv_perfect"]:
-                                                mon_data["iv"] = iv_values
                                         else:
                                             mon_data["iv"] = True
                                     elif field_name == "moves":
@@ -464,48 +372,149 @@ def parse_trainer_parties(fname: pathlib.Path) -> Dict[str, Dict[str, Any]]:
                                             # Extract the actual name from the ID object if needed
                                             if hasattr(macro_name, "name"):
                                                 macro_name = macro_name.name
-                                            
+
                                             if macro_name in evMap:
                                                 mon_data["ev"] = evMap[macro_name]
-                                            elif macro_name == "TRAINER_PARTY_EVS" and hasattr(field_init.expr, "args") and field_init.expr.args:
+                                            elif (
+                                                macro_name == "TRAINER_PARTY_EVS"
+                                                and hasattr(field_init.expr, "args")
+                                                and field_init.expr.args
+                                            ):
                                                 # This is a direct TRAINER_PARTY_EVS function call with EV values
-                                                ev_values = [extract_int(arg) for arg in field_init.expr.args.exprs]
+                                                ev_values = [
+                                                    extract_int(arg)
+                                                    for arg in field_init.expr.args.exprs
+                                                ]
                                                 if len(ev_values) == 6:
                                                     mon_data["ev"] = ev_values
                                                 else:
-                                                    print(f"Warning: Expected 6 EV values, got {len(ev_values)}")
-                                                    mon_data["ev"] = ev_values + [0] * (6 - len(ev_values))  # Pad with zeros
+                                                    print(
+                                                        f"Warning: Expected 6 EV values, got {len(ev_values)}"
+                                                    )
+                                                    mon_data["ev"] = ev_values + [0] * (
+                                                        6 - len(ev_values)
+                                                    )  # Pad with zeros
                                             else:
                                                 # Unknown predefined macro, use default
                                                 import pprint
-                                                print(f"Warning: Unknown EV spread macro '{macro_name}', using default")
+
+                                                print(
+                                                    f"Warning: Unknown EV spread macro '{macro_name}', using default"
+                                                )
                                                 print("AST for unknown EV macro:")
                                                 pprint.pprint(field_init.expr, indent=2)
-                                                mon_data["ev"] = [6, 252, 0, 0, 0, 252]  # Default spread
-                                        
-                                        elif hasattr(field_init.expr, "args") and field_init.expr.args:
+                                                mon_data["ev"] = [
+                                                    6,
+                                                    252,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    252,
+                                                ]  # Default spread
+
+                                        elif (
+                                            hasattr(field_init.expr, "args")
+                                            and field_init.expr.args
+                                        ):
                                             # Direct TRAINER_PARTY_EVS(hp, atk, def, spatk, spdef, speed) call
-                                            ev_values = [extract_int(arg) for arg in field_init.expr.args.exprs]
+                                            ev_values = [
+                                                extract_int(arg)
+                                                for arg in field_init.expr.args.exprs
+                                            ]
                                             if len(ev_values) == 6:
                                                 mon_data["ev"] = ev_values
                                             else:
-                                                print(f"Warning: Expected 6 EV values, got {len(ev_values)}")
-                                                mon_data["ev"] = ev_values + [0] * (6 - len(ev_values))  # Pad with zeros
-                                        
+                                                print(
+                                                    f"Warning: Expected 6 EV values, got {len(ev_values)}"
+                                                )
+                                                mon_data["ev"] = ev_values + [0] * (
+                                                    6 - len(ev_values)
+                                                )  # Pad with zeros
+
                                         else:
                                             # Single EV value or NULL
                                             try:
                                                 ev_val = extract_int(field_init.expr)
                                                 if ev_val == 0:
-                                                    mon_data["ev"] = [0, 0, 0, 0, 0, 0]  # No EVs
+                                                    mon_data["ev"] = [
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0,
+                                                    ]  # No EVs
                                                 else:
-                                                    mon_data["ev"] = [ev_val] * 6  # Apply to all stats
+                                                    mon_data["ev"] = [
+                                                        ev_val
+                                                    ] * 6  # Apply to all stats
                                             except (AttributeError, ValueError):
                                                 # Handle compound literals or other complex expressions
-                                                print(f"Warning: Complex EV expression in {decl.name}, using default")
-                                                mon_data["ev"] = [6, 252, 0, 0, 0, 252]  # Default spread
+                                                print(
+                                                    f"Warning: Complex EV expression in {decl.name}, using default"
+                                                )
+                                                mon_data["ev"] = [
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                ]  # Default spread
 
-                            party_data["party"].append(mon_data)
+                                    elif field_name == "preStatus":
+                                        # Extract pre-status condition
+                                        print(
+                                            f"Processing preStatus field in {decl.name}"
+                                        )
+                                        if hasattr(field_init.expr, "name"):
+                                            mon_data["preStatus"] = field_init.expr.name
+                                            print(
+                                                f"  -> Extracted constant: {mon_data['preStatus']}"
+                                            )
+                                        else:
+                                            mon_data["preStatus"] = extract_int(
+                                                field_init.expr
+                                            )
+                                            print(
+                                                f"  -> Extracted int: {mon_data['preStatus']}"
+                                            )
+                                    elif field_name == "prestatus":
+                                        # Alternative field name (lowercase)
+                                        print(
+                                            f"Processing prestatus field in {decl.name}"
+                                        )
+                                        if hasattr(field_init.expr, "name"):
+                                            mon_data["preStatus"] = field_init.expr.name
+                                            print(
+                                                f"  -> Extracted constant: {mon_data['preStatus']}"
+                                            )
+                                        else:
+                                            mon_data["preStatus"] = extract_int(
+                                                field_init.expr
+                                            )
+                                            print(
+                                                f"  -> Extracted int: {mon_data['preStatus']}"
+                                            )
+                                    elif field_name == "status":
+                                        # Another possible field name
+                                        print(
+                                            f"Processing status field in {decl.name}"
+                                        )
+                                        if hasattr(field_init.expr, "name"):
+                                            mon_data["preStatus"] = field_init.expr.name
+                                            print(
+                                                f"  -> Extracted constant: {mon_data['preStatus']}"
+                                            )
+                                        else:
+                                            mon_data["preStatus"] = extract_int(
+                                                field_init.expr
+                                            )
+                                            print(
+                                                f"  -> Extracted int: {mon_data['preStatus']}"
+                                            )
+
+                party_data["party"].append(mon_data)
 
                 all_parties[decl.name] = party_data
 

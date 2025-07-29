@@ -59,6 +59,11 @@ BINARY_BOOL_OPS = {
     '-': operator.sub,
     '*': operator.mul,
     '/': operator.itruediv,
+    '<<': operator.lshift,
+    '>>': operator.rshift,
+    '&': operator.and_,
+    '|': operator.or_,
+    '^': operator.xor,
 }
 
 SPLIT_CHARS = re.compile(r"[\W_-]+")

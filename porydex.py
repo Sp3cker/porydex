@@ -194,6 +194,7 @@ def extract(args: argparse.Namespace):
     # Parse trainer parties
     trainer_parties = parse_trainer_parties(expansion_data / "trainer_parties.h")
 
+
     # Convert trainer parties to consistent format with numeric IDs
     from porydex.parse.trainer_parties import convert_to_consistent_format
 
