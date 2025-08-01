@@ -24,6 +24,7 @@ from porydex.parse.national_dex import parse_national_dex_enum
 from porydex.parse.species import parse_species
 from porydex.parse.trainer_parties import parse_trainer_parties
 from porydex.parse.trainers import parse_trainers
+
 MAX_SPECIES_EXPANSION = 1560 + 1
 
 
@@ -83,10 +84,6 @@ def config_clear(_):
     porydex.config.clear()
 
 
-
-    
-
-
 def extract(args: argparse.Namespace):
     """Extract all data from the expansion."""
 
@@ -102,9 +99,9 @@ def extract(args: argparse.Namespace):
     ]
 
     expansion_data = porydex.config.expansion / "src" / "data"
-    
+
     # Handle trainers subcommand
-    if args.command == 'trainers':
+    if args.command == "trainers":
         parse_trainers(expansion_data)
         return
     # custom_headers = pathlib.Path("custom_headers")
@@ -134,6 +131,8 @@ def extract(args: argparse.Namespace):
     abilities = parse_abilities(expansion_data / "abilities.h")
 
     items_data = parse_items(expansion_data / "items.h")
+    with open(porydex.config.output / "items.json", "w+", encoding="utf-8") as outf:
+        json.dump(items_data, outf, indent=4, ensure_ascii=False)
     items = get_item_names_list(items_data)
     item_constants = get_item_constants_dict(items_data)
 
@@ -193,7 +192,6 @@ def extract(args: argparse.Namespace):
 
     # Parse trainer parties
     trainer_parties = parse_trainer_parties(expansion_data / "trainer_parties.h")
-
 
     # Convert trainer parties to consistent format with numeric IDs
     from porydex.parse.trainer_parties import convert_to_consistent_format
@@ -350,8 +348,10 @@ def main():
     config_clear_p.set_defaults(func=config_clear)
 
     extract_p = subp.add_parser("extract", help="run data extraction")
-    extract_subp = extract_p.add_subparsers(dest="command", help="extraction subcommands")
-    
+    extract_subp = extract_p.add_subparsers(
+        dest="command", help="extraction subcommands"
+    )
+
     # Add trainers subcommand
     trainers_p = extract_subp.add_parser("trainers", help="extract trainer data only")
     trainers_p.add_argument(
@@ -360,7 +360,7 @@ def main():
         help="if specified, flush the cache of parsed data and reload from expansion",
     )
     trainers_p.set_defaults(func=extract)
-    
+
     # Add default extract subcommand (for when no subcommand is specified)
     extract_p.add_argument(
         "--reload",

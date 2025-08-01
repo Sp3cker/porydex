@@ -83,8 +83,6 @@ def eiDexSpecies(
         return None
 
 
-
-
 def eiDex(
     moves: dict,
     trainer_parties: dict,
@@ -195,7 +193,7 @@ def eiDex(
                         "id": move_num,
                         "name": m["name"],
                         "type": type_id,
-                        "pp": int(m['pp']),
+                        "pp": int(m["pp"]),
                         "desc": description,
                         "power": int(m.get("basePower", 0) or 0),
                         "acc": int(m.get("accuracy", 0) or 0),
@@ -216,22 +214,25 @@ def eiDex(
                 print(f"Move data: {m}")
                 continue
 
-
-
         # Ensure output directory exists
         output_path = porydex.config.output / "moves.json"
         output_path.parent.mkdir(parents=True, exist_ok=True)
         # print(f"Writing {len(transformed)} moves to {output_path}")
 
-# MOVES
+        # MOVES
         with open(output_path, "w+", encoding="utf-8") as outf:
             json.dump(transformed, outf, indent=4, ensure_ascii=False)
         print(f"Successfully wrote moves.json with {len(transformed)} entries")
-# TRAINER PARTIES
+        # TRAINER PARTIES
         trainers_path = porydex.config.output / "trainer_parties.json"
         with open(trainers_path, "w+", encoding="utf-8") as outf:
             json.dump(trainer_parties, outf, indent=4, ensure_ascii=False)
         print(f"Writing {len(trainer_parties)} trainer parties to {trainers_path}")
+       # ITEMS
+
+        # with open(porydex.config.output / "items.json", "w+", encoding="utf-8") as outf:
+        #     json.dump(items, outf, indent=4, ensure_ascii=False)
+        # print(f"Writing {len(items)} items to {items_path}")
 
         # Write move constants file
         constants_path = porydex.config.output / "move_constants.json"
@@ -275,7 +276,7 @@ def eiDex(
         #     print(f"Error exporting move constants from header: {e}")
         #     import traceback
 
-            # traceback.print_exc()
+        # traceback.print_exc()
 
         print("=== Moves Export Complete ===")
 

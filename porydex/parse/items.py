@@ -4,7 +4,52 @@ import re
 from pycparser.c_ast import ID, ExprList, NamedInitializer
 from yaspin import yaspin
 
-from porydex.parse import load_truncated, extract_int, extract_u8_str
+from porydex.parse import load_truncated, extract_int, extract_u8_str, extract_compound_str
+
+def parse_item_description_constants(fname: pathlib.Path) -> dict:
+    """
+    Parse description constants from the items.h file.
+    
+    Args:
+        fname: Path to the items.h file
+        
+    Returns:
+        Dictionary mapping description constant names to their string values
+    """
+    description_constants = {}
+    
+    try:
+        with open(fname, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Pattern to match description constants like:
+        # static const u8 sQuestionMarksDesc[] = _("?????");
+        pattern = r'static const u8 (\w+)\[\] = _\(\s*"([^"]*)"\s*\);'
+        
+        matches = re.findall(pattern, content, re.MULTILINE | re.DOTALL)
+        
+        for match in matches:
+            constant_name = match[0]
+            description = match[1].strip()
+            # Replace any escaped newlines with spaces
+            description = description.replace("\\n", " ")
+            description_constants[constant_name] = description
+        
+        # Also look for COMPOUND_STRING descriptions
+        compound_pattern = r'static const u8 (\w+)\[\] = _\(\s*COMPOUND_STRING\(\s*"([^"]*)"\s*\);'
+        compound_matches = re.findall(compound_pattern, content, re.MULTILINE | re.DOTALL)
+        
+        for match in compound_matches:
+            constant_name = match[0]
+            description = match[1].strip()
+            # Replace any escaped newlines with spaces
+            description = description.replace("\\n", " ")
+            description_constants[constant_name] = description
+            
+    except Exception as e:
+        print(f"Warning: Could not parse item description constants: {e}")
+    
+    return description_constants
 
 def parse_item_constants_from_header(header_path: pathlib.Path) -> dict:
     """Parse item constants directly from the header file to get the correct constant names."""
@@ -14,9 +59,9 @@ def parse_item_constants_from_header(header_path: pathlib.Path) -> dict:
         with open(header_path, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # Find all ITEM_* constant definitions
-        # Pattern: #define ITEM_SOMETHING 123
-        pattern = r'#define\s+(ITEM_\w+)\s+(\d+)'
+        # Find all ITEM_* constant definitions, but exclude ITEM_USE_* and ITEM_EFFECT_* constants
+        # Pattern: #define ITEM_SOMETHING 123 (but not ITEM_USE_* or ITEM_EFFECT_*)
+        pattern = r'#define\s+(ITEM_(?!USE_|EFFECT_)\w+)\s+(\d+)'
         matches = re.findall(pattern, content)
         
         for constant_name, value_str in matches:
@@ -41,34 +86,65 @@ def get_item_name(struct_init: NamedInitializer) -> str:
     print(struct_init.show())
     raise ValueError('no name for item structure')
 
-def get_constant_name(item) -> str:
-    """Extract the constant name (like ITEM_POKE_BALL) from the item declaration."""
-    if hasattr(item, 'name') and len(item.name) > 0:
-        if isinstance(item.name[0], ID):
-            return item.name[0].name
-        else:
-            # For array-style declarations like [ITEM_POKE_BALL], extract the name
-            # The name might be in the array index
-            constant_str = str(item.name[0])
+def get_item_price(struct_init: NamedInitializer) -> int:
+    for field_init in struct_init.expr.exprs:
+        if field_init.name[0].name == 'price':
+            field_expr = field_init.expr
             
-            # Try to extract just the identifier part
-            if hasattr(item.name[0], 'name'):
-                return item.name[0].name
-            elif hasattr(item.name[0], 'value'):
-                return item.name[0].value
+            # Handle conditional expressions like (I_PRICE >= GEN_7) ? 800 : 1200
+            if hasattr(field_expr, 'cond') and hasattr(field_expr, 'iftrue') and hasattr(field_expr, 'iffalse'):
+                # For conditional expressions, take the first value (iftrue)
+                try:
+                    return extract_int(field_expr.iftrue)
+                except:
+                    # Fallback to the second value if first fails
+                    try:
+                        return extract_int(field_expr.iffalse)
+                    except:
+                        return 0
             else:
-                # Try to clean up the string representation
-                # Remove any extra formatting that might be added by str()
-                cleaned = constant_str
-                if "Constant(type=" in cleaned:
-                    # Extract the value from Constant(type='int', value='X')
-                    import re
-                    match = re.search(r"value='([^']*)'", cleaned)
-                    if match:
-                        cleaned = match.group(1)
-                return cleaned
-    return ""
+                # Regular integer expression
+                try:
+                    return extract_int(field_expr)
+                except:
+                    return 0
+    
+    # Default price if not found
+    return 0
 
+def get_item_description(struct_init: NamedInitializer, description_constants: dict = None) -> str:
+    for field_init in struct_init.expr.exprs:
+        if field_init.name[0].name == 'description':
+            field_expr = field_init.expr
+            
+            # Handle different types of description fields
+            if hasattr(field_expr, "exprs"):
+                # Compound string (multiple string literals concatenated)
+                try:
+                    return extract_compound_str(field_expr)
+                except:
+                    return str(field_expr)
+            elif hasattr(field_expr, "value"):
+                # String constant
+                return field_expr.value.strip('"')
+            elif hasattr(field_expr, "name"):
+                # Identifier (e.g., sQuestionMarksDesc)
+                constant_name = field_expr.name
+                if description_constants and constant_name in description_constants:
+                    # Resolve the constant to its actual string value
+                    return description_constants[constant_name]
+                else:
+                    # Fallback to the constant name if we can't resolve it
+                    return constant_name
+            else:
+                # Fallback - try to extract as compound string
+                try:
+                    return extract_compound_str(field_expr)
+                except:
+                    return str(field_expr)
+
+    # Default description if not found
+    return ""
 def validate_item_name(item_name: str, item_id: int) -> list[str]:
     """Validate item name and return any warnings."""
     warnings = []
@@ -208,7 +284,7 @@ def analyze_item_conflict(item_id: int, old_name: str, new_name: str) -> str:
     else:
         return f"Unknown item name conflict pattern"
 
-def all_item_names(items_data) -> dict:
+def all_item_names(items_data, description_constants: dict = None) -> dict:
     d_items = {}
     duplicate_warnings = []
     conflict_analysis = {}
@@ -222,11 +298,12 @@ def all_item_names(items_data) -> dict:
         
         item_id = extract_int(item.name[0])
         item_name = get_item_name(item)
-        constant_name = get_constant_name(item)
+        item_price = get_item_price(item)
+        item_description = get_item_description(item, description_constants)
         
         # Debug: Print first few items to see what we're getting
         if i < 10:
-            print(f"  Item {i}: ID={item_id}, Name='{item_name}', Constant='{constant_name}'")
+            print(f"  Item {i}: ID={item_id}, Name='{item_name}', Price={item_price}")
         
         # Validate item name
         item_warnings = validate_item_name(item_name, item_id)
@@ -241,13 +318,19 @@ def all_item_names(items_data) -> dict:
                 conflict_analysis[item_id] = conflict_type
             # Keep the newer definition (usually the more descriptive one)
             d_items[item_id] = {
+                'itemId': item_id,
+                'id': '',  # Will be filled in by parse_items
                 'name': item_name,
-                'constant': constant_name
+                'price': item_price,
+                'description': item_description
             }
         else:
             d_items[item_id] = {
+                'itemId': item_id,
+                'id': '',  # Will be filled in by parse_items
                 'name': item_name,
-                'constant': constant_name
+                'price': item_price,
+                'description': item_description
             }
     
     print(f"Processed {len(d_items)} unique items")
@@ -293,8 +376,8 @@ def get_item_constants_dict(items_dict: dict) -> dict:
     """Extract constant names from items dict."""
     constants = {}
     for item_id, item_data in items_dict.items():
-        if item_data['constant']:
-            constants[item_data['constant']] = item_id
+        if item_data['id']:
+            constants[item_data['id']] = item_id
     return constants
 
 def parse_items(fname: pathlib.Path) -> dict:
@@ -309,13 +392,28 @@ def parse_items(fname: pathlib.Path) -> dict:
     header_path = fname.parent.parent.parent / "include" / "constants" / "items.h"
     header_constants = parse_item_constants_from_header(header_path)
     
-    # Parse the items data
-    items_dict = all_item_names(items_data)
+    # Parse description constants from the items.h file
+    description_constants = parse_item_description_constants(fname)
     
-    # Override constant names with the correct ones from the header
+    # Parse the items data
+    items_dict = all_item_names(items_data, description_constants)
+    
+    # Assign constants from the header file
     for item_id, item_data in items_dict.items():
         if item_id in header_constants:
-            item_data['constant'] = header_constants[item_id]
+            item_data['id'] = header_constants[item_id]
+        else:
+            # Generate a fallback constant name if not found in header
+            item_name = item_data['name']
+            if item_name and item_name != "????????":
+                # Convert item name to constant format (e.g., "Poké Ball" -> "ITEM_POKE_BALL")
+                constant_name = "ITEM_" + item_name.upper().replace(" ", "_").replace("-", "_").replace("'", "")
+                # Remove any non-alphanumeric characters except underscores
+                import re
+                constant_name = re.sub(r"[^A-Z0-9_]", "", constant_name)
+                item_data['id'] = constant_name
+            else:
+                item_data['id'] = f"ITEM_{item_id}"
     
     return items_dict
 
