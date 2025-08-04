@@ -112,6 +112,7 @@ class PokemonData(TypedDict):
 
     # Special flags
     cosmetic: NotRequired[bool]
+    randomizerMode: NotRequired[int]
 
 
 @dataclass
@@ -261,6 +262,8 @@ def parse_mon(
                     mon["abilities"]["1"] = ability_names[ability_1]
                 if ability_H != 0 and ability_H != ability_0:
                     mon["abilities"]["H"] = ability_names[ability_H]
+            case "randomizerMode" | "randomizerModes":
+                mon["randomizerMode"] = extract_int(field_expr)
             case "bodyColor":
                 mon["color"] = BODY_COLOR[extract_int(field_expr)]
             case "speciesName":
@@ -269,12 +272,7 @@ def parse_mon(
                     name = "MissingNo."
                 mon["name"] = name
                 
-                # Log if the name is close to "indeedee"
-                if "indeedee" in name.lower():
-                    print(f"Found Indeedee-related mon: {name} (species ID: {mon['num']})")
-                # You can also check for other similar names
-                elif "indeed" in name.lower():
-                    print(f"Found Indeed-related mon: {name} (species ID: {mon['num']})")
+              
             case "natDexNum":
                 mon["nationalDex"] = national_dex[extract_id(field_expr)]
             case "height":

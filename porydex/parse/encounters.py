@@ -9,6 +9,64 @@ from yaspin import yaspin
 from porydex.common import name_key
 from porydex.parse import extract_id, extract_int, load_data
 
+def parse_species_constants(species_header_path: pathlib.Path) -> dict:
+    """Parse species constants directly from the header file."""
+    constants = {}
+    aliases = {}
+    
+    try:
+        with open(species_header_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # First pass: Find all SPECIES_* constant definitions with numeric values
+        # Pattern: #define SPECIES_SOMETHING 123
+        pattern = r'#define\s+(SPECIES_\w+)\s+(\d+)'
+        matches = re.findall(pattern, content)
+        
+        for constant_name, value_str in matches:
+            try:
+                value = int(value_str)
+                constants[constant_name] = value
+            except ValueError:
+                continue
+        
+        # Second pass: Find aliases (constants defined as other constants)
+        # Pattern: #define SPECIES_SOMETHING SPECIES_SOMETHING_ELSE
+        alias_pattern = r'#define\s+(SPECIES_\w+)\s+(SPECIES_\w+)'
+        alias_matches = re.findall(alias_pattern, content)
+        
+        # Resolve aliases, handling multi-level aliases
+        aliases = dict(alias_matches)
+        
+        # Keep resolving until all aliases are resolved (up to 10 levels to prevent infinite loops)
+        for _ in range(10):
+            resolved_any = False
+            for alias_name, target_name in list(aliases.items()):
+                if target_name in constants:
+                    # Direct resolution
+                    constants[alias_name] = constants[target_name]
+                    del aliases[alias_name]
+                    resolved_any = True
+                elif target_name in aliases:
+                    # Chain resolution: update the target to point deeper
+                    aliases[alias_name] = aliases[target_name]
+                    resolved_any = True
+            
+            if not resolved_any:
+                break
+    
+    except FileNotFoundError:
+        print(f"Warning: Could not find species header file: {species_header_path}")
+    
+    return constants
+
+def camel_to_underscore(s: str) -> str:
+    """Convert camelCase to underscore format."""
+    import re
+    # Add underscore before capital letters, but not at the start
+    s = re.sub(r'(?<!^)(?=[A-Z])', '_', s)
+    return s.upper()
+
 def snake_to_pascal(s: str) -> str:
     return ''.join(x.capitalize() for x in s.lower().split('_'))
 
@@ -24,19 +82,16 @@ def split_words(s: str) -> str:
 
 @dataclasses.dataclass
 class Encounter:
-    species: str
-    min_lvl: int
-    max_lvl: int
+    species: int  # Species ID (index)
+    min_level: int
+    max_level: int
 
     def to_json(self) -> dict:
-        return dataclasses.asdict(
-            self,
-            dict_factory=lambda fields: {
-                snake_to_camel(key): value
-                for key, value in fields
-                if value is not None
-            }
-        )
+        return {
+            "min_level": self.min_level,
+            "max_level": self.max_level,
+            "species": self.species
+        }
 
 @dataclasses.dataclass
 class EncounterInfo:
@@ -45,28 +100,25 @@ class EncounterInfo:
 
 @dataclasses.dataclass
 class EncounterRate:
-    base_rate: int
-    encs: list[Encounter]
+    encounter_rate: int
+    mons: list[Encounter]
 
     def to_json(self) -> dict:
-        return dataclasses.asdict(
-            self,
-            dict_factory=lambda fields: {
-                snake_to_camel(key): value
-                for key, value in fields
-                if value is not None
-            }
-        )
+        return {
+            "encounter_rate": self.encounter_rate,
+            "mons": [mon.to_json() for mon in self.mons]
+        }
 
 @dataclasses.dataclass
 class MapEncounters:
+    id: int | None
     name: str | None
     land: EncounterRate | None
     surf: EncounterRate | None
     rock: EncounterRate | None
     fish: EncounterRate | None
 
-MAP_NAME_PATTERN = re.compile(r'g(\w+)_.*')
+MAP_NAME_PATTERN = re.compile(r'g([A-Za-z0-9_]+?)_[A-Z]')
 
 def parse_encounter_init(init: NamedInitializer,
                          info_sections: dict[str, EncounterInfo],
@@ -89,7 +141,7 @@ def parse_encounter_header(header: InitList,
                            info_sections: dict[str, EncounterInfo],
                            encounter_defs: dict[str, list[Encounter]]) -> MapEncounters:
     field_inits = header.exprs
-    encs = MapEncounters(None, None, None, None, None)
+    encs = MapEncounters(None, None, None, None, None, None)
     for init in field_inits:
         result = None
         match init.name[0].name:
@@ -115,9 +167,9 @@ def parse_encounter_header(header: InitList,
 def parse_encounter_def(entry: InitList, species_names: list[str]) -> Encounter:
     try:
         return Encounter(
-            species=name_key(species_names[extract_int(entry.exprs[2])]),
-            min_lvl=extract_int(entry.exprs[0]),
-            max_lvl=extract_int(entry.exprs[1]),
+            species=extract_int(entry.exprs[2]),  # Use species ID directly instead of name
+            min_level=extract_int(entry.exprs[0]),
+            max_level=extract_int(entry.exprs[1]),
         )
     except Exception as e:
         id = extract_int(entry.exprs[2])
@@ -125,7 +177,71 @@ def parse_encounter_def(entry: InitList, species_names: list[str]) -> Encounter:
         print(f'{len(species_names)=}')
         raise e
 
-def parse_encounters_data(exts, jd: dict, species_names: list[str]) -> dict[str, dict[str, EncounterRate] | dict[str, dict]]:
+def parse_encounters_simple(wild_encounters_json: dict, species_constants: dict) -> dict:
+    """
+    Parse encounters by using wild_encounters.json as source of truth,
+    just converting species names to IDs.
+    """
+    # Use the species constants directly
+    species_name_to_id = species_constants
+    
+    # Start with the structure from wild_encounters.json
+    result = {
+        "wild_encounter_groups": []
+    }
+    
+    for group in wild_encounters_json.get("wild_encounter_groups", []):
+        new_group = {
+            "label": group.get("label", ""),
+            "for_maps": group.get("for_maps", True),
+            "fields": group.get("fields", []),
+            "encounters": []
+        }
+        
+        for encounter in group.get("encounters", []):
+            new_encounter = {
+                "map": encounter.get("map", ""),
+                "base_label": encounter.get("base_label", "")
+            }
+            
+            # Convert each encounter type
+            for field_name in ["land_mons", "water_mons", "rock_smash_mons", "fishing_mons"]:
+                if field_name in encounter:
+                    # Map field names to output format
+                    output_name = {
+                        "land_mons": "land",
+                        "water_mons": "water", 
+                        "rock_smash_mons": "rock",
+                        "fishing_mons": "fish"
+                    }.get(field_name, field_name)
+                    
+                    field_data = encounter[field_name]
+                    new_field = {
+                        "encounter_rate": field_data.get("encounter_rate", 0),
+                        "mons": []
+                    }
+                    
+                    # Convert species names to IDs
+                    for mon in field_data.get("mons", []):
+                        species_name = mon.get("species", "")
+                        species_id = species_name_to_id.get(species_name, 0)
+                        
+                        new_mon = {
+                            "min_level": mon.get("min_level", 1),
+                            "max_level": mon.get("max_level", 1),
+                            "species": species_id
+                        }
+                        new_field["mons"].append(new_mon)
+                    
+                    new_encounter[output_name] = new_field
+            
+            new_group["encounters"].append(new_encounter)
+        
+        result["wild_encounter_groups"].append(new_group)
+    
+    return result
+
+def parse_encounters_data(exts, jd: dict, species_names: list[str]) -> dict:
     headers = []
     info_sections = {}
     encounter_defs = {}
@@ -153,61 +269,80 @@ def parse_encounters_data(exts, jd: dict, species_names: list[str]) -> dict[str,
                 headers = entry.init.exprs
                 break
 
-    all_encounters = {
-        'rates': {
-            'land': [],
-            'surf': [],
-            'rock': [],
-            'fish': {
-                'old': [],
-                'good': [],
-                'super': [],
-            },
-        }
+    # Start with the exact structure from wild_encounters.json
+    wild_encounters = {
+        "wild_encounter_groups": [
+            {
+                "label": "gWildMonHeaders",
+                "for_maps": True,
+                "fields": jd['wild_encounter_groups'][0]['fields'],  # Copy the global field definitions
+                "encounters": []
+            }
+        ]
     }
+    
+    # Create a mapping from base_label to map constant from the JSON data
+    map_constants = {}
+    base_labels = {}
     global_group = jd['wild_encounter_groups'][0]
-    for field in global_group['fields']:
-        match field['type']:
-            case 'land_mons':
-                all_encounters['rates']['land'] = field['encounter_rates']
-            case 'water_mons':
-                all_encounters['rates']['surf'] = field['encounter_rates']
-            case 'rock_smash_mons':
-                all_encounters['rates']['rock'] = field['encounter_rates']
-            case 'fishing_mons':
-                rates = field['encounter_rates']
-                for slot in field['groups'].get('old_rod', []):
-                    all_encounters['rates']['fish']['old'].append(rates[slot])
-                for slot in field['groups'].get('good_rod', []):
-                    all_encounters['rates']['fish']['good'].append(rates[slot])
-                for slot in field['groups'].get('super_rod', []):
-                    all_encounters['rates']['fish']['super'].append(rates[slot])
+    for encounter in global_group.get('encounters', []):
+        if 'base_label' in encounter and 'map' in encounter:
+            map_constants[encounter['base_label']] = encounter['map']
+            base_labels[encounter['base_label']] = encounter['base_label']
 
+    # Process each parsed encounter header
     for header in headers:
         data = parse_encounter_header(header, info_sections, encounter_defs)
         if not data.name:
             continue
 
-        all_encounters[name_key(data.name)] = {
-            'name': split_words(data.name),
-            'land': data.land.to_json() if data.land else {},
-            'surf': data.surf.to_json() if data.surf else {},
-            'rock': data.rock.to_json() if data.rock else {},
-            'fish': data.fish.to_json() if data.fish else {},
-        }
+        # Convert the parsed name to the base_label format
+        base_label = f"g{data.name.capitalize()}"
+        
+        # Get map constant and base_label (use defaults if not found)
+        if base_label in map_constants:
+            map_constant = map_constants[base_label]
+            base_label_value = base_labels[base_label]
+        else:
+            # Convert camelCase to underscore format and add MAP_ prefix
+            map_constant = f"MAP_{camel_to_underscore(data.name)}"
+            base_label_value = base_label
 
-    return all_encounters
+        # Build encounter entry in wild_encounters.json format
+        encounter_entry = {
+            "map": map_constant,
+            "base_label": base_label_value
+        }
+        
+        # Add encounter types if they exist
+        if data.land:
+            encounter_entry["land"] = data.land.to_json()
+        if data.surf:
+            encounter_entry["water"] = data.surf.to_json()
+        if data.rock:
+            encounter_entry["rock"] = data.rock.to_json()
+        if data.fish:
+            encounter_entry["fish"] = data.fish.to_json()
+
+        wild_encounters["wild_encounter_groups"][0]["encounters"].append(encounter_entry)
+
+    return wild_encounters
 
 def load_json(fname: pathlib.Path) -> dict:
     with open(fname, 'r', encoding='utf-8') as j:
         return json.load(j)
 
 def parse_encounters(fname: pathlib.Path,
-                     species_names: list[str]) -> dict[str, dict[str, EncounterRate] | dict[str, dict]]:
-    encounters: ExprList
-    with yaspin(text=f'Loading encounter tables: {fname}', color='cyan') as spinner:
-        encounters = load_data(fname)
+                     species_names: list[str]) -> dict:
+    # Load the wild_encounters.json file directly
+    json_path = fname.with_suffix('.json')
+    with yaspin(text=f'Loading encounter tables: {json_path}', color='cyan') as spinner:
+        wild_encounters_json = load_json(json_path)
         spinner.ok("✅")
 
-    return parse_encounters_data(encounters, load_json(fname.with_suffix('.json')), species_names)
+    # Parse species constants from the header file
+    species_header_path = fname.parent.parent.parent / "include" / "constants" / "species.h"
+    species_constants = parse_species_constants(species_header_path)
+    
+    return parse_encounters_simple(wild_encounters_json, species_constants)
 

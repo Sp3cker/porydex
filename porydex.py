@@ -24,6 +24,7 @@ from porydex.parse.national_dex import parse_national_dex_enum
 from porydex.parse.species import parse_species
 from porydex.parse.trainer_parties import parse_trainer_parties
 from porydex.parse.trainers import parse_trainers
+from porydex.randomizer import parse_randomizer_modes, classify_species_by_mode
 
 MAX_SPECIES_EXPANSION = 1560 + 1
 
@@ -84,6 +85,167 @@ def config_clear(_):
     porydex.config.clear()
 
 
+def extract_randomizer_data():
+    """Extract randomization data and export to randomize.json
+    
+    This function parses the randomizer modes from the pokeemerald-expansion
+    header file and creates a JSON file that maps each species to whether
+    it can be randomized under each mode. The output file is saved as
+    'randomize.json' in the configured output directory.
+    
+    The output structure is:
+    {
+        "modes": {
+            "RANDOMIZE_WILD_MON": 0,
+            "RANDOMIZE_TRAINER_MON": 1,
+            ...
+        },
+        "species": {
+            "NOT_RANDOMIZABLE": {
+                "Species1": true,
+                "Species2": true,
+                ...
+            },
+            "RANDOMIZE_WILD_MON": {
+                "Species3": true,
+                "Species4": false,
+                ...
+            },
+            ...
+        }
+    }
+    
+    Species that are not randomizable under any mode are placed in the
+    NOT_RANDOMIZABLE dictionary to avoid repetition across all modes.
+    """
+    
+    porydex.config.load()
+    
+    # Ensure output directory exists
+    porydex.config.output.mkdir(parents=True, exist_ok=True)
+    
+    # Parse the randomizer modes from the header
+    modes = parse_randomizer_modes()
+    
+    if not modes:
+        print("Warning: Could not parse randomizer modes from header file.")
+        print("Make sure the expansion path is correctly configured and the randomizer.h file exists.")
+        return
+    
+    # Parse species data to get the randomizerMode field
+    expansion_data = porydex.config.expansion / "src" / "data"
+    
+    # We need to parse the basic dependencies for species parsing
+    abilities = parse_abilities(expansion_data / "abilities.h")
+    items_data = parse_items(expansion_data / "items.h")
+    items = get_item_names_list(items_data)
+    
+    moves = parse_moves(expansion_data / "moves_info.h")
+    max_move_id = max(move.get("moveId", move["num"]) for move in moves.values())
+    move_names = [""] * (max_move_id + 1)
+    for move in moves.values():
+        move_id = move.get("moveId", move["num"])
+        move_names[move_id] = move["name"]
+    
+    forms = parse_form_tables(expansion_data / "pokemon" / "form_species_tables.h")
+    form_changes = parse_form_change_tables(
+        expansion_data / "pokemon" / "form_change_tables.h"
+    )
+    map_sections = parse_maps(expansion_data / "region_map" / "region_map_entries.h")
+    
+    # Load move constants for learnset parsing
+    from porydex.parse.moves import parse_constants_from_header
+    move_constants = parse_constants_from_header(
+        pathlib.Path("../include/constants/moves.h")
+    )
+    
+    lvlup_learnsets = parse_level_up_learnsets(
+        expansion_data / "pokemon" / "level_up_learnsets.h",
+        move_names,
+        move_constants,
+        {},  # raw_move_id_to_move_names_index - simplified for randomizer
+    )
+    teach_learnsets = parse_teachable_learnsets(
+        expansion_data / "pokemon" / "teachable_learnsets.h", move_names
+    )
+    national_dex = parse_national_dex_enum(
+        porydex.config.expansion / "include" / "constants" / "pokedex.h"
+    )
+    
+    # Parse species data
+    species, _ = parse_species(
+        expansion_data / "pokemon" / "species_info.h",
+        abilities,
+        items,
+        move_names,
+        forms,
+        form_changes,
+        map_sections,
+        lvlup_learnsets,
+        teach_learnsets,
+        national_dex,
+        [],  # included_mons - empty for randomizer
+    )
+    
+    # Create the randomization data structure
+    randomize_data = {
+        "modes": modes,
+        "species": {}
+    }
+    
+    # First, identify species that are not randomizable across all modes
+    not_randomizable = set()
+    all_species = set(species.keys())
+    
+    # Check each species against all modes
+    for species_name, species_info in species.items():
+        randomizer_mode = species_info.get("randomizerMode")
+        
+        # If randomizerMode is not defined, assume it can be randomized in any mode
+        if randomizer_mode is None:
+            continue  # Skip adding to not_randomizable
+        
+        is_randomizable_in_any_mode = False
+        
+        for mode_value in modes.values():
+            if (randomizer_mode & mode_value) != 0:
+                is_randomizable_in_any_mode = True
+                break
+        
+        if not is_randomizable_in_any_mode:
+            not_randomizable.add(species_name)
+    
+    # Add NOT_RANDOMIZABLE to the species data
+    randomize_data["species"]["NOT_RANDOMIZABLE"] = {
+        species_name: True for species_name in not_randomizable
+    }
+    
+    # For each mode, classify which species are randomizable (excluding NOT_RANDOMIZABLE species)
+    for mode_name, mode_value in modes.items():
+        species_classification = {}
+        for species_name, species_info in species.items():
+            if species_name not in not_randomizable:
+                randomizer_mode = species_info.get("randomizerMode")
+                
+                # If randomizerMode is not defined, assume it can be randomized in any mode
+                if randomizer_mode is None:
+                    species_classification[species_name] = True
+                else:
+                    is_randomizable = (randomizer_mode & mode_value) != 0
+                    species_classification[species_name] = is_randomizable
+        randomize_data["species"][mode_name] = species_classification
+    
+    # Write to randomize.json
+    output_file = porydex.config.output / "randomize.json"
+    with open(output_file, "w", encoding="utf-8") as f:
+        json.dump(randomize_data, f, indent=2, ensure_ascii=False)
+    
+    print(f"Randomization data exported to {output_file}")
+    print(f"Found {len(modes)} randomization modes:")
+    for mode_name in modes.keys():
+        print(f"  - {mode_name}")
+
+
 def extract(args: argparse.Namespace):
     """Extract all data from the expansion."""
 
@@ -104,6 +266,86 @@ def extract(args: argparse.Namespace):
     if args.command == "trainers":
         parse_trainers(expansion_data)
         return
+    
+    # Handle randomizer subcommand
+    if args.command == "randomizer":
+        extract_randomizer_data()
+        return
+    
+    # Handle encounters subcommand
+    if args.command == "encounters":
+        # Parse dependencies needed for species parsing
+        abilities = parse_abilities(expansion_data / "abilities.h")
+        
+        items_data = parse_items(expansion_data / "items.h")
+        items = get_item_names_list(items_data)
+        
+        moves = parse_moves(expansion_data / "moves_info.h")
+        max_move_id = max(move.get("moveId", move["num"]) for move in moves.values())
+        move_names = [""] * (max_move_id + 1)
+        for move in moves.values():
+            move_id = move.get("moveId", move["num"])
+            move_names[move_id] = move["name"]
+        
+        forms = parse_form_tables(expansion_data / "pokemon" / "form_species_tables.h")
+        form_changes = parse_form_change_tables(
+            expansion_data / "pokemon" / "form_change_tables.h"
+        )
+        map_sections = parse_maps(expansion_data / "region_map" / "region_map_entries.h")
+        
+        # Load move constants for learnset parsing
+        from porydex.parse.moves import parse_constants_from_header
+        move_constants = parse_constants_from_header(
+            pathlib.Path("../include/constants/moves.h")
+        )
+        
+        lvlup_learnsets = parse_level_up_learnsets(
+            expansion_data / "pokemon" / "level_up_learnsets.h",
+            move_names,
+            move_constants,
+            {},  # raw_move_id_to_move_names_index - simplified for encounters
+        )
+        teach_learnsets = parse_teachable_learnsets(
+            expansion_data / "pokemon" / "teachable_learnsets.h", move_names
+        )
+        national_dex = parse_national_dex_enum(
+            porydex.config.expansion / "include" / "constants" / "pokedex.h"
+        )
+        
+        # Parse species data to get species names
+        species, _ = parse_species(
+            expansion_data / "pokemon" / "species_info.h",
+            abilities,
+            items,
+            move_names,
+            forms,
+            form_changes,
+            map_sections,
+            lvlup_learnsets,
+            teach_learnsets,
+            national_dex,
+            [],  # included_mons - empty for encounters
+        )
+        
+        # Create species_names array
+        species_names = ["????????????"] * (MAX_SPECIES_EXPANSION + 1)
+        for mon in species.values():
+            if mon.get("cosmetic", False):
+                species_names[mon["num"]] = mon["name"].split("-")[0]
+            else:
+                species_names[mon["num"]] = mon["name"]
+        
+        # Parse encounters
+        encounters = parse_encounters(expansion_data / "wild_encounters.h", species_names)
+        
+        # Export to JSON
+        output_file = porydex.config.output / "encounters.json"
+        with open(output_file, "w", encoding="utf-8") as f:
+            json.dump(encounters, f, indent=2, ensure_ascii=False)
+        
+        print(f"Encounter data exported to {output_file}")
+        return
+
     # custom_headers = pathlib.Path("custom_headers")
     moves = parse_moves(expansion_data / "moves_info.h")
     # import pprint
@@ -352,6 +594,15 @@ def main():
         dest="command", help="extraction subcommands"
     )
 
+    # Add encounters subcommand
+    encounters_p = extract_subp.add_parser("encounters", help="extract encounter data only")
+    encounters_p.add_argument(
+        "--reload",
+        action="store_true",
+        help="if specified, flush the cache of parsed data and reload from expansion",
+    )
+    encounters_p.set_defaults(func=extract)
+
     # Add trainers subcommand
     trainers_p = extract_subp.add_parser("trainers", help="extract trainer data only")
     trainers_p.add_argument(
@@ -360,6 +611,15 @@ def main():
         help="if specified, flush the cache of parsed data and reload from expansion",
     )
     trainers_p.set_defaults(func=extract)
+
+    # Add randomizer subcommand
+    randomizer_p = extract_subp.add_parser("randomizer", help="extract randomization data only")
+    randomizer_p.add_argument(
+        "--reload",
+        action="store_true",
+        help="if specified, flush the cache of parsed data and reload from expansion",
+    )
+    randomizer_p.set_defaults(func=extract)
 
     # Add default extract subcommand (for when no subcommand is specified)
     extract_p.add_argument(

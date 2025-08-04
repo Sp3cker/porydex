@@ -83,6 +83,11 @@ EVO_METHOD_MAPPING = {
     'EVO_ITEM_COUNT_999': 50,
     'EVO_DEFEAT_THREE_WITH_ITEM': 51,
     'EVO_OVERWORLD_STEPS': 52,
+    # Randomizer constants from include/pokemon.h
+    'MON_RANDOMIZER_NORMAL': 0,
+    'MON_RANDOMIZER_RANDOM_FORM': 1,
+    'MON_RANDOMIZER_SPECIAL_FORM': 2,
+    'MON_RANDOMIZER_INVALID': 3,
 }
 
 def _pickle_target(fname: pathlib.Path) -> pathlib.Path:
@@ -196,7 +201,11 @@ def eval_binary_operand(expr) -> int:
             # Return 0 as a fallback for unknown identifiers
             # This allows processing to continue for unknown constants
             return 0
-    return int(expr.value)
+    try:
+        return int(expr.value)
+    except ValueError:
+        # try hexadecimal; if that doesn't work, just fail
+        return int(expr.value, 16)
 
 def process_binary(expr: BinaryOp) -> int | bool:
     left = eval_binary_operand(expr.left)
