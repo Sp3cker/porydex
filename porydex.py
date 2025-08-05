@@ -293,6 +293,19 @@ def extract(args: argparse.Namespace):
         )
         map_sections = parse_maps(expansion_data / "region_map" / "region_map_entries.h")
         
+        # Parse map constants for mapNum and mapGroup information
+        from porydex.parse.maps import parse_map_constants
+        map_constants = parse_map_constants(
+            porydex.config.expansion / "include" / "constants" / "map_groups.h"
+        )
+        
+        # Export map constants to JSON
+        map_constants_output = porydex.config.output / "map_constants.json"
+        with open(map_constants_output, "w", encoding="utf-8") as f:
+            json.dump(map_constants, f, indent=2, ensure_ascii=False)
+        
+        print(f"Map constants exported to {map_constants_output}")
+        
         # Load move constants for learnset parsing
         from porydex.parse.moves import parse_constants_from_header
         move_constants = parse_constants_from_header(
@@ -388,6 +401,19 @@ def extract(args: argparse.Namespace):
     # Export form change constants as JSON maps
     export_form_change_constants(porydex.config.output)
     map_sections = parse_maps(expansion_data / "region_map" / "region_map_entries.h")
+    
+    # Parse map constants for mapNum and mapGroup information
+    from porydex.parse.maps import parse_map_constants
+    map_constants = parse_map_constants(
+        porydex.config.expansion / "include" / "constants" / "map_groups.h"
+    )
+    
+    # Export map constants to JSON
+    map_constants_output = porydex.config.output / "map_constants.json"
+    with open(map_constants_output, "w", encoding="utf-8") as f:
+        json.dump(map_constants, f, indent=2, ensure_ascii=False)
+    
+    print(f"Map constants exported to {map_constants_output}")
 
     # Load move constants for learnset parsing
     from porydex.parse.moves import parse_constants_from_header

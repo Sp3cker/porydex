@@ -199,8 +199,9 @@ def parse_encounters_simple(wild_encounters_json: dict, species_constants: dict)
         }
         
         for encounter in group.get("encounters", []):
+            map_constant = encounter.get("map", "")
             new_encounter = {
-                "map": encounter.get("map", ""),
+                "map": map_constant,
                 "base_label": encounter.get("base_label", "")
             }
             
