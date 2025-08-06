@@ -113,6 +113,9 @@ class PokemonData(TypedDict):
     # Special flags
     cosmetic: NotRequired[bool]
     randomizerMode: NotRequired[int]
+    isLegendary: NotRequired[bool]
+    isMythical: NotRequired[bool]
+    isUltraBeast: NotRequired[bool]
 
 
 @dataclass
@@ -264,6 +267,12 @@ def parse_mon(
                     mon["abilities"]["H"] = ability_names[ability_H]
             case "randomizerMode" | "randomizerModes":
                 mon["randomizerMode"] = extract_int(field_expr)
+            case "isLegendary":
+                mon["isLegendary"] = extract_int(field_expr) == 1
+            case "isMythical":
+                mon["isMythical"] = extract_int(field_expr) == 1
+            case "isUltraBeast":
+                mon["isUltraBeast"] = extract_int(field_expr) == 1
             case "bodyColor":
                 mon["color"] = BODY_COLOR[extract_int(field_expr)]
             case "speciesName":
