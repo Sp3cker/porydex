@@ -148,7 +148,7 @@ def extract(args: argparse.Namespace):
         # Load move constants for learnset parsing
         from porydex.parse.moves import parse_constants_from_header
         move_constants = parse_constants_from_header(
-            pathlib.Path("../include/constants/moves.h")
+            expansion_data / "include" / "constants" / "moves.h"
         )
         
         lvlup_learnsets = parse_level_up_learnsets(
