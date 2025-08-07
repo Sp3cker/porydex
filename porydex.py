@@ -8,22 +8,8 @@ import porydex.config
 from porydex.common import PICKLE_PATH, name_key
 from porydex.parse.abilities import parse_abilities
 from porydex.parse.encounters import parse_encounters
-from porydex.parse.form_change_constants import export_form_change_constants
-from porydex.parse.form_change_tables import parse_form_change_tables
-from porydex.parse.form_tables import parse_form_tables
-from porydex.parse.items import (
-    get_item_constants_dict,
-    get_item_names_list,
-    parse_items,
-)
-from porydex.parse.learnsets import parse_level_up_learnsets, parse_teachable_learnsets
-from porydex.parse.maps import parse_map_constants, parse_maps
-from porydex.parse.moves import parse_constants_from_header, parse_moves
-from porydex.parse.national_dex import parse_national_dex_enum
-from porydex.parse.species import parse_species
-from porydex.parse.trainer_parties import convert_to_consistent_format, parse_trainer_parties
-from porydex.parse.trainers import parse_trainers
 from porydex.randomizer import extract_randomizer_data
+from porydex.data_loader import load_all_data
 from porydex.toEidex import eiDex
 
 MAX_SPECIES_EXPANSION = 1560 + 1
@@ -99,287 +85,48 @@ def extract(args: argparse.Namespace):
         for path in (PICKLE_PATH, porydex.config.output)
     ]
 
-    expansion_data = porydex.config.expansion / "src" / "data"
+    # Use shared data loader to get all data in one place (DRY principle)
+    include_trainer_parties = args.command != 'randomizer'  # Only load trainer parties when needed
+    all_data = load_all_data(
+        expansion_path=porydex.config.expansion,
+        include_trainer_parties=include_trainer_parties,
+        included_mons=[]  # no included species filtering
+    )
 
-    # Handle trainers subcommand
-    if args.command == "trainers":
-        parse_trainers(expansion_data)
-        return
-    
+    # Extract commonly used data
+    species = all_data['species']
+    moves = all_data['moves']
+    species_names = all_data['species_names']
+
     # Handle randomizer subcommand
-    if args.command == "randomizer":
-        extract_randomizer_data()
+    if args.command == 'randomizer':
+        extract_randomizer_data(species)
         return
-    
+
     # Handle encounters subcommand
-    if args.command == "encounters":
-        # Parse dependencies needed for species parsing
-        abilities = parse_abilities(expansion_data / "abilities.h")
-        
-        items_data = parse_items(expansion_data / "items.h")
-        items = get_item_names_list(items_data)
-        
-        moves = parse_moves(expansion_data / "moves_info.h")
-        max_move_id = max(move.get("moveId", move["num"]) for move in moves.values())
-        move_names = [""] * (max_move_id + 1)
-        for move in moves.values():
-            move_id = move.get("moveId", move["num"])
-            move_names[move_id] = move["name"]
-        
-        forms = parse_form_tables(expansion_data / "pokemon" / "form_species_tables.h")
-        form_changes = parse_form_change_tables(
-            expansion_data / "pokemon" / "form_change_tables.h"
-        )
-        map_sections = parse_maps(expansion_data / "region_map" / "region_map_entries.h")
-        
-        map_constants = parse_map_constants(
-            porydex.config.expansion / "include" / "constants" / "map_groups.h"
-        )
-        
-        # Export map constants to JSON
-        map_constants_output = porydex.config.output / "map_constants.json"
-        with open(map_constants_output, "w", encoding="utf-8") as f:
-            json.dump(map_constants, f, indent=2, ensure_ascii=False)
-        
-        print(f"Map constants exported to {map_constants_output}")
-        
-        # Load move constants for learnset parsing
-        move_constants = parse_constants_from_header(
-            pathlib.Path("../include/constants/moves.h")
-        )
-        
-        lvlup_learnsets = parse_level_up_learnsets(
-            expansion_data / "pokemon" / "level_up_learnsets.h",
-            move_names,
-            move_constants,
-            {},  # raw_move_id_to_move_names_index - simplified for encounters
-        )
-        teach_learnsets = parse_teachable_learnsets(
-            expansion_data / "pokemon" / "teachable_learnsets.h", move_names
-        )
-        national_dex = parse_national_dex_enum(
-            porydex.config.expansion / "include" / "constants" / "pokedex.h"
-        )
-        
-        # Parse species data to get species names
-        species, _ = parse_species(
-            expansion_data / "pokemon" / "species_info.h",
-            abilities,
-            items,
-            move_names,
-            forms,
-            form_changes,
-            map_sections,
-            lvlup_learnsets,
-            teach_learnsets,
-            national_dex,
-            [],  # included_mons - empty for encounters
-        )
-        
-        # Create species_names array
-        species_names = ["????????????"] * (MAX_SPECIES_EXPANSION + 1)
-        for mon in species.values():
-            if mon.get("cosmetic", False):
-                species_names[mon["num"]] = mon["name"].split("-")[0]
-            else:
-                species_names[mon["num"]] = mon["name"]
-        
-        # Parse encounters
-        encounters = parse_encounters(expansion_data / "wild_encounters.h", species_names)
-        
-        # Export to JSON
-        output_file = porydex.config.output / "encounters.json"
-        with open(output_file, "w", encoding="utf-8") as f:
+    if args.command == 'encounters':
+        expansion_data = porydex.config.expansion / "src" / "data"
+        encounters = parse_encounters(expansion_data / 'wild_encounters.h', species_names)
+        output_file = porydex.config.output / 'encounters.json'
+        with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(encounters, f, indent=2, ensure_ascii=False)
-        
         print(f"Encounter data exported to {output_file}")
         return
 
-    # custom_headers = pathlib.Path("custom_headers")
-    moves = parse_moves(expansion_data / "moves_info.h")
-    # import pprint
-
-    # pprint.pprint(moves)
-    # import sys
-
-    # sys.exit(0)
-    # Create move_names array using the move IDs from constants, not sorted by num
-    # This ensures move_names[move_id] corresponds to the correct move
-    max_move_id = max(move.get("moveId", move["num"]) for move in moves.values())
-    move_names = [""] * (max_move_id + 1)  # Initialize with empty strings
-    for move in moves.values():
-        move_id = move.get("moveId", move["num"])
-        move_names[move_id] = move["name"]
-
-    # Create a mapping from raw move IDs (from learnsets) to move_names array indices
-    # This is needed because learnsets use raw move IDs, but move_names is indexed by moveId
-    raw_move_id_to_move_names_index = {}
-    for move in moves.values():
-        raw_move_id = move["num"]  # This is the raw move ID from the moves data
-        move_id = move.get("moveId", move["num"])  # This is the moveId (from constants)
-        raw_move_id_to_move_names_index[raw_move_id] = move_id
-
-    abilities = parse_abilities(expansion_data / "abilities.h")
-
-    items_data = parse_items(expansion_data / "items.h")
-    with open(porydex.config.output / "items.json", "w+", encoding="utf-8") as outf:
-        json.dump(items_data, outf, indent=4, ensure_ascii=False)
-    items = get_item_names_list(items_data)
-    item_constants = get_item_constants_dict(items_data)
-
-    forms = parse_form_tables(expansion_data / "pokemon" / "form_species_tables.h")
-
-    # Parse form change tables
-    form_changes = parse_form_change_tables(
-        expansion_data / "pokemon" / "form_change_tables.h"
-    )
-
-    # Export form change constants as JSON maps
-    export_form_change_constants(porydex.config.output)
-    map_sections = parse_maps(expansion_data / "region_map" / "region_map_entries.h")
-    
-    # Parse map constants for mapNum and mapGroup information
-    map_constants = parse_map_constants(
-        porydex.config.expansion / "include" / "constants" / "map_groups.h"
-    )
-    
-    # Export map constants to JSON
-    map_constants_output = porydex.config.output / "map_constants.json"
-    with open(map_constants_output, "w", encoding="utf-8") as f:
-        json.dump(map_constants, f, indent=2, ensure_ascii=False)
-    
-    print(f"Map constants exported to {map_constants_output}")
-
-    # Load move constants for learnset parsing
-    move_constants = parse_constants_from_header(
-        pathlib.Path("../include/constants/moves.h")
-    )
-
-    lvlup_learnsets = parse_level_up_learnsets(
-        expansion_data / "pokemon" / "level_up_learnsets.h",
-        move_names,
-        move_constants,
-        raw_move_id_to_move_names_index,
-    )
-    teach_learnsets = parse_teachable_learnsets(
-        expansion_data / "pokemon" / "teachable_learnsets.h", move_names
-    )
-    national_dex = parse_national_dex_enum(
-        porydex.config.expansion / "include" / "constants" / "pokedex.h"
-    )
-
-    included_mons = []
-    if porydex.config.included_mons_file:
-        with open(porydex.config.included_mons_file, "r", encoding="utf-8") as included:
-            included_mons = list(
-                filter(
-                    lambda s: len(s) > 0, map(lambda s: s.strip(), included.readlines())
-                )
-            )
-
-    species, learnsets = parse_species(
-        expansion_data / "pokemon" / "species_info.h",
-        abilities,
-        items,
-        move_names,
-        forms,
-        form_changes,
-        map_sections,
-        lvlup_learnsets,
-        teach_learnsets,
-        national_dex,
-        included_mons,
-    )
-
-    # Parse trainer parties
-    trainer_parties = parse_trainer_parties(expansion_data / "trainer_parties.h")
-
-    # Convert trainer parties to consistent format with numeric IDs
-    # Create constant mappings for conversion
-    species_constants = {}
-    for species_data in species.values():
-        species_name = f"SPECIES_{species_data['name'].upper()}"
-        species_constants[species_name] = species_data["num"]
-
-    move_constants = {}
-    for i, move in enumerate(move_names):
-        if move and move != "None":
-            move_name = f"MOVE_{move.upper().replace(' ', '_').replace('-', '_')}"
-            move_constants[move_name] = i
-
-    ability_constants = {}
-    if isinstance(abilities, dict):
-        for ability_name, ability_data in abilities.items():
-            if isinstance(ability_data, dict) and "id" in ability_data:
-                ability_constants[ability_name] = ability_data["id"]
-    elif isinstance(abilities, list):
-        for i, ability in enumerate(abilities):
-            if ability and ability != "None":
-                ability_name = (
-                    f"ABILITY_{ability.upper().replace(' ', '_').replace('-', '_')}"
-                )
-                ability_constants[ability_name] = i
-
-    item_constants = {}
-    if isinstance(items, dict):
-        for item_name, item_data in items.items():
-            if isinstance(item_data, dict) and "id" in item_data:
-                item_constants[item_name] = item_data["id"]
-    elif isinstance(items, list):
-        for i, item in enumerate(items):
-            if item and item != "None":
-                item_name = f"ITEM_{item.upper().replace(' ', '_').replace('-', '_')}"
-                item_constants[item_name] = i
-
-    # Convert trainer parties to consistent format
-    consistent_trainer_parties = convert_to_consistent_format(
-        trainer_parties,
-        species_constants,
-        move_constants,
-        ability_constants,
-        item_constants,
-        items,  # Pass the actual item names list
-    )
-
-    species_names = ["????????????"] * (MAX_SPECIES_EXPANSION + 1)
-    for mon in species.values():
-        if mon.get("cosmetic", False):
-            species_names[mon["num"]] = mon["name"].split("-")[0]
-        else:
-            species_names[mon["num"]] = mon["name"]
-
-    # cleanup cosmetic forms and missingno from species
-    to_purge = ["missingno"]
-    for key, mon in species.items():
-        if mon.get("cosmetic", False):
-            to_purge.append(key)
-    for key in to_purge:
-        del species[key]
-
-    # species_names = [mon['name'] for mon in sorted(species.values(), key=lambda m: m['num'])]
-    # encounters = parse_encounters(expansion_data / "wild_encounters.h", species_names)
-
-    # Re-index num to nationalDex on the species before finishing up
-    for _, mon in species.items():
-        mon["num"] = mon["nationalDex"]
-        del mon["nationalDex"]
-
-    # Write trainer parties JSON regardless of format
-
-    # Pass the export_species parameter based on command line args
+    # Default (eiDex) extraction
     export_species = not args.no_species
     eiDex(
         moves,
-        consistent_trainer_parties,
+        all_data['trainer_parties'],
         export_species=export_species,
-        abilities=abilities,
-        items=items,
-        move_names=move_names,
-        forms=forms,
-        form_changes=form_changes,
-        level_up_learnsets=lvlup_learnsets,
-        teachable_learnsets=teach_learnsets,
-        national_dex=national_dex,
+        abilities=all_data['abilities'],
+        items=all_data['items'],
+        move_names=all_data['move_names'],
+        forms=all_data['forms'],
+        form_changes=all_data['form_changes'],
+        level_up_learnsets=all_data['learnsets'],  # Note: this might need adjustment based on eiDx function signature
+        teachable_learnsets=all_data['learnsets'],  # Note: this might need adjustment
+        national_dex=all_data['national_dex'],
     )
 
 

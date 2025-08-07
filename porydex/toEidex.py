@@ -4,6 +4,7 @@ import porydex.config
 from porydex.move_descriptions import enrich_moves_with_descriptions
 from porydex.parse.species_object import parse_all_generations_with_data
 from porydex.parse.moves import parse_move_constants
+from porydex.randomizer import extract_randomizer_data
 
 vanilla_data_dir = pathlib.Path("vanilla")
 typeData = json.load(open(vanilla_data_dir / "typeData.json", "r", encoding="utf-8"))
@@ -60,7 +61,7 @@ def eiDexSpecies(
         )
 
         print(f"Successfully parsed {len(species_data)} species")
-
+        extract_randomizer_data(species_data)
         # Write species data to output file
         output_path = porydex.config.output / "species.json"
         print(f"Writing {len(species_data)} species to {output_path}")

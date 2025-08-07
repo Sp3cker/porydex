@@ -280,8 +280,7 @@ def parse_mon(
                 if name == "??????????":
                     name = "MissingNo."
                 mon["name"] = name
-                
-              
+
             case "natDexNum":
                 mon["nationalDex"] = national_dex[extract_id(field_expr)]
             case "height":
@@ -630,49 +629,48 @@ def parse_species_data(
             if "name" not in mon or not mon["name"]:
                 continue
 
-            if mon["name"].rfind("-") != -1:
-                base_name = mon["name"].split("-")[0]
-                cosmetics = COSMETIC_FORME_SPECIES.get(base_name, None)
-                if cosmetics and any(
-                    map(lambda s: s[0]["name"] == base_name, all_species_data.values())
+            # disabled cosmetic filtering
+            # if mon['name'] includes a hyphen, previous code filtered cosmetic formes; disable that
+            # if mon["name"].rfind("-") != -1:
+            base_name = mon["name"].split("-")[0]
+            cosmetics = COSMETIC_FORME_SPECIES.get(base_name, None)
+            if cosmetics and any(
+                map(lambda s: s[0]["name"] == base_name, all_species_data.values())
+            ):
+                if cosmetics.alts is None or mon["name"] not in map(
+                    lambda alt: f"{base_name}-{alt}", cosmetics.alts
                 ):
-                    if cosmetics.alts is None or mon["name"] not in map(
-                        lambda alt: f"{base_name}-{alt}", cosmetics.alts
-                    ):
-                        mon["cosmetic"] = (
-                            True  # use this later during cleanup to map the name to its base form
-                        )
+                    mon["cosmetic"] = True
+                    pass
+
+            special = SPECIAL_ABILITIES.get(base_name, None)
+            if special:
+                form_name = mon["name"].replace(base_name, "")[1:]
+                if "-" in form_name:
+                    sub_form = f'-{form_name.split("-")[0]}'
+                    special_form = "-".join(form_name.split("-")[1:])
+                else:
+                    sub_form = ""
+                    special_form = form_name
+
+                if special.form == special_form:
+                    target = f"{base_name}{sub_form}"
+                    try:
+                        parent_mon = next(
+                            s
+                            for s in all_species_data.values()
+                            if s[0]["name"] == target
+                            or (
+                                "baseForme" in s[0]
+                                and f'{s[0]["name"]}-{s[0]["baseForme"]}' == target
+                            )
+                        )[0]
+                        parent_mon["abilities"]["S"] = special.ability
+                        del all_species_data[mon["num"]]
+                        pass
+                    except StopIteration:
+                        print(f"Warning: Could not find parent mon for special ability {special.ability} on {mon['name']}")
                         continue
-
-                special = SPECIAL_ABILITIES.get(base_name, None)
-                if special:
-                    form_name = mon["name"].replace(base_name, "")[1:]
-                    if "-" in form_name:
-                        sub_form = f'-{form_name.split("-")[0]}'
-                        special_form = "-".join(form_name.split("-")[1:])
-                    else:
-                        sub_form = ""
-                        special_form = form_name
-
-                    if special.form == special_form:
-                        target = f"{base_name}{sub_form}"
-                        try:
-                            parent_mon = next(
-                                s
-                                for s in all_species_data.values()
-                                if s[0]["name"] == target
-                                or (
-                                    "baseForme" in s[0]
-                                    and f'{s[0]["name"]}-{s[0]["baseForme"]}' == target
-                                )
-                            )[0]
-                            parent_mon["abilities"]["S"] = special.ability
-                            del all_species_data[mon["num"]]
-                            continue
-                        except StopIteration:
-                            # If we can't find the parent mon, just continue without special ability handling
-                            print(f"Warning: Could not find parent mon for special ability {special.ability} on {mon['name']}")
-                            continue
 
             key = name_key(mon["name"])
             all_learnsets[key] = {}

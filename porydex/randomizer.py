@@ -93,7 +93,8 @@ def parse_randomizer_modes(header_path: pathlib.Path | None = None) -> Dict[str,
     return modes
 
 
-def get_species_randomization_data(species_data: Dict[str, dict]) -> List[Dict]:
+def get_species_randomization_data(unsortedspecies_data: Dict[str, dict]) -> List[Dict]:
+    species_data = {species["name"]: species for species in sorted(unsortedspecies_data.values(), key=lambda x: x.get("num", 0))}
     """Return array of species randomization data with proper structure.
     
     Each species object contains:
@@ -185,121 +186,35 @@ def classify_species_by_mode(
     return result
 
 
-def extract_randomizer_data():
-    """Extract randomization data and export to randomize.json
-    
-    This function parses the randomizer modes from the pokeemerald-expansion
-    header file and creates a JSON file that contains species randomization data.
-    The output file is saved as 'randomize.json' in the configured output directory.
-    
-    The output structure is:
-    {
-        "modes": {
-            "RANDOMIZE_WILD_MON": 0,
-            "RANDOMIZE_TRAINER_MON": 1,
-            ...
-        },
-        "species": [
-            {
-                "id": 1,
-                "isLegendary": false,
-                "mode": 0,
-                "baseStat": 318
-            },
-            ...
-        ]
-    }
-    """
-    
-    config.load()
-    
-    # Ensure output directory exists
-    config.output.mkdir(parents=True, exist_ok=True)
-    
-    # Parse the randomizer modes from the header
+def extract_randomizer_data(species: Dict[str, dict]) -> None:
+    """Extract randomization data and export to randomize.json"""
+
+    # Parse randomizer modes
     modes = parse_randomizer_modes()
-    
     if not modes:
         print("Warning: Could not parse randomizer modes from header file.")
         print("Make sure the expansion path is correctly configured and the randomizer.h file exists.")
         return
-    
-    # Parse species data to get the randomizerMode and isLegendary fields
-    expansion_data = config.expansion / "src" / "data"
-    
-    # We need to parse the basic dependencies for species parsing
-    from porydex.parse.abilities import parse_abilities
-    from porydex.parse.items import parse_items, get_item_names_list
-    from porydex.parse.moves import parse_moves
-    from porydex.parse.form_tables import parse_form_tables
-    from porydex.parse.form_change_tables import parse_form_change_tables
-    from porydex.parse.maps import parse_maps
-    from porydex.parse.learnsets import parse_level_up_learnsets, parse_teachable_learnsets
-    from porydex.parse.national_dex import parse_national_dex_enum
-    from porydex.parse.species import parse_species
-    
-    abilities = parse_abilities(expansion_data / "abilities.h")
-    items_data = parse_items(expansion_data / "items.h")
-    items = get_item_names_list(items_data)
-    
-    moves = parse_moves(expansion_data / "moves_info.h")
-    max_move_id = max(move.get("moveId", move["num"]) for move in moves.values())
-    move_names = [""] * (max_move_id + 1)
-    for move in moves.values():
-        move_id = move.get("moveId", move["num"])
-        move_names[move_id] = move["name"]
-    
-    forms = parse_form_tables(expansion_data / "pokemon" / "form_species_tables.h")
-    form_changes = parse_form_change_tables(
-        expansion_data / "pokemon" / "form_change_tables.h"
-    )
-    map_sections = parse_maps(expansion_data / "region_map" / "region_map_entries.h")
-    
-    # Load move constants for learnset parsing
-    from porydex.parse.moves import parse_constants_from_header
-    move_constants = parse_constants_from_header(
-        pathlib.Path("../include/constants/moves.h")
-    )
-    
-    lvlup_learnsets = parse_level_up_learnsets(
-        expansion_data / "pokemon" / "level_up_learnsets.h",
-        move_names,
-        move_constants,
-        {},  # raw_move_id_to_move_names_index - simplified for randomizer
-    )
-    teach_learnsets = parse_teachable_learnsets(
-        expansion_data / "pokemon" / "teachable_learnsets.h", move_names
-    )
-    national_dex = parse_national_dex_enum(
-        config.expansion / "include" / "constants" / "pokedex.h"
-    )
-    
-    # Parse species data
-    species, _ = parse_species(
-        expansion_data / "pokemon" / "species_info.h",
-        abilities,
-        items,
-        move_names,
-        forms,
-        form_changes,
-        map_sections,
-        lvlup_learnsets,
-        teach_learnsets,
-        national_dex,
-        [],  # included_mons - empty for randomizer
-    )
-    
+
+    # Debugging: Log missing Pokémon by ID
+    missing_ids = [758, 1112, 1165, 1409, 1411, 1435]
+    for species_id in missing_ids:
+        if species_id not in [mon["num"] for mon in species.values()]:
+            print(f"Missing Pokémon ID: {species_id}")
+        else:
+            print(f"Found Pokémon ID: {species_id}")
+
     # Create the randomization data structure
     randomize_data = {
         "modes": modes,
         "species": get_species_randomization_data(species)
     }
-    
+
     # Write to randomize.json
     output_file = config.output / "randomize.json"
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(randomize_data, f, indent=2, ensure_ascii=False)
-    
+
     print(f"Randomization data exported to {output_file}")
     print(f"Found {len(modes)} randomization modes:")
     for mode_name in modes.keys():
