@@ -1,2 +1,0 @@
-from porydex.parse.form_change_tables import parse_form_change_tables
-from porydex.parse.form_change_constants import export_form_change_constants 

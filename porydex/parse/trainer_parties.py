@@ -230,12 +230,7 @@ def convert_to_consistent_format(
 
                 if "preStatus" in mon and mon["preStatus"] is not None:
                     consistent_mon["preStatus"] = mon["preStatus"]
-                    print(f"Added preStatus to consistent_mon: {mon['preStatus']} for party {party_name}")
-                elif "preStatus" in mon:
-                    print(f"preStatus found but is None: {mon['preStatus']} for party {party_name}")
-                else:
-                    print(f"No preStatus found in mon for party {party_name}, available keys: {list(mon.keys())}")
-        
+
                 party_list.append(consistent_mon)
 
         consistent_parties[party_name] = party_list
@@ -291,14 +286,6 @@ def parse_trainer_parties(fname: pathlib.Path) -> Dict[str, Dict[str, Any]]:
                                 ):
                                     field_name = field_init.name[0].name
                                     # Debug: print field names to see what's being parsed
-                                    if field_name in [
-                                        "preStatus",
-                                        "prestatus",
-                                        "status",
-                                    ]:
-                                        print(
-                                            f"Found status field: {field_name} in {decl.name}"
-                                        )
 
                                     if field_name == "lvl":
                                         mon_data["lvl"] = extract_int(field_init.expr)
@@ -479,11 +466,6 @@ def parse_trainer_parties(fname: pathlib.Path) -> Dict[str, Dict[str, Any]]:
                                             print(
                                                 f"  -> Extracted int: {mon_data['preStatus']}"
                                             )
-                                    elif field_name == "prestatus":
-                                        # Alternative field name (lowercase)
-                                        print(
-                                            f"Processing prestatus field in {decl.name}"
-                                        )
                                         if hasattr(field_init.expr, "name"):
                                             mon_data["preStatus"] = field_init.expr.name
                                             print(
@@ -498,9 +480,7 @@ def parse_trainer_parties(fname: pathlib.Path) -> Dict[str, Dict[str, Any]]:
                                             )
                                     elif field_name == "status":
                                         # Another possible field name
-                                        print(
-                                            f"Processing status field in {decl.name}"
-                                        )
+                                        print(f"Processing status field in {decl.name}")
                                         if hasattr(field_init.expr, "name"):
                                             mon_data["preStatus"] = field_init.expr.name
                                             print(

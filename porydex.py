@@ -1,30 +1,30 @@
 import argparse
 import json
-import pathlib
 import os
+import pathlib
 import sys
 
 import porydex.config
-from porydex.toEidex import eiDex
 from porydex.common import PICKLE_PATH, name_key
 from porydex.parse.abilities import parse_abilities
 from porydex.parse.encounters import parse_encounters
-from porydex.parse.form_tables import parse_form_tables
-from porydex.parse.form_change_tables import parse_form_change_tables
 from porydex.parse.form_change_constants import export_form_change_constants
+from porydex.parse.form_change_tables import parse_form_change_tables
+from porydex.parse.form_tables import parse_form_tables
 from porydex.parse.items import (
-    parse_items,
-    get_item_names_list,
     get_item_constants_dict,
+    get_item_names_list,
+    parse_items,
 )
 from porydex.parse.learnsets import parse_level_up_learnsets, parse_teachable_learnsets
-from porydex.parse.maps import parse_maps
-from porydex.parse.moves import parse_moves
+from porydex.parse.maps import parse_map_constants, parse_maps
+from porydex.parse.moves import parse_constants_from_header, parse_moves
 from porydex.parse.national_dex import parse_national_dex_enum
 from porydex.parse.species import parse_species
-from porydex.parse.trainer_parties import parse_trainer_parties
+from porydex.parse.trainer_parties import convert_to_consistent_format, parse_trainer_parties
 from porydex.parse.trainers import parse_trainers
 from porydex.randomizer import extract_randomizer_data
+from porydex.toEidex import eiDex
 
 MAX_SPECIES_EXPANSION = 1560 + 1
 
@@ -132,8 +132,6 @@ def extract(args: argparse.Namespace):
         )
         map_sections = parse_maps(expansion_data / "region_map" / "region_map_entries.h")
         
-        # Parse map constants for mapNum and mapGroup information
-        from porydex.parse.maps import parse_map_constants
         map_constants = parse_map_constants(
             porydex.config.expansion / "include" / "constants" / "map_groups.h"
         )
@@ -146,9 +144,8 @@ def extract(args: argparse.Namespace):
         print(f"Map constants exported to {map_constants_output}")
         
         # Load move constants for learnset parsing
-        from porydex.parse.moves import parse_constants_from_header
         move_constants = parse_constants_from_header(
-            expansion_data / "include" / "constants" / "moves.h"
+            pathlib.Path("../include/constants/moves.h")
         )
         
         lvlup_learnsets = parse_level_up_learnsets(
@@ -242,7 +239,6 @@ def extract(args: argparse.Namespace):
     map_sections = parse_maps(expansion_data / "region_map" / "region_map_entries.h")
     
     # Parse map constants for mapNum and mapGroup information
-    from porydex.parse.maps import parse_map_constants
     map_constants = parse_map_constants(
         porydex.config.expansion / "include" / "constants" / "map_groups.h"
     )
@@ -255,8 +251,6 @@ def extract(args: argparse.Namespace):
     print(f"Map constants exported to {map_constants_output}")
 
     # Load move constants for learnset parsing
-    from porydex.parse.moves import parse_constants_from_header
-
     move_constants = parse_constants_from_header(
         pathlib.Path("../include/constants/moves.h")
     )
@@ -301,8 +295,6 @@ def extract(args: argparse.Namespace):
     trainer_parties = parse_trainer_parties(expansion_data / "trainer_parties.h")
 
     # Convert trainer parties to consistent format with numeric IDs
-    from porydex.parse.trainer_parties import convert_to_consistent_format
-
     # Create constant mappings for conversion
     species_constants = {}
     for species_data in species.values():
