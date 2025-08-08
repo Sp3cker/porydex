@@ -100,7 +100,7 @@ def extract(args: argparse.Namespace):
 
     # Handle randomizer subcommand
     if args.command == 'randomizer':
-        extract_randomizer_data(species)
+        extract_randomizer_data()
         return
 
     # Handle encounters subcommand

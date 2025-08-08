@@ -61,7 +61,6 @@ def eiDexSpecies(
         )
 
         print(f"Successfully parsed {len(species_data)} species")
-        extract_randomizer_data(species_data)
         # Write species data to output file
         output_path = porydex.config.output / "species.json"
         print(f"Writing {len(species_data)} species to {output_path}")

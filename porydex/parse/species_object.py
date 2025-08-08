@@ -54,6 +54,9 @@ class SpeciesObject(TypedDict):
     baseForm: int
     heldItems: NotRequired[list[int]]  # [uncommon, rare]
     siblings: NotRequired[list[int]]
+    isLegendary: bool
+    isMythic: bool
+    isUltraBeast: bool
 
 
 def parse_species_to_object(fname: pathlib.Path,
@@ -435,7 +438,10 @@ def create_species_object(mon: PokemonData,
         "forms": forms_list,  # Now contains form change requirement arrays
         "formId": form_id,
         "nameKey": name_key_value,  # Use hyphenated form name for nameKey
-        "baseForm": base_form
+        "baseForm": base_form,
+        "isLegendary": bool(mon.get('isLegendary', False)),
+        "isMythic": bool(mon.get('isMythical', False)),
+        "isUltraBeast": bool(mon.get('isUltraBeast', False)),
     }
     
     # Only add heldItems property if one of the two values is not 0
