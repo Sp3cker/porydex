@@ -6,10 +6,11 @@ import sys
 
 import porydex.config
 from porydex.common import PICKLE_PATH, name_key
+from porydex.data_loader import load_all_data
 from porydex.parse.abilities import parse_abilities
 from porydex.parse.encounters import parse_encounters
+from porydex.parse.graphics import parse_trainer_graphics, parse_item_graphics, parse_object_event_graphics
 from porydex.randomizer import extract_randomizer_data
-from porydex.data_loader import load_all_data
 from porydex.toEidex import eiDex
 
 MAX_SPECIES_EXPANSION = 1560 + 1
@@ -75,8 +76,12 @@ def extract(args: argparse.Namespace):
     """Extract all data from the expansion."""
 
     if args.reload:
-        for f in PICKLE_PATH.glob("*"):
-            os.remove(f)
+        if PICKLE_PATH.exists():
+            for f in PICKLE_PATH.glob("*"):
+                os.remove(f)
+            print(f"Cleared cache directory: {PICKLE_PATH}")
+        else:
+            print(f"Cache directory does not exist: {PICKLE_PATH}")
 
     porydex.config.load()
 
@@ -113,6 +118,40 @@ def extract(args: argparse.Namespace):
         print(f"Encounter data exported to {output_file}")
         return
 
+    # Handle graphics subcommand
+    if args.command == 'graphics':
+        # Determine what to extract based on flags
+        extract_trainers = args.trainers or (not args.items and not args.object_events)
+        extract_items = args.items or (not args.trainers and not args.object_events)
+        extract_object_events = args.object_events or (not args.trainers and not args.items)
+
+        if extract_trainers:
+            print("Extracting trainer graphics...")
+            trainer_graphics = parse_trainer_graphics(porydex.config.expansion)
+            output_file = porydex.config.output / 'trainer_graphics.json'
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(trainer_graphics, f, indent=2, ensure_ascii=False)
+            print(f"Trainer graphics exported to {output_file} ({len(trainer_graphics)} trainers)")
+
+        if extract_items:
+            print("Extracting item graphics...")
+            item_graphics = parse_item_graphics(porydex.config.expansion)
+            output_file = porydex.config.output / 'item_graphics.json'
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(item_graphics, f, indent=2, ensure_ascii=False)
+            print(f"Item graphics exported to {output_file} ({len(item_graphics)} items)")
+
+        if extract_object_events:
+            print("Extracting object event graphics...")
+            object_event_graphics = parse_object_event_graphics(porydex.config.expansion)
+            output_file = porydex.config.output / 'object_event_graphics.json'
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(object_event_graphics, f, indent=2, ensure_ascii=False)
+            print(f"Object event graphics exported to {output_file} ({len(object_event_graphics)} object events)")
+
+        print("Note: Pokemon graphics are now included in species.json automatically")
+        return
+
     # Default (eiDex) extraction
     export_species = not args.no_species
     eiDex(
@@ -121,11 +160,12 @@ def extract(args: argparse.Namespace):
         export_species=export_species,
         abilities=all_data['abilities'],
         items=all_data['items'],
+        items_full=all_data['items_full'],
         move_names=all_data['move_names'],
         forms=all_data['forms'],
         form_changes=all_data['form_changes'],
-        level_up_learnsets=all_data['learnsets'],  # Note: this might need adjustment based on eiDx function signature
-        teachable_learnsets=all_data['learnsets'],  # Note: this might need adjustment
+        level_up_learnsets=all_data['level_up_learnsets'],
+        teachable_learnsets=all_data['teachable_learnsets'],
         national_dex=all_data['national_dex'],
     )
 
@@ -224,6 +264,31 @@ def main():
         help="if specified, flush the cache of parsed data and reload from expansion",
     )
     randomizer_p.set_defaults(func=extract)
+
+    # Add graphics subcommand
+    graphics_p = extract_subp.add_parser("graphics", help="extract graphics data (trainers, items, object events). Pokemon graphics are included in species.json")
+    graphics_p.add_argument(
+        "--trainers",
+        action="store_true",
+        help="extract only trainer graphics",
+    )
+    graphics_p.add_argument(
+        "--items",
+        action="store_true",
+        help="extract only item graphics",
+    )
+    graphics_p.add_argument(
+        "--object-events",
+        action="store_true",
+        dest="object_events",
+        help="extract only object event (overworld sprite) graphics",
+    )
+    graphics_p.add_argument(
+        "--reload",
+        action="store_true",
+        help="if specified, flush the cache of parsed data and reload from expansion",
+    )
+    graphics_p.set_defaults(func=extract)
 
     # Add default extract subcommand (for when no subcommand is specified)
     extract_p.add_argument(

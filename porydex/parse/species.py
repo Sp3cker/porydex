@@ -1,22 +1,57 @@
-from collections import defaultdict
-from dataclasses import dataclass
-from typing import TypedDict, NotRequired, Union
-
 import pathlib
 import re
+from collections import defaultdict
+from dataclasses import dataclass
+from typing import NotRequired, TypedDict, Union
 
 from pycparser.c_ast import Constant, ExprList, NamedInitializer
 from yaspin import yaspin
 
 from porydex.common import name_key
 from porydex.model import (
-    ExpansionEvoMethod,
+    BODY_COLOR,
     DAMAGE_TYPE,
     EGG_GROUP,
-    BODY_COLOR,
     EVO_METHOD,
+    ExpansionEvoMethod,
 )
-from porydex.parse import load_truncated, extract_id, extract_int, extract_u8_str
+from porydex.parse import extract_id, extract_int, extract_u8_str, load_truncated
+
+# Global cache for graphics variable to path mappings
+_GRAPHICS_VAR_TO_PATH = None
+
+
+def _load_graphics_mappings(expansion_path: pathlib.Path) -> dict[str, str]:
+    """Load mappings from graphics variable names to file paths."""
+    global _GRAPHICS_VAR_TO_PATH
+
+    if _GRAPHICS_VAR_TO_PATH is not None:
+        return _GRAPHICS_VAR_TO_PATH
+
+    pokemon_h = expansion_path / "src/data/graphics/pokemon.h"
+    var_to_path = {}
+
+    with open(pokemon_h, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+        # Match graphics variable declarations
+        patterns = [
+            r'const\s+u32\s+(gMonFrontPic_\w+)\[\]\s*=\s*INCBIN_U32\("([^"]+)"\)',
+            r'const\s+u32\s+(gMonBackPic_\w+)\[\]\s*=\s*INCBIN_U32\("([^"]+)"\)',
+            r'const\s+u16\s+(gMonPalette_\w+)\[\]\s*=\s*INCBIN_U16\("([^"]+)"\)',
+            r'const\s+u16\s+(gMonShinyPalette_\w+)\[\]\s*=\s*INCBIN_U16\("([^"]+)"\)',
+            r'const\s+u8\s+(gMonIcon_\w+)\[\]\s*=\s*INCBIN_U8\("([^"]+)"\)',
+        ]
+
+        for pattern in patterns:
+            for match in re.finditer(pattern, content):
+                var_name = match.group(1)
+                path = match.group(2)
+                var_to_path[var_name] = path
+
+    _GRAPHICS_VAR_TO_PATH = var_to_path
+    return var_to_path
+
 
 EXPANSION_GEN9_START = 1289
 VANILLA_GEN9_START = 906
@@ -61,7 +96,7 @@ class PokemonData(TypedDict):
     # Core identification
     num: int
     name: str
-
+    unknownName: str
     # Base stats and characteristics
     baseStats: BaseStats
     types: list[str]
@@ -169,6 +204,7 @@ def parse_mon(
     level_up_learnsets: dict[str, dict[str, list[int]]],
     teachable_learnsets: dict[str, dict[str, list[str]]],
     national_dex: dict[str, int],
+    graphics_mappings: dict[str, str] = None,
 ) -> tuple[PokemonData, list, dict, dict]:
     init_list = struct_init.expr.exprs
     mon: PokemonData = {}
@@ -280,6 +316,9 @@ def parse_mon(
                 if name == "??????????":
                     name = "MissingNo."
                 mon["name"] = name
+            case "unknownName":
+                unknown_name = extract_u8_str(field_expr)
+                mon["unknownName"] = unknown_name
 
             case "natDexNum":
                 mon["nationalDex"] = national_dex[extract_id(field_expr)]
@@ -289,6 +328,26 @@ def parse_mon(
             case "weight":
                 # Stored in expansion as KG * 10
                 mon["weightkg"] = extract_int(field_expr) / 10
+            case "frontPic" if graphics_mappings:
+                var_name = extract_id(field_expr)
+                if var_name in graphics_mappings:
+                    mon["frontPic"] = graphics_mappings[var_name]
+            case "backPic" if graphics_mappings:
+                var_name = extract_id(field_expr)
+                if var_name in graphics_mappings:
+                    mon["backPic"] = graphics_mappings[var_name]
+            case "palette" if graphics_mappings:
+                var_name = extract_id(field_expr)
+                if var_name in graphics_mappings:
+                    mon["palette"] = graphics_mappings[var_name]
+            case "shinyPalette" if graphics_mappings:
+                var_name = extract_id(field_expr)
+                if var_name in graphics_mappings:
+                    mon["shinyPalette"] = graphics_mappings[var_name]
+            case "iconSprite" if graphics_mappings:
+                var_name = extract_id(field_expr)
+                if var_name in graphics_mappings:
+                    mon["icon"] = graphics_mappings[var_name]
             case "itemRare":
                 mon["items"]["R"] = item_names[extract_int(field_expr)]
             case "itemUncommon":
@@ -313,7 +372,7 @@ def parse_mon(
                         mon["baseSpecies"] = mon["name"]
                         mon["forme"] = form_name
                         mon["name"] = f'{mon["name"]}-{form_name}'
-                        
+
                         # Log form processing for Indeedee
                         if "indeedee" in mon["name"].lower():
                             print(f"Form processing for Indeedee: {mon['name']} (ID: {mon['num']}, form: {form_name})")
@@ -607,6 +666,7 @@ def parse_species_data(
     teachable_learnsets: dict[str, dict[str, list[str]]],
     national_dex: dict[str, int],
     included_mons: list[str],
+    graphics_mappings: dict[str, str] = None,
 ) -> tuple[dict[str, PokemonData], dict]:
     # first pass: raw AST parse, build evolutions table
     all_species_data: dict[int, tuple[PokemonData, list]] = {}
@@ -623,6 +683,7 @@ def parse_species_data(
                 level_up_learnsets,
                 teachable_learnsets,
                 national_dex,
+                graphics_mappings,
             )
             all_species_data[mon["num"]] = (mon, evos)
 
@@ -731,6 +792,10 @@ def parse_species(
         )
         spinner.ok("✅")
 
+    # Load graphics mappings from the expansion directory
+    import porydex.config
+    graphics_mappings = _load_graphics_mappings(porydex.config.expansion)
+
     return parse_species_data(
         species_data,
         abilities,
@@ -743,4 +808,5 @@ def parse_species(
         teachable_learnsets,
         national_dex,
         included_mons,
+        graphics_mappings,
     )

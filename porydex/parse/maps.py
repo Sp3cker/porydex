@@ -1,10 +1,10 @@
 import pathlib
 import re
 
-from pycparser.c_ast import Decl, ExprList, BinaryOp, Constant, ID
+from pycparser.c_ast import ID, BinaryOp, Constant, Decl, ExprList
 from yaspin import yaspin
 
-from porydex.parse import load_data, extract_id, extract_int, extract_u8_str
+from porydex.parse import extract_id, extract_int, extract_u8_str, load_data
 
 # Define constants to match the C code
 WILD_AREA_LAND = 0
@@ -47,10 +47,15 @@ def all_maps(existing: ExprList) -> list[str]:
             break
 
     # Now map constants to names and store them in a name map
-    map_names = {
-        extract_int(entry.name[0]): map_name_defs[extract_id(entry.expr.exprs[-1])]
-        for entry in existing[-1].init.exprs
-    }
+    map_names = {}
+    for entry in existing[-1].init.exprs:
+        try:
+            key = extract_int(entry.name[0])
+            id_value = extract_id(entry.expr.exprs[-1])
+            map_names[key] = map_name_defs[id_value]
+        except (TypeError, KeyError, AttributeError, IndexError) as e:
+            # Skip entries that can't be processed
+            continue
 
     # Zip the map down to a list
     return [map_name for _, map_name in sorted(map_names.items(), key=lambda e: e[0])]
@@ -142,10 +147,10 @@ def parse_map_constants(fname: pathlib.Path) -> dict:
                             "group": map_group,
                             "seeds": seeds,
                         }
-                        
+
                         # Mark that we successfully added seeds
                         seeds_added = True
-                        
+
                 except Exception as e:
                     # Skip any declarations that can't be parsed
                     print(f"Warning: Could not parse map constant {decl.name}: {e}")
@@ -154,7 +159,7 @@ def parse_map_constants(fname: pathlib.Path) -> dict:
         # If pycparser didn't find any constants, fall back to regex method
         if not map_constants:
             raise Exception("No map constants found")
-            
+
         # Check if seeds were successfully added
         if not seeds_added:
             raise Exception("Failed to add seeds property to any map constants")
@@ -191,7 +196,7 @@ def parse_map_constants_regex(fname: pathlib.Path) -> dict:
         for map_name, map_num, map_group in matches:
             map_num_int = int(map_num)
             map_group_int = int(map_group)
-            
+
             # Calculate seeds for this map
             seeds = {
                 area_name: [
@@ -200,9 +205,9 @@ def parse_map_constants_regex(fname: pathlib.Path) -> dict:
                 ]
                 for area_name, (area_id, slots) in AREA_INFO.items()
             }
-            
+
             map_constants[map_name] = {
-                "num": map_num_int, 
+                "num": map_num_int,
                 "group": map_group_int,
                 "seeds": seeds
             }

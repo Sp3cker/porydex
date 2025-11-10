@@ -64,10 +64,11 @@ BINARY_BOOL_OPS = {
     '&': operator.and_,
     '|': operator.or_,
     '^': operator.xor,
+    '&&': lambda a, b: a and b,  # Logical AND
+    '||': lambda a, b: a or b,   # Logical OR
 }
 
 SPLIT_CHARS = re.compile(r"[\W_-]+")
 
 def name_key(name: str) -> str:
     return ''.join(SPLIT_CHARS.split(name.replace('é', 'e'))).lower()
-

@@ -1,7 +1,7 @@
 import configparser
 import enum
-import pathlib
 import os
+import pathlib
 
 
 class OutputFormat(enum.Enum):
@@ -22,7 +22,7 @@ class OutputFormat(enum.Enum):
             return s
 
 
-compiler: pathlib.Path = pathlib.Path("gcc")
+compiler: pathlib.Path = pathlib.Path("gcc")  # On macOS, this is clang (which works fine for preprocessing)
 expansion: pathlib.Path = pathlib.Path("../pokeemerald-expansion").resolve()
 output: pathlib.Path = pathlib.Path("./site/data").resolve()
 format: OutputFormat = OutputFormat.ei

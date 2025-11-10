@@ -1,31 +1,35 @@
 import pathlib
 import pickle
 import re
+import subprocess
+import tempfile
 import typing
-
-import porydex.config
 
 from pycparser import parse_file
 from pycparser.c_ast import (
+    ID,
     BinaryOp,
     Cast,
     CompoundLiteral,
     Decl,
     ExprList,
     FuncCall,
-    ID,
     TernaryOp,
     UnaryOp,
 )
 
+import porydex.config
 from porydex.common import (
-    PICKLE_PATH,
     BINARY_BOOL_OPS,
     CONFIG_INCLUDES,
     EXPANSION_INCLUDES,
     GLOBAL_PREPROC,
+    PICKLE_PATH,
     PREPROCESS_LIBC,
 )
+
+# Global ability constants cache
+_ABILITY_CONSTANTS = None
 
 # Mapping of evolution method identifier names to their numeric values
 # This matches the constants defined in include/constants/pokemon.h
@@ -214,13 +218,12 @@ def process_binary(expr: BinaryOp) -> int | bool:
     return op(left, right)
 
 def process_ternary(expr: TernaryOp) -> typing.Any:
-    if isinstance(expr.cond.left, ID):
-        raise ValueError('cannot process left-side ID value in ternary')
-    if isinstance(expr.cond.right, ID):
-        raise ValueError('cannot process right-side ID value in ternary')
+    # Evaluate the condition - it can be a binary operation or nested expression
+    left_val = eval_binary_operand(expr.cond.left)
+    right_val = eval_binary_operand(expr.cond.right)
 
     op = BINARY_BOOL_OPS[expr.cond.op]
-    if op(expr.cond.left.value, expr.cond.right.value):
+    if op(left_val, right_val):
         return expr.iftrue
     else:
         return expr.iffalse
@@ -249,12 +252,29 @@ def extract_u8_str(expr) -> str:
     if isinstance(expr, FuncCall):
         return expr.args.exprs[-1].value.replace('\\n', ' ')[1:-1]
 
+    # arm-none-eabi-gcc can also expand to CompoundLiteral(InitList([Constant]))
+    if isinstance(expr, CompoundLiteral):
+        return expr.init.exprs[-1].value.replace('\\n', ' ')[1:-1]
+
+    # Handle ID objects (constant references)
+    if isinstance(expr, ID):
+        return expr.name
+
     # clang expands the macro to InitList([Constant])
-    return expr.exprs[0].value.replace('\\n', ' ')[1:-1]
+    if hasattr(expr, 'exprs'):
+        return expr.exprs[0].value.replace('\\n', ' ')[1:-1]
+
+    # Fallback for unexpected types
+    raise TypeError(f"Unexpected type in extract_u8_str: {type(expr).__name__}")
+
+def set_ability_constants(constants: dict):
+    """Set the global ability constants for use by extract_int."""
+    global _ABILITY_CONSTANTS
+    _ABILITY_CONSTANTS = constants
 
 def extract_int(expr) -> int:
     if isinstance(expr, TernaryOp):
-        return int(process_ternary(expr).value)
+        return extract_int(process_ternary(expr))  # Recursively handle the result
 
     if isinstance(expr, UnaryOp):
         # we only care about the negative symbol
@@ -270,6 +290,8 @@ def extract_int(expr) -> int:
         # Handle identifier objects by looking up known constants
         if expr.name in EVO_METHOD_MAPPING:
             return EVO_METHOD_MAPPING[expr.name]
+        elif _ABILITY_CONSTANTS and expr.name in _ABILITY_CONSTANTS:
+            return _ABILITY_CONSTANTS[expr.name]
         else:
             # Return 0 as a fallback for unknown identifiers
             # This allows processing to continue for unknown constants
@@ -296,4 +318,3 @@ def extract_prefixed(prefix: str | re.Pattern, val: str, mod_if_match: typing.Ca
         return mod_if_match(match.group(1))
 
     return val
-

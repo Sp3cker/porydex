@@ -71,7 +71,7 @@ def eiDexSpecies(
         with open(output_path, "w+", encoding="utf-8") as outf:
             json.dump(species_data, outf, indent=4, ensure_ascii=False)
 
-        print(f"Successfully wrote species.json with {len(species_data)} entries")
+        print(f"Successfully wrote species.json with {len(species_data)} entries for EIDex")
 
         return species_data
 
@@ -89,6 +89,7 @@ def eiDex(
     export_species: bool = True,
     abilities=None,
     items=None,
+    items_full=None,
     move_names=None,
     forms=None,
     form_changes=None,
@@ -105,6 +106,7 @@ def eiDex(
         export_species: Whether to also export species data (default: True)
         abilities: Pre-parsed list of ability names (required if export_species=True)
         items: Pre-parsed list of item names (required if export_species=True)
+        items_full: Pre-parsed dictionary of full item data with prices and descriptions
         move_names: Pre-parsed list of move names (required if export_species=True)
         forms: Pre-parsed form data (required if export_species=True)
         level_up_learnsets: Pre-parsed learnset data (required if export_species=True)
@@ -224,15 +226,39 @@ def eiDex(
             json.dump(transformed, outf, indent=4, ensure_ascii=False)
         print(f"Successfully wrote moves.json with {len(transformed)} entries")
         # TRAINER PARTIES
-        trainers_path = porydex.config.output / "trainer_parties.json"
-        with open(trainers_path, "w+", encoding="utf-8") as outf:
-            json.dump(trainer_parties, outf, indent=4, ensure_ascii=False)
-        print(f"Writing {len(trainer_parties)} trainer parties to {trainers_path}")
+        # trainers_path = porydex.config.output / "trainer_parties.json"
+        # with open(trainers_path, "w+", encoding="utf-8") as outf:
+        #     json.dump(trainer_parties, outf, indent=4, ensure_ascii=False)
+        # print(f"Writing {len(trainer_parties)} trainer parties to {trainers_path}")
        # ITEMS
+        items_path = porydex.config.output / "items.json"
 
-        # with open(porydex.config.output / "items.json", "w+", encoding="utf-8") as outf:
-        #     json.dump(items, outf, indent=4, ensure_ascii=False)
-        # print(f"Writing {len(items)} items to {items_path}")
+        # Export full items data if available, otherwise export just names
+        if items_full is not None:
+            # Convert dict to list format for JSON export
+            items_to_export = []
+            for item_id in sorted(items_full.keys()):
+                item_data = items_full[item_id]
+                items_to_export.append({
+                    'id': item_data['itemId'],
+                    'constantName': item_data['id'],
+                    'name': item_data['name'],
+                    'price': item_data['price'],
+                    'description': item_data['description'],
+                    'iconPic': item_data['iconPic'],
+                    'iconPalette': item_data['iconPalette']
+                })
+            
+            with open(porydex.config.output / "items.json", "w+", encoding="utf-8") as outf:
+                json.dump(items_to_export, outf, indent=4, ensure_ascii=False)
+            print(f"Writing {len(items_to_export)} items with full data to {items_path}")
+        elif items is not None:
+            # Fallback to just exporting names list
+            with open(porydex.config.output / "items.json", "w+", encoding="utf-8") as outf:
+                json.dump(items, outf, indent=4, ensure_ascii=False)
+            print(f"Writing {len(items)} items (names only) to {items_path}")
+        else:
+            print("WARNING: No items data available to export")
 
         # Write move constants file
         constants_path = porydex.config.output / "move_constants.json"

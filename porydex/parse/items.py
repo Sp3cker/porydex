@@ -6,6 +6,39 @@ from yaspin import yaspin
 
 from porydex.parse import load_truncated, extract_int, extract_u8_str, extract_compound_str
 
+def parse_item_graphics_constants(graphics_file: pathlib.Path) -> dict:
+    """
+    Parse the graphics/items.h file to extract symbol-to-filepath mappings.
+
+    Args:
+        graphics_file: Path to src/data/graphics/items.h
+
+    Returns:
+        Dictionary mapping symbol names to file paths
+        Example: {'gItemIcon_PokeBall': 'graphics/items/icons/poke_ball.4bpp.smol'}
+    """
+    graphics_map = {}
+
+    try:
+        with open(graphics_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        # Pattern to match: const u32 gItemIcon_PokeBall[] = INCBIN_U32("graphics/items/icons/poke_ball.4bpp.smol");
+        # or: const u16 gItemIconPalette_PokeBall[] = INCBIN_U16("graphics/items/icons/poke_ball.gbapal");
+        pattern = r'const\s+(?:u32|u16)\s+(\w+)\[\]\s+=\s+INCBIN_(?:U32|U16)\("([^"]+)"\);'
+
+        matches = re.findall(pattern, content, re.MULTILINE)
+
+        for symbol_name, file_path in matches:
+            graphics_map[symbol_name] = file_path
+
+        print(f"Parsed {len(graphics_map)} graphics symbol mappings from {graphics_file.name}")
+
+    except Exception as e:
+        print(f"Warning: Could not parse item graphics constants: {e}")
+
+    return graphics_map
+
 def parse_item_description_constants(fname: pathlib.Path) -> dict:
     """
     Parse description constants from the items.h file.
@@ -116,7 +149,7 @@ def get_item_description(struct_init: NamedInitializer, description_constants: d
     for field_init in struct_init.expr.exprs:
         if field_init.name[0].name == 'description':
             field_expr = field_init.expr
-            
+
             # Handle different types of description fields
             if hasattr(field_expr, "exprs"):
                 # Compound string (multiple string literals concatenated)
@@ -144,6 +177,26 @@ def get_item_description(struct_init: NamedInitializer, description_constants: d
                     return str(field_expr)
 
     # Default description if not found
+    return ""
+
+def get_item_icon_pic(struct_init: NamedInitializer) -> str:
+    """Extract iconPic symbol name from item struct."""
+    for field_init in struct_init.expr.exprs:
+        if field_init.name[0].name == 'iconPic':
+            field_expr = field_init.expr
+            if hasattr(field_expr, "name"):
+                # It's an identifier like gItemIcon_PokeBall
+                return field_expr.name
+    return ""
+
+def get_item_icon_palette(struct_init: NamedInitializer) -> str:
+    """Extract iconPalette symbol name from item struct."""
+    for field_init in struct_init.expr.exprs:
+        if field_init.name[0].name == 'iconPalette':
+            field_expr = field_init.expr
+            if hasattr(field_expr, "name"):
+                # It's an identifier like gItemIconPalette_PokeBall
+                return field_expr.name
     return ""
 def validate_item_name(item_name: str, item_id: int) -> list[str]:
     """Validate item name and return any warnings."""
@@ -284,7 +337,7 @@ def analyze_item_conflict(item_id: int, old_name: str, new_name: str) -> str:
     else:
         return f"Unknown item name conflict pattern"
 
-def all_item_names(items_data, description_constants: dict = None) -> dict:
+def all_item_names(items_data, description_constants: dict = None, graphics_map: dict = None) -> dict:
     d_items = {}
     duplicate_warnings = []
     conflict_analysis = {}
@@ -295,20 +348,30 @@ def all_item_names(items_data, description_constants: dict = None) -> dict:
     for i, item in enumerate(items_data):
         if isinstance(item.name[0], ID):
             continue
-        
+
         item_id = extract_int(item.name[0])
         item_name = get_item_name(item)
         item_price = get_item_price(item)
         item_description = get_item_description(item, description_constants)
-        
+        item_icon_pic_symbol = get_item_icon_pic(item)
+        item_icon_palette_symbol = get_item_icon_palette(item)
+
+        # Resolve symbols to file paths using graphics_map
+        if graphics_map:
+            item_icon_pic = graphics_map.get(item_icon_pic_symbol, item_icon_pic_symbol)
+            item_icon_palette = graphics_map.get(item_icon_palette_symbol, item_icon_palette_symbol)
+        else:
+            item_icon_pic = item_icon_pic_symbol
+            item_icon_palette = item_icon_palette_symbol
+
         # Debug: Print first few items to see what we're getting
         if i < 10:
-            print(f"  Item {i}: ID={item_id}, Name='{item_name}', Price={item_price}")
-        
+            print(f"  Item {i}: ID={item_id}, Name='{item_name}', Price={item_price}, IconPic='{item_icon_pic}', IconPalette='{item_icon_palette}'")
+
         # Validate item name
         item_warnings = validate_item_name(item_name, item_id)
         validation_warnings.extend(item_warnings)
-        
+
         # Check for duplicate item IDs (caused by macro overwrites)
         if item_id in d_items:
             old_name = d_items[item_id]['name']
@@ -322,7 +385,9 @@ def all_item_names(items_data, description_constants: dict = None) -> dict:
                 'id': '',  # Will be filled in by parse_items
                 'name': item_name,
                 'price': item_price,
-                'description': item_description
+                'description': item_description,
+                'iconPic': item_icon_pic,
+                'iconPalette': item_icon_palette
             }
         else:
             d_items[item_id] = {
@@ -330,7 +395,9 @@ def all_item_names(items_data, description_constants: dict = None) -> dict:
                 'id': '',  # Will be filled in by parse_items
                 'name': item_name,
                 'price': item_price,
-                'description': item_description
+                'description': item_description,
+                'iconPic': item_icon_pic,
+                'iconPalette': item_icon_palette
             }
     
     print(f"Processed {len(d_items)} unique items")
@@ -391,12 +458,16 @@ def parse_items(fname: pathlib.Path) -> dict:
     # Parse constants directly from the header file
     header_path = fname.parent.parent.parent / "include" / "constants" / "items.h"
     header_constants = parse_item_constants_from_header(header_path)
-    
+
     # Parse description constants from the items.h file
     description_constants = parse_item_description_constants(fname)
-    
+
+    # Parse graphics constants from the graphics/items.h file
+    graphics_path = fname.parent / "graphics" / "items.h"
+    graphics_map = parse_item_graphics_constants(graphics_path)
+
     # Parse the items data
-    items_dict = all_item_names(items_data, description_constants)
+    items_dict = all_item_names(items_data, description_constants, graphics_map)
     
     # Assign constants from the header file
     for item_id, item_data in items_dict.items():
