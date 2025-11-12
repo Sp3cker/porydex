@@ -10,6 +10,7 @@ from porydex.data_loader import load_all_data
 from porydex.parse.abilities import parse_abilities
 from porydex.parse.encounters import parse_encounters
 from porydex.parse.graphics import parse_trainer_graphics, parse_item_graphics, parse_object_event_graphics
+from porydex.parse.trainers_party import parse_trainers_party
 from porydex.randomizer import extract_randomizer_data
 from porydex.toEidex import eiDex
 
@@ -150,6 +151,16 @@ def extract(args: argparse.Namespace):
             print(f"Object event graphics exported to {output_file} ({len(object_event_graphics)} object events)")
 
         print("Note: Pokemon graphics are now included in species.json automatically")
+        return
+
+    # Handle trainers subcommand
+    if args.command == 'trainers':
+        print("Extracting trainer party data from trainers.party...")
+        trainers_data = parse_trainers_party(porydex.config.expansion)
+        output_file = porydex.config.output / 'trainers.json'
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(trainers_data, f, indent=2, ensure_ascii=False)
+        print(f"Trainer data exported to {output_file} ({len(trainers_data)} trainers)")
         return
 
     # Default (eiDex) extraction

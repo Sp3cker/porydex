@@ -6,10 +6,30 @@ Parses graphics header files to extract icon/sprite and palette mappings.
 
 import pathlib
 import re
-from typing import Dict, Any, Optional
+from typing import Dict, List, Optional, TypedDict
 
 
-def parse_trainer_graphics(expansion_path: pathlib.Path) -> Dict[str, Any]:
+class TrainerGraphicsInfo(TypedDict):
+    """Graphics information for a trainer."""
+    trainerClass: str
+    pic: str
+    frontPic: Optional[str]
+    palette: Optional[str]
+
+
+class ItemGraphicsInfo(TypedDict):
+    """Graphics information for an item."""
+    icon: Optional[str]
+    palette: Optional[str]
+
+
+class ObjectEventGraphicsInfo(TypedDict):
+    """Graphics information for an object event sprite."""
+    sprites: List[str]
+    palette: Optional[str]
+
+
+def parse_trainer_graphics(expansion_path: pathlib.Path) -> Dict[str, TrainerGraphicsInfo]:
     """
     Parse trainer graphics from trainers.h and trainers.party.
 
@@ -107,7 +127,7 @@ def parse_trainer_graphics(expansion_path: pathlib.Path) -> Dict[str, Any]:
     return trainer_graphics
 
 
-def parse_item_graphics(expansion_path: pathlib.Path) -> Dict[str, Any]:
+def parse_item_graphics(expansion_path: pathlib.Path) -> Dict[str, ItemGraphicsInfo]:
     """
     Parse item graphics from items.h and graphics/items.h.
 
@@ -177,7 +197,7 @@ def parse_item_graphics(expansion_path: pathlib.Path) -> Dict[str, Any]:
     return item_graphics
 
 
-def parse_object_event_graphics(expansion_path: pathlib.Path) -> Dict[str, Any]:
+def parse_object_event_graphics(expansion_path: pathlib.Path) -> Dict[str, ObjectEventGraphicsInfo]:
     """
     Parse object event (overworld sprite) graphics.
 
