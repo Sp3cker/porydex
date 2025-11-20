@@ -1,30 +1,16 @@
 import pathlib
-import re
 
 from pycparser.c_ast import ExprList, NamedInitializer
 from yaspin import yaspin
 
-from porydex.parse import extract_int, extract_u8_str, load_truncated
+from porydex.parse import extract_int, extract_u8_str
+from porydex.parse.generic_table import parse_enum_from_header
 
 
 def parse_ability_constants(constants_file: pathlib.Path) -> dict:
     """Parse ability constants from the abilities.h enum file."""
-    constants = {}
-
-    with open(constants_file, 'r', encoding='utf-8') as f:
-        content = f.read()
-
-    # Pattern to match enum entries like "ABILITY_NAME = value,"
-    pattern = r'(ABILITY_[A-Z_]+)\s*=\s*(\d+)'
-    matches = re.findall(pattern, content)
-
-    for constant_name, value_str in matches:
-        try:
-            constants[constant_name] = int(value_str)
-        except ValueError:
-            pass
-
-    return constants
+    # Use generic enum parser instead of custom regex
+    return parse_enum_from_header(constants_file, enum_name=None)
 
 def get_ability_name(struct_init: NamedInitializer) -> str:
     for field_init in struct_init.expr.exprs:

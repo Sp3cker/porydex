@@ -1,27 +1,23 @@
+"""Parser for National Dex enum constants.
+
+Now uses generic_table.py utilities instead of custom enum parsing.
+"""
+
 import pathlib
-import re
+
+from porydex.parse.generic_table import parse_enum_from_header
+
 
 def parse_national_dex_enum(fname: pathlib.Path) -> dict[str, int]:
-    ENUM_ENTRY_PATTERN = re.compile(r'(NATIONAL_DEX_\w+),')
-    enum_ctx = False
-    national_dex = {}
-    counter = 0
-    with open(fname, 'r', encoding='utf-8') as enum_file:
-        for line in enum_file:
-            line = line.strip()
-            if enum_ctx:
-                if line.startswith('};'):
-                    enum_ctx = False
-                    if national_dex:
-                        break
+    """
+    Parse National Dex enum from header file.
 
-                match = ENUM_ENTRY_PATTERN.match(line)
-                if match:
-                    national_dex[match.group(1)] = counter
-                    counter = counter + 1
+    Args:
+        fname: Path to header file containing enum NationalPokedexNum
 
-            elif line.startswith('enum'):
-                enum_ctx = True
-
-    return national_dex
+    Returns:
+        Dictionary mapping NATIONAL_DEX_* constants to integer values
+    """
+    # Use generic enum parser - no need for custom parsing logic
+    return parse_enum_from_header(fname, enum_name=None)  # Parses all enums in file
 

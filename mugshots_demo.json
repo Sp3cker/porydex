@@ -1,0 +1,1512 @@
+{
+  "mugshots": {
+    "MUGSHOT_HARIKO": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/hariko/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_NATSUKI": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/natsuki/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_hot.gbapal"
+      }
+    },
+    "MUGSHOT_BIG_SIS": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/big_sis/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_KABA": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/elder_kaba/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_CLERK": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/clerk/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_CROBAT": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/crobat/normal.4bpp.smol",
+        "pal": "graphics/trainers/front_pics/crobat_shadows/crobat.gbapal"
+      }
+    },
+    "MUGSHOT_ZUBAT": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/zubat/normal.4bpp.smol",
+        "pal": "graphics/trainers/front_pics/crobat_shadows/golbat_m.gbapal"
+      }
+    },
+    "MUGSHOT_INCENSE": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/incense/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_HANA": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/leader_hana/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_woody.gbapal"
+      }
+    },
+    "MUGSHOT_KOISHI": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/leader_koishi/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_YUTAKA": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/leader_yutaka/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_woody.gbapal"
+      }
+    },
+    "MUGSHOT_MASQUERAIN_GIRL": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/masquerain_girl/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_OKADA": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/okada/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      },
+      "EMOTE_SEXY": {
+        "gfx": "graphics/field_mugshots/okada/sexy.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_YOUNGSTER": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/youngster/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_SCHOOL_KID_F": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/school_kid_f/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_greenish.gbapal"
+      }
+    },
+    "MUGSHOT_SCHOOL_KID_M": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/school_kid_m/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_greenish.gbapal"
+      }
+    },
+    "MUGSHOT_BUG_CATCHER": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/bug_catcher/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_AROMA_LADY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/aroma_lady/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_greenish.gbapal"
+      }
+    },
+    "MUGSHOT_MONK": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/monk/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_woody.gbapal"
+      }
+    },
+    "MUGSHOT_LASS": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/lass/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_greenish.gbapal"
+      }
+    },
+    "MUGSHOT_NINJA_BOY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/ninja_boy/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_HEX_MANIAC": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/hex_maniac/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_ARTIST": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/artist/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_BATTLE_GIRL": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/battle_girl/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_BATTLE_GUY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/battle_guy/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_HOT_SPRING_F": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/hot_spring_f/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_greenish.gbapal"
+      }
+    },
+    "MUGSHOT_HOT_SPRING_M": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/hot_spring_m/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_greenish.gbapal"
+      }
+    },
+    "MUGSHOT_BREEDER_M": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/breeder_m/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_BREEDER_F": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/breeder_f/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_SAMURAI": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/samurai/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_SHAMISEN_GREEN": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/shamisen_green/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_greenish.gbapal"
+      }
+    },
+    "MUGSHOT_SHAMISEN_RED": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/shamisen_red/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_greenish.gbapal"
+      }
+    },
+    "MUGSHOT_SHAMISEN_BLUE": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/shamisen_blue/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_greenish.gbapal"
+      }
+    },
+    "MUGSHOT_COOK": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cook/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_IWA": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/elder_iwa/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_GEM_MANIAC": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/gem_maniac/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_MINER": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/miner/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_GARDENER": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/gardener/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_purplish.gbapal"
+      }
+    },
+    "MUGSHOT_FARMER": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/farmer/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_woody.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_WOMAN_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/woman_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_WOMAN_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/woman_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_MAN_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/man_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_MAN_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/man_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_OLD_MAN": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/old_man/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_OLD_WOMAN": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/old_woman/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_LITTLE_BOY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/little_boy/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_LITTLE_GIRL": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/little_girl/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_GIRL_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/girl_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_GIRL_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/girl_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_BOY_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/boy_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_BOY_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/boy_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_FAT_GUY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/fat_guy/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_NURSE": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/nurse/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SUNRISE_VALET": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sunrise/valet/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sunrise.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_WOMAN_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/woman_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_WOMAN_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/woman_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_MAN_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/man_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_MAN_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/man_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_OLD_MAN": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/old_man/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_OLD_WOMAN": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/old_woman/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_LITTLE_BOY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/little_boy/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_LITTLE_GIRL": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/little_girl/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_GIRL_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/girl_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_GIRL_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/girl_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_BOY_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/boy_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_BOY_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/boy_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_FAT_GUY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/fat_guy/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_NURSE": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/nurse/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SAKURA_VALET": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/sakura/valet/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_sakura.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_WOMAN_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/woman_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_WOMAN_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/woman_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_MAN_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/man_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_MAN_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/man_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_OLD_MAN": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/old_man/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_OLD_WOMAN": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/old_woman/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_LITTLE_BOY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/little_boy/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_LITTLE_GIRL": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/little_girl/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_GIRL_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/girl_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_GIRL_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/girl_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_BOY_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/boy_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_BOY_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/boy_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_FAT_GUY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/fat_guy/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_NURSE": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/nurse/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_SEASIDE_VALET": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/seaside/valet/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_seaside.gbapal"
+      }
+    },
+    "MUGSHOT_HOT_MAN_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/hot/man_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_hot.gbapal"
+      }
+    },
+    "MUGSHOT_HOT_OLD_WOMAN": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/hot/old_woman/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_hot.gbapal"
+      }
+    },
+    "MUGSHOT_HOT_GIRL_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/hot/girl_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_hot.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_WOMAN_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/woman_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_WOMAN_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/woman_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_MAN_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/man_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_MAN_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/man_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_OLD_MAN": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/old_man/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_OLD_WOMAN": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/old_woman/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_LITTLE_BOY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/little_boy/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_LITTLE_GIRL": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/little_girl/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_GIRL_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/girl_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_GIRL_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/girl_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_BOY_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/boy_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_BOY_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/boy_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_FAT_GUY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/fat_guy/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_NURSE": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/nurse/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_MOUNTAIN_VALET": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/mountain/valet/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_mountain.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_WOMAN_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/woman_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_WOMAN_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/woman_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_MAN_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/man_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_MAN_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/man_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_OLD_MAN": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/old_man/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_OLD_WOMAN": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/old_woman/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_LITTLE_BOY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/little_boy/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_LITTLE_GIRL": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/little_girl/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_GIRL_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/girl_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_GIRL_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/girl_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_BOY_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/boy_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_BOY_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/boy_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_FAT_GUY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/fat_guy/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_NURSE": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/nurse/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_UUME_VALET": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/uume/valet/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_uume.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_WOMAN_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/woman_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_WOMAN_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/woman_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_MAN_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/man_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_MAN_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/man_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_OLD_MAN": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/old_man/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_OLD_WOMAN": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/old_woman/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_LITTLE_BOY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/little_boy/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_LITTLE_GIRL": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/little_girl/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_GIRL_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/girl_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_GIRL_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/girl_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_BOY_1": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/boy_1/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_BOY_2": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/boy_2/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_FAT_GUY": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/fat_guy/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_NURSE": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/nurse/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    },
+    "MUGSHOT_COLD_VALET": {
+      "EMOTE_NORMAL": {
+        "gfx": "graphics/field_mugshots/cold/valet/normal.4bpp.smol",
+        "pal": "graphics/object_events/palettes/pal_cold.gbapal"
+      }
+    }
+  },
+  "graphics": {
+    "sFieldMugshotGfx_TestNormal": "graphics/field_mugshots/test/normal.4bpp.smol",
+    "sFieldMugshotGfx_TestAlt": "graphics/field_mugshots/test/alt.4bpp.smol",
+    "sFieldMugshotPal_TestNormal": "graphics/field_mugshots/test/normal.gbapal",
+    "sFieldMugshotPal_TestAlt": "graphics/field_mugshots/test/alt.gbapal",
+    "sFieldMugshotGfx_HarikoNormal": "graphics/field_mugshots/hariko/normal.4bpp.smol",
+    "sFieldMugshotGfx_NatsukiNormal": "graphics/field_mugshots/natsuki/normal.4bpp.smol",
+    "sFieldMugshotGfx_KabaNormal": "graphics/field_mugshots/elder_kaba/normal.4bpp.smol",
+    "sFieldMugshotGfx_KoishiNormal": "graphics/field_mugshots/leader_koishi/normal.4bpp.smol",
+    "sFieldMugshotGfx_HanaNormal": "graphics/field_mugshots/leader_hana/normal.4bpp.smol",
+    "sFieldMugshotGfx_YutakaNormal": "graphics/field_mugshots/leader_yutaka/normal.4bpp.smol",
+    "sFieldMugshotGfx_CrobatNormal": "graphics/field_mugshots/crobat/normal.4bpp.smol",
+    "sFieldMugshotGfx_ZubatNormal": "graphics/field_mugshots/zubat/normal.4bpp.smol",
+    "sFieldMugshotGfx_ClerkNormal": "graphics/field_mugshots/clerk/normal.4bpp.smol",
+    "sFieldMugshotGfx_IncenseNormal": "graphics/field_mugshots/incense/normal.4bpp.smol",
+    "sFieldMugshotGfx_OkadaNormal": "graphics/field_mugshots/okada/normal.4bpp.smol",
+    "sFieldMugshotGfx_OkadaSexy": "graphics/field_mugshots/okada/sexy.4bpp.smol",
+    "sFieldMugshotGfx_MasquerainGirlNormal": "graphics/field_mugshots/masquerain_girl/normal.4bpp.smol",
+    "sFieldMugshotGfx_YoungsterNormal": "graphics/field_mugshots/youngster/normal.4bpp.smol",
+    "sFieldMugshotGfx_SchoolKidFNormal": "graphics/field_mugshots/school_kid_f/normal.4bpp.smol",
+    "sFieldMugshotGfx_SchoolKidMNormal": "graphics/field_mugshots/school_kid_m/normal.4bpp.smol",
+    "sFieldMugshotGfx_BugCatcherMNormal": "graphics/field_mugshots/bug_catcher/normal.4bpp.smol",
+    "sFieldMugshotGfx_AromaLadyNormal": "graphics/field_mugshots/aroma_lady/normal.4bpp.smol",
+    "sFieldMugshotGfx_MonkNormal": "graphics/field_mugshots/monk/normal.4bpp.smol",
+    "sFieldMugshotGfx_LassNormal": "graphics/field_mugshots/lass/normal.4bpp.smol",
+    "sFieldMugshotGfx_NinjaBoyNormal": "graphics/field_mugshots/ninja_boy/normal.4bpp.smol",
+    "sFieldMugshotGfx_HexManiacNormal": "graphics/field_mugshots/hex_maniac/normal.4bpp.smol",
+    "sFieldMugshotGfx_ArtistNormal": "graphics/field_mugshots/artist/normal.4bpp.smol",
+    "sFieldMugshotGfx_BattleGirlNormal": "graphics/field_mugshots/battle_girl/normal.4bpp.smol",
+    "sFieldMugshotGfx_BattleGuyNormal": "graphics/field_mugshots/battle_guy/normal.4bpp.smol",
+    "sFieldMugshotGfx_HotSpringFNormal": "graphics/field_mugshots/hot_spring_f/normal.4bpp.smol",
+    "sFieldMugshotGfx_HotSpringMNormal": "graphics/field_mugshots/hot_spring_m/normal.4bpp.smol",
+    "sFieldMugshotGfx_BreederMNormal": "graphics/field_mugshots/breeder_m/normal.4bpp.smol",
+    "sFieldMugshotGfx_BreederFNormal": "graphics/field_mugshots/breeder_f/normal.4bpp.smol",
+    "sFieldMugshotGfx_SamuraiNormal": "graphics/field_mugshots/samurai/normal.4bpp.smol",
+    "sFieldMugshotGfx_ShamisenGreenNormal": "graphics/field_mugshots/shamisen_green/normal.4bpp.smol",
+    "sFieldMugshotGfx_ShamisenRedNormal": "graphics/field_mugshots/shamisen_red/normal.4bpp.smol",
+    "sFieldMugshotGfx_ShamisenBlueNormal": "graphics/field_mugshots/shamisen_blue/normal.4bpp.smol",
+    "sFieldMugshotGfx_CookNormal": "graphics/field_mugshots/cook/normal.4bpp.smol",
+    "sFieldMugshotGfx_IwaNormal": "graphics/field_mugshots/elder_iwa/normal.4bpp.smol",
+    "sFieldMugshotGfx_GemManiacNormal": "graphics/field_mugshots/gem_maniac/normal.4bpp.smol",
+    "sFieldMugshotGfx_MinerNormal": "graphics/field_mugshots/miner/normal.4bpp.smol",
+    "sFieldMugshotGfx_GardenerNormal": "graphics/field_mugshots/gardener/normal.4bpp.smol",
+    "sFieldMugshotGfx_FarmerNormal": "graphics/field_mugshots/farmer/normal.4bpp.smol",
+    "sFieldMugshotGfx_BigSisNormal": "graphics/field_mugshots/sunrise/big_sis/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseWoman1Normal": "graphics/field_mugshots/sunrise/woman_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseWoman2Normal": "graphics/field_mugshots/sunrise/woman_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseMan1Normal": "graphics/field_mugshots/sunrise/man_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseMan2Normal": "graphics/field_mugshots/sunrise/man_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseOldManNormal": "graphics/field_mugshots/sunrise/old_man/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseOldWomanNormal": "graphics/field_mugshots/sunrise/old_woman/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseLittleBoyNormal": "graphics/field_mugshots/sunrise/little_boy/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseLittleGirlNormal": "graphics/field_mugshots/sunrise/little_girl/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseGirl1Normal": "graphics/field_mugshots/sunrise/girl_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseGirl2Normal": "graphics/field_mugshots/sunrise/girl_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseBoy1Normal": "graphics/field_mugshots/sunrise/boy_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseBoy2Normal": "graphics/field_mugshots/sunrise/boy_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseFatGuyNormal": "graphics/field_mugshots/sunrise/fat_guy/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseNurseNormal": "graphics/field_mugshots/sunrise/nurse/normal.4bpp.smol",
+    "sFieldMugshotGfx_SunriseValetNormal": "graphics/field_mugshots/sunrise/valet/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraWoman1Normal": "graphics/field_mugshots/sakura/woman_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraWoman2Normal": "graphics/field_mugshots/sakura/woman_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraMan1Normal": "graphics/field_mugshots/sakura/man_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraMan2Normal": "graphics/field_mugshots/sakura/man_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraOldManNormal": "graphics/field_mugshots/sakura/old_man/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraOldWomanNormal": "graphics/field_mugshots/sakura/old_woman/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraLittleBoyNormal": "graphics/field_mugshots/sakura/little_boy/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraLittleGirlNormal": "graphics/field_mugshots/sakura/little_girl/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraGirl1Normal": "graphics/field_mugshots/sakura/girl_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraGirl2Normal": "graphics/field_mugshots/sakura/girl_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraBoy1Normal": "graphics/field_mugshots/sakura/boy_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraBoy2Normal": "graphics/field_mugshots/sakura/boy_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraFatGuyNormal": "graphics/field_mugshots/sakura/fat_guy/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraNurseNormal": "graphics/field_mugshots/sakura/nurse/normal.4bpp.smol",
+    "sFieldMugshotGfx_SakuraValetNormal": "graphics/field_mugshots/sakura/valet/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainWoman1Normal": "graphics/field_mugshots/mountain/woman_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainWoman2Normal": "graphics/field_mugshots/mountain/woman_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainMan1Normal": "graphics/field_mugshots/mountain/man_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainMan2Normal": "graphics/field_mugshots/mountain/man_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainOldManNormal": "graphics/field_mugshots/mountain/old_man/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainOldWomanNormal": "graphics/field_mugshots/mountain/old_woman/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainLittleBoyNormal": "graphics/field_mugshots/mountain/little_boy/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainLittleGirlNormal": "graphics/field_mugshots/mountain/little_girl/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainGirl1Normal": "graphics/field_mugshots/mountain/girl_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainGirl2Normal": "graphics/field_mugshots/mountain/girl_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainBoy1Normal": "graphics/field_mugshots/mountain/boy_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainBoy2Normal": "graphics/field_mugshots/mountain/boy_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainFatGuyNormal": "graphics/field_mugshots/mountain/fat_guy/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainNurseNormal": "graphics/field_mugshots/mountain/nurse/normal.4bpp.smol",
+    "sFieldMugshotGfx_MountainValetNormal": "graphics/field_mugshots/mountain/valet/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeWoman1Normal": "graphics/field_mugshots/uume/woman_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeWoman2Normal": "graphics/field_mugshots/uume/woman_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeMan1Normal": "graphics/field_mugshots/uume/man_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeMan2Normal": "graphics/field_mugshots/uume/man_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeOldManNormal": "graphics/field_mugshots/uume/old_man/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeOldWomanNormal": "graphics/field_mugshots/uume/old_woman/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeLittleBoyNormal": "graphics/field_mugshots/uume/little_boy/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeLittleGirlNormal": "graphics/field_mugshots/uume/little_girl/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeGirl1Normal": "graphics/field_mugshots/uume/girl_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeGirl2Normal": "graphics/field_mugshots/uume/girl_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeBoy1Normal": "graphics/field_mugshots/uume/boy_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeBoy2Normal": "graphics/field_mugshots/uume/boy_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeFatGuyNormal": "graphics/field_mugshots/uume/fat_guy/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeNurseNormal": "graphics/field_mugshots/uume/nurse/normal.4bpp.smol",
+    "sFieldMugshotGfx_UumeValetNormal": "graphics/field_mugshots/uume/valet/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdWoman1Normal": "graphics/field_mugshots/cold/woman_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdWoman2Normal": "graphics/field_mugshots/cold/woman_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdMan1Normal": "graphics/field_mugshots/cold/man_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdMan2Normal": "graphics/field_mugshots/cold/man_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdOldManNormal": "graphics/field_mugshots/cold/old_man/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdOldWomanNormal": "graphics/field_mugshots/cold/old_woman/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdLittleBoyNormal": "graphics/field_mugshots/cold/little_boy/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdLittleGirlNormal": "graphics/field_mugshots/cold/little_girl/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdGirl1Normal": "graphics/field_mugshots/cold/girl_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdGirl2Normal": "graphics/field_mugshots/cold/girl_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdBoy1Normal": "graphics/field_mugshots/cold/boy_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdBoy2Normal": "graphics/field_mugshots/cold/boy_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdFatGuyNormal": "graphics/field_mugshots/cold/fat_guy/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdNurseNormal": "graphics/field_mugshots/cold/nurse/normal.4bpp.smol",
+    "sFieldMugshotGfx_ColdValetNormal": "graphics/field_mugshots/cold/valet/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideWoman1Normal": "graphics/field_mugshots/seaside/woman_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideWoman2Normal": "graphics/field_mugshots/seaside/woman_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideMan1Normal": "graphics/field_mugshots/seaside/man_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideMan2Normal": "graphics/field_mugshots/seaside/man_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideOldManNormal": "graphics/field_mugshots/seaside/old_man/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideOldWomanNormal": "graphics/field_mugshots/seaside/old_woman/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideLittleBoyNormal": "graphics/field_mugshots/seaside/little_boy/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideLittleGirlNormal": "graphics/field_mugshots/seaside/little_girl/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideGirl1Normal": "graphics/field_mugshots/seaside/girl_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideGirl2Normal": "graphics/field_mugshots/seaside/girl_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideBoy1Normal": "graphics/field_mugshots/seaside/boy_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideBoy2Normal": "graphics/field_mugshots/seaside/boy_2/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideFatGuyNormal": "graphics/field_mugshots/seaside/fat_guy/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideNurseNormal": "graphics/field_mugshots/seaside/nurse/normal.4bpp.smol",
+    "sFieldMugshotGfx_SeasideValetNormal": "graphics/field_mugshots/seaside/valet/normal.4bpp.smol",
+    "sFieldMugshotGfx_HotMan1Normal": "graphics/field_mugshots/hot/man_1/normal.4bpp.smol",
+    "sFieldMugshotGfx_HotOldWomanNormal": "graphics/field_mugshots/hot/old_woman/normal.4bpp.smol",
+    "sFieldMugshotGfx_HotGirl2Normal": "graphics/field_mugshots/hot/girl_2/normal.4bpp.smol"
+  },
+  "palettes": {
+    "gObjectEventPal_Brendan": "graphics/trainers/palettes/protagonist.gbapal",
+    "gObjectEventPic_RubySapphireBrendanNormal": "graphics/object_events/pics/people/ruby_sapphire_brendan/walking.4bpp",
+    "gObjectEventPic_RubySapphireBrendanRunning": "graphics/object_events/pics/people/ruby_sapphire_brendan/running.4bpp",
+    "gObjectEventPal_RubySapphireBrendan": "graphics/object_events/palettes/ruby_sapphire_brendan.gbapal",
+    "gObjectEventPal_BrendanReflection": "graphics/object_events/palettes/brendan_reflection.gbapal",
+    "gObjectEventPal_BridgeReflection": "graphics/object_events/palettes/bridge_reflection.gbapal",
+    "gObjectEventPic_BrendanFieldMove": "graphics/object_events/pics/people/brendan/field_move.4bpp",
+    "gObjectEventPic_BrendanSurfing": "graphics/object_events/pics/people/brendan/surfing.4bpp",
+    "gObjectEventPic_BrendanMachBike": "graphics/object_events/pics/people/brendan/mach_bike.4bpp",
+    "gObjectEventPic_BrendanAcroBike": "graphics/object_events/pics/people/brendan/acro_bike.4bpp",
+    "gObjectEventPic_BrendanFishing": "graphics/object_events/pics/people/brendan/fishing.4bpp",
+    "gObjectEventPic_BrendanWatering": "graphics/object_events/pics/people/brendan/watering.4bpp",
+    "gObjectEventPic_BrendanDecorating": "graphics/object_events/pics/people/brendan/decorating.4bpp",
+    "gObjectEventPic_MayDecorating": "graphics/object_events/pics/people/may/decorating.4bpp",
+    "gObjectEventPic_BrendanUnderwater": "graphics/object_events/pics/people/brendan/underwater.4bpp",
+    "gObjectEventPic_MayUnderwater": "graphics/object_events/pics/people/may/underwater.4bpp",
+    "gObjectEventPal_PlayerUnderwater": "graphics/object_events/palettes/player_underwater.gbapal",
+    "gObjectEventPal_May": "graphics/trainers/palettes/protagonist.gbapal",
+    "gObjectEventPal_MayReflection": "graphics/object_events/palettes/may_reflection.gbapal",
+    "gObjectEventPic_RubySapphireMayNormal": "graphics/object_events/pics/people/ruby_sapphire_may/walking.4bpp",
+    "gObjectEventPic_RubySapphireMayRunning": "graphics/object_events/pics/people/ruby_sapphire_may/running.4bpp",
+    "gObjectEventPal_RubySapphireMay": "graphics/object_events/palettes/ruby_sapphire_may.gbapal",
+    "gUnusedObjectEventPalette": "graphics/object_events/palettes/unused_palette.gbapal",
+    "gObjectEventPic_MayMachBike": "graphics/object_events/pics/people/may/mach_bike.4bpp",
+    "gObjectEventPic_MayAcroBike": "graphics/object_events/pics/people/may/acro_bike.4bpp",
+    "gObjectEventPic_MaySurfing": "graphics/object_events/pics/people/may/surfing.4bpp",
+    "gObjectEventPic_MayFieldMove": "graphics/object_events/pics/people/may/field_move.4bpp",
+    "gObjectEventPic_MayFishing": "graphics/object_events/pics/people/may/fishing.4bpp",
+    "gObjectEventPic_MayWatering": "graphics/object_events/pics/people/may/watering.4bpp",
+    "gObjectEventPal_Npc1": "graphics/object_events/palettes/npc_1.gbapal",
+    "gObjectEventPal_Npc2": "graphics/object_events/palettes/npc_2.gbapal",
+    "gObjectEventPal_Npc3": "graphics/object_events/palettes/npc_3.gbapal",
+    "gObjectEventPal_Npc4": "graphics/object_events/palettes/npc_4.gbapal",
+    "gObjectEventPal_Npc1Reflection": "graphics/object_events/palettes/npc_1_reflection.gbapal",
+    "gObjectEventPal_Npc2Reflection": "graphics/object_events/palettes/npc_2_reflection.gbapal",
+    "gObjectEventPal_Npc3Reflection": "graphics/object_events/palettes/npc_3_reflection.gbapal",
+    "gObjectEventPal_Npc4Reflection": "graphics/object_events/palettes/npc_4_reflection.gbapal",
+    "gObjectEventPal_Npc_Purplish": "graphics/object_events/palettes/pal_purplish.gbapal",
+    "gObjectEventPal_Npc_Woody": "graphics/object_events/palettes/pal_woody.gbapal",
+    "gObjectEventPal_Npc_Greenish": "graphics/object_events/palettes/pal_greenish.gbapal",
+    "gObjectEventPal_Npc_Sunrise": "graphics/object_events/palettes/pal_sunrise.gbapal",
+    "gObjectEventPal_Npc_Seaside": "graphics/object_events/palettes/pal_seaside.gbapal",
+    "gObjectEventPal_Npc_Uume": "graphics/object_events/palettes/pal_uume.gbapal",
+    "gObjectEventPal_Npc_Hot": "graphics/object_events/palettes/pal_hot.gbapal",
+    "gObjectEventPal_Npc_Sakura": "graphics/object_events/palettes/pal_sakura.gbapal",
+    "gObjectEventPal_Npc_Mountain": "graphics/object_events/palettes/pal_mountain.gbapal",
+    "gObjectEventPal_Npc_Cold": "graphics/object_events/palettes/pal_cold.gbapal",
+    "gObjectEventPic_CrobatShadowsGruntM": "graphics/object_events/pics/people/crobat_shadows/zubat_m.4bpp",
+    "gObjectEventPic_CrobatShadowsGruntMAlign": "graphics/object_events/pics/people/crobat_shadows/zubat_m_align.4bpp",
+    "gObjectEventPic_CrobatShadowsGruntF": "graphics/object_events/pics/people/crobat_shadows/zubat_f.4bpp",
+    "gObjectEventPic_CrobatShadowsAdminM": "graphics/object_events/pics/people/crobat_shadows/golbat_m.4bpp",
+    "gObjectEventPic_CrobatShadowsAdminF": "graphics/object_events/pics/people/crobat_shadows/golbat_f.4bpp",
+    "gObjectEventPic_CrobatShadowsBoss": "graphics/object_events/pics/people/crobat_shadows/crobat.4bpp",
+    "gObjectEventPic_CrobatShadowsBossCape": "graphics/object_events/pics/people/crobat_shadows/crobat_cape.4bpp",
+    "gObjectEventPic_CrobatShadowsKevin": "graphics/object_events/pics/people/crobat_shadows/kevin.4bpp",
+    "gObjectEventPal_CrobatShadowsGolbat": "graphics/trainers/front_pics/crobat_shadows/golbat_m.gbapal",
+    "gObjectEventPal_CrobatShadowsCrobat": "graphics/trainers/front_pics/crobat_shadows/crobat.gbapal",
+    "gObjectEventPic_Samurai": "graphics/object_events/pics/people/samurai/samurai.4bpp",
+    "gObjectEventPal_Samurai": "graphics/trainers/front_pics/samurai.gbapal",
+    "gObjectEventPic_Sunrise_Woman1": "graphics/object_events/pics/people/sunrise/woman_1.4bpp",
+    "gObjectEventPic_Sunrise_Woman2": "graphics/object_events/pics/people/sunrise/woman_2.4bpp",
+    "gObjectEventPic_Sunrise_Man1": "graphics/object_events/pics/people/sunrise/man_1.4bpp",
+    "gObjectEventPic_Sunrise_Man2": "graphics/object_events/pics/people/sunrise/man_2.4bpp",
+    "gObjectEventPic_Sunrise_OldMan": "graphics/object_events/pics/people/sunrise/old_man.4bpp",
+    "gObjectEventPic_Sunrise_OldWoman": "graphics/object_events/pics/people/sunrise/old_woman.4bpp",
+    "gObjectEventPic_Sunrise_LittleGirl": "graphics/object_events/pics/people/sunrise/little_girl.4bpp",
+    "gObjectEventPic_Sunrise_LittleBoy": "graphics/object_events/pics/people/sunrise/little_boy.4bpp",
+    "gObjectEventPic_Sunrise_Girl1": "graphics/object_events/pics/people/sunrise/girl_1.4bpp",
+    "gObjectEventPic_Sunrise_Girl2": "graphics/object_events/pics/people/sunrise/girl_2.4bpp",
+    "gObjectEventPic_Sunrise_Boy1": "graphics/object_events/pics/people/sunrise/boy_1.4bpp",
+    "gObjectEventPic_Sunrise_Boy2": "graphics/object_events/pics/people/sunrise/boy_2.4bpp",
+    "gObjectEventPic_Sunrise_Nurse": "graphics/object_events/pics/people/sunrise/nurse.4bpp",
+    "gObjectEventPic_Sunrise_Valet": "graphics/object_events/pics/people/sunrise/valet.4bpp",
+    "gObjectEventPic_Sunrise_FatGuy": "graphics/object_events/pics/people/sunrise/fat_guy.4bpp",
+    "gObjectEventPic_Seaside_Woman1": "graphics/object_events/pics/people/seaside/woman_1.4bpp",
+    "gObjectEventPic_Seaside_Woman2": "graphics/object_events/pics/people/seaside/woman_2.4bpp",
+    "gObjectEventPic_Seaside_Man1": "graphics/object_events/pics/people/seaside/man_1.4bpp",
+    "gObjectEventPic_Seaside_Man2": "graphics/object_events/pics/people/seaside/man_2.4bpp",
+    "gObjectEventPic_Seaside_OldMan": "graphics/object_events/pics/people/seaside/old_man.4bpp",
+    "gObjectEventPic_Seaside_OldWoman": "graphics/object_events/pics/people/seaside/old_woman.4bpp",
+    "gObjectEventPic_Seaside_LittleGirl": "graphics/object_events/pics/people/seaside/little_girl.4bpp",
+    "gObjectEventPic_Seaside_LittleBoy": "graphics/object_events/pics/people/seaside/little_boy.4bpp",
+    "gObjectEventPic_Seaside_Girl1": "graphics/object_events/pics/people/seaside/girl_1.4bpp",
+    "gObjectEventPic_Seaside_Girl2": "graphics/object_events/pics/people/seaside/girl_2.4bpp",
+    "gObjectEventPic_Seaside_Boy1": "graphics/object_events/pics/people/seaside/boy_1.4bpp",
+    "gObjectEventPic_Seaside_Boy2": "graphics/object_events/pics/people/seaside/boy_2.4bpp",
+    "gObjectEventPic_Seaside_Nurse": "graphics/object_events/pics/people/seaside/nurse.4bpp",
+    "gObjectEventPic_Seaside_Valet": "graphics/object_events/pics/people/seaside/valet.4bpp",
+    "gObjectEventPic_Seaside_FatGuy": "graphics/object_events/pics/people/seaside/fat_guy.4bpp",
+    "gObjectEventPic_Uume_Woman1": "graphics/object_events/pics/people/uume/woman_1.4bpp",
+    "gObjectEventPic_Uume_Woman2": "graphics/object_events/pics/people/uume/woman_2.4bpp",
+    "gObjectEventPic_Uume_Man1": "graphics/object_events/pics/people/uume/man_1.4bpp",
+    "gObjectEventPic_Uume_Man2": "graphics/object_events/pics/people/uume/man_2.4bpp",
+    "gObjectEventPic_Uume_OldMan": "graphics/object_events/pics/people/uume/old_man.4bpp",
+    "gObjectEventPic_Uume_OldWoman": "graphics/object_events/pics/people/uume/old_woman.4bpp",
+    "gObjectEventPic_Uume_LittleGirl": "graphics/object_events/pics/people/uume/little_girl.4bpp",
+    "gObjectEventPic_Uume_LittleBoy": "graphics/object_events/pics/people/uume/little_boy.4bpp",
+    "gObjectEventPic_Uume_Girl1": "graphics/object_events/pics/people/uume/girl_1.4bpp",
+    "gObjectEventPic_Uume_Girl2": "graphics/object_events/pics/people/uume/girl_2.4bpp",
+    "gObjectEventPic_Uume_Boy1": "graphics/object_events/pics/people/uume/boy_1.4bpp",
+    "gObjectEventPic_Uume_Boy2": "graphics/object_events/pics/people/uume/boy_2.4bpp",
+    "gObjectEventPic_Uume_Nurse": "graphics/object_events/pics/people/uume/nurse.4bpp",
+    "gObjectEventPic_Uume_Valet": "graphics/object_events/pics/people/uume/valet.4bpp",
+    "gObjectEventPic_Uume_FatGuy": "graphics/object_events/pics/people/uume/fat_guy.4bpp",
+    "gObjectEventPic_Uume_OldWomanSwimming": "graphics/object_events/pics/people/uume/old_woman_swimming.4bpp",
+    "gObjectEventPic_Hot_Woman1": "graphics/object_events/pics/people/hot/woman_1.4bpp",
+    "gObjectEventPic_Hot_Woman2": "graphics/object_events/pics/people/hot/woman_2.4bpp",
+    "gObjectEventPic_Hot_Man1": "graphics/object_events/pics/people/hot/man_1.4bpp",
+    "gObjectEventPic_Hot_Man2": "graphics/object_events/pics/people/hot/man_2.4bpp",
+    "gObjectEventPic_Hot_OldMan": "graphics/object_events/pics/people/hot/old_man.4bpp",
+    "gObjectEventPic_Hot_OldWoman": "graphics/object_events/pics/people/hot/old_woman.4bpp",
+    "gObjectEventPic_Hot_LittleGirl": "graphics/object_events/pics/people/hot/little_girl.4bpp",
+    "gObjectEventPic_Hot_LittleBoy": "graphics/object_events/pics/people/hot/little_boy.4bpp",
+    "gObjectEventPic_Hot_Girl1": "graphics/object_events/pics/people/hot/girl_1.4bpp",
+    "gObjectEventPic_Hot_Girl2": "graphics/object_events/pics/people/hot/girl_2.4bpp",
+    "gObjectEventPic_Hot_Boy1": "graphics/object_events/pics/people/hot/boy_1.4bpp",
+    "gObjectEventPic_Hot_Boy2": "graphics/object_events/pics/people/hot/boy_2.4bpp",
+    "gObjectEventPic_Hot_Nurse": "graphics/object_events/pics/people/hot/nurse.4bpp",
+    "gObjectEventPic_Hot_FatGuy": "graphics/object_events/pics/people/hot/fat_guy.4bpp",
+    "gObjectEventPic_Hot_Valet": "graphics/object_events/pics/people/hot/valet.4bpp",
+    "gObjectEventPic_Natsuki": "graphics/object_events/pics/people/hot/natsuki.4bpp",
+    "gObjectEventPic_Sakura_Woman1": "graphics/object_events/pics/people/sakura/woman_1.4bpp",
+    "gObjectEventPic_Sakura_Woman2": "graphics/object_events/pics/people/sakura/woman_2.4bpp",
+    "gObjectEventPic_Sakura_Man1": "graphics/object_events/pics/people/sakura/man_1.4bpp",
+    "gObjectEventPic_Sakura_Man2": "graphics/object_events/pics/people/sakura/man_2.4bpp",
+    "gObjectEventPic_Sakura_OldMan": "graphics/object_events/pics/people/sakura/old_man.4bpp",
+    "gObjectEventPic_Sakura_OldWoman": "graphics/object_events/pics/people/sakura/old_woman.4bpp",
+    "gObjectEventPic_Sakura_LittleGirl": "graphics/object_events/pics/people/sakura/little_girl.4bpp",
+    "gObjectEventPic_Sakura_LittleBoy": "graphics/object_events/pics/people/sakura/little_boy.4bpp",
+    "gObjectEventPic_Sakura_Girl1": "graphics/object_events/pics/people/sakura/girl_1.4bpp",
+    "gObjectEventPic_Sakura_Girl2": "graphics/object_events/pics/people/sakura/girl_2.4bpp",
+    "gObjectEventPic_Sakura_Boy1": "graphics/object_events/pics/people/sakura/boy_1.4bpp",
+    "gObjectEventPic_Sakura_Boy2": "graphics/object_events/pics/people/sakura/boy_2.4bpp",
+    "gObjectEventPic_Sakura_Nurse": "graphics/object_events/pics/people/sakura/nurse.4bpp",
+    "gObjectEventPic_Sakura_Valet": "graphics/object_events/pics/people/sakura/valet.4bpp",
+    "gObjectEventPic_Sakura_FatGuy": "graphics/object_events/pics/people/sakura/fat_guy.4bpp",
+    "gObjectEventPic_Mountain_Woman1": "graphics/object_events/pics/people/mountain/woman_1.4bpp",
+    "gObjectEventPic_Mountain_Woman2": "graphics/object_events/pics/people/mountain/woman_2.4bpp",
+    "gObjectEventPic_Mountain_Man1": "graphics/object_events/pics/people/mountain/man_1.4bpp",
+    "gObjectEventPic_Mountain_Man2": "graphics/object_events/pics/people/mountain/man_2.4bpp",
+    "gObjectEventPic_Mountain_OldMan": "graphics/object_events/pics/people/mountain/old_man.4bpp",
+    "gObjectEventPic_Mountain_OldWoman": "graphics/object_events/pics/people/mountain/old_woman.4bpp",
+    "gObjectEventPic_Mountain_LittleGirl": "graphics/object_events/pics/people/mountain/little_girl.4bpp",
+    "gObjectEventPic_Mountain_LittleBoy": "graphics/object_events/pics/people/mountain/little_boy.4bpp",
+    "gObjectEventPic_Mountain_Girl1": "graphics/object_events/pics/people/mountain/girl_1.4bpp",
+    "gObjectEventPic_Mountain_Girl2": "graphics/object_events/pics/people/mountain/girl_2.4bpp",
+    "gObjectEventPic_Mountain_Boy1": "graphics/object_events/pics/people/mountain/boy_1.4bpp",
+    "gObjectEventPic_Mountain_Boy2": "graphics/object_events/pics/people/mountain/boy_2.4bpp",
+    "gObjectEventPic_Mountain_Nurse": "graphics/object_events/pics/people/mountain/nurse.4bpp",
+    "gObjectEventPic_Mountain_Valet": "graphics/object_events/pics/people/mountain/valet.4bpp",
+    "gObjectEventPic_Mountain_FatGuy": "graphics/object_events/pics/people/mountain/fat_guy.4bpp",
+    "gObjectEventPic_AromaLady": "graphics/object_events/pics/people/greenish/aroma_lady.4bpp",
+    "gObjectEventPic_Fisherman": "graphics/object_events/pics/people/greenish/fisherman.4bpp",
+    "gObjectEventPic_OnsenF": "graphics/object_events/pics/people/greenish/hotspring_f.4bpp",
+    "gObjectEventPic_OnsenM": "graphics/object_events/pics/people/greenish/hotspring_m.4bpp",
+    "gObjectEventPic_KimonoGirl": "graphics/object_events/pics/people/greenish/kimono_girl.4bpp",
+    "gObjectEventPic_Lass": "graphics/object_events/pics/people/greenish/lass.4bpp",
+    "gObjectEventPic_Nurse": "graphics/object_events/pics/people/greenish/nurse.4bpp",
+    "gObjectEventPic_SchoolKidM": "graphics/object_events/pics/people/greenish/school_kid_m.4bpp",
+    "gObjectEventPic_SchoolKidF": "graphics/object_events/pics/people/greenish/school_kid_f.4bpp",
+    "gObjectEventPic_ShamisenBlue": "graphics/object_events/pics/people/greenish/shamisen_blue.4bpp",
+    "gObjectEventPic_ShamisenGreen": "graphics/object_events/pics/people/greenish/shamisen_green.4bpp",
+    "gObjectEventPic_ShamisenRed": "graphics/object_events/pics/people/greenish/shamisen_red.4bpp",
+    "gObjectEventPic_TwinF": "graphics/object_events/pics/people/greenish/twin_f.4bpp",
+    "gObjectEventPic_TwinM": "graphics/object_events/pics/people/greenish/twin_m.4bpp",
+    "gObjectEventPic_OnsenFSwimming": "graphics/object_events/pics/people/greenish/hotspring_f_swimming.4bpp",
+    "gObjectEventPic_OnsenMSwimming": "graphics/object_events/pics/people/greenish/hotspring_m_swimming.4bpp",
+    "gObjectEventPic_Artist": "graphics/object_events/pics/people/purplish/artist.4bpp",
+    "gObjectEventPic_BugCatcher": "graphics/object_events/pics/people/purplish/bug_catcher.4bpp",
+    "gObjectEventPic_Cook": "graphics/object_events/pics/people/purplish/cook.4bpp",
+    "gObjectEventPic_Elder2": "graphics/object_events/pics/people/purplish/elder2.4bpp",
+    "gObjectEventPic_Farmer": "graphics/object_events/pics/people/purplish/farmer.4bpp",
+    "gObjectEventPic_Firebringer": "graphics/object_events/pics/people/purplish/firebringer.4bpp",
+    "gObjectEventPic_Gardener": "graphics/object_events/pics/people/purplish/gardener.4bpp",
+    "gObjectEventPic_GemManiac": "graphics/object_events/pics/people/purplish/gem_maniac.4bpp",
+    "gObjectEventPic_HexManiac": "graphics/object_events/pics/people/purplish/hex_maniac.4bpp",
+    "gObjectEventPic_IncenseSeller": "graphics/object_events/pics/people/purplish/incense_seller.4bpp",
+    "gObjectEventPic_Kaba": "graphics/object_events/pics/people/purplish/kaba.4bpp",
+    "gObjectEventPic_MartEmployee": "graphics/object_events/pics/people/purplish/mart_employee.4bpp",
+    "gObjectEventPic_BattleGirl": "graphics/object_events/pics/people/purplish/martial_artist_f.4bpp",
+    "gObjectEventPic_BlackBelt": "graphics/object_events/pics/people/purplish/martial_artist_m.4bpp",
+    "gObjectEventPic_MasquerainWoman": "graphics/object_events/pics/people/purplish/masquerain_woman.4bpp",
+    "gObjectEventPic_Medium": "graphics/object_events/pics/people/purplish/medium.4bpp",
+    "gObjectEventPic_Miner": "graphics/object_events/pics/people/purplish/miner.4bpp",
+    "gObjectEventPic_NinjaBoy": "graphics/object_events/pics/people/purplish/ninja_boy.4bpp",
+    "gObjectEventPic_PonytaWoman": "graphics/object_events/pics/people/purplish/ponyta_woman.4bpp",
+    "gObjectEventPic_Youngster": "graphics/object_events/pics/people/purplish/youngster.4bpp",
+    "gObjectEventPic_PokemonBreederF": "graphics/object_events/pics/people/purplish/breeder_f.4bpp",
+    "gObjectEventPic_PokemonBreederM": "graphics/object_events/pics/people/purplish/breeder_m.4bpp",
+    "gObjectEventPic_Monk": "graphics/object_events/pics/people/woody/monk.4bpp",
+    "gObjectEventPic_OldMan": "graphics/object_events/pics/people/woody/old_man.4bpp",
+    "gObjectEventPic_OldWoman": "graphics/object_events/pics/people/woody/old_woman.4bpp",
+    "gObjectEventPic_SwimmerF": "graphics/object_events/pics/people/woody/swimmer_swimming_f.4bpp",
+    "gObjectEventPic_Traveler": "graphics/object_events/pics/people/woody/traveler.4bpp",
+    "gObjectEventPic_Valet": "graphics/object_events/pics/people/woody/valet.4bpp",
+    "gObjectEventPic_RichBoy": "graphics/object_events/pics/people/rich_boy.4bpp",
+    "gObjectEventPic_FatMan": "graphics/object_events/pics/people/fat_man.4bpp",
+    "gObjectEventPal_FatMan": "graphics/object_events/pics/people/fat_man.gbapal",
+    "gObjectEventPic_PokefanF": "graphics/object_events/pics/people/pokefan_f.4bpp",
+    "gObjectEventPic_TravelingMerchant": "graphics/object_events/pics/people/traveling_merchant.4bpp",
+    "gObjectEventPal_TravelingMerchant": "graphics/trainers/front_pics/traveling_merchant.gbapal",
+    "gObjectEventPic_Bean": "graphics/object_events/pics/people/cold/hariko.4bpp",
+    "gObjectEventPic_ExpertM": "graphics/object_events/pics/people/expert_m.4bpp",
+    "gObjectEventPic_ExpertF": "graphics/object_events/pics/people/expert_f.4bpp",
+    "gObjectEventPic_PokefanM": "graphics/object_events/pics/people/pokefan_m.4bpp",
+    "gObjectEventPic_LinkReceptionist": "graphics/object_events/pics/people/link_receptionist.4bpp",
+    "gObjectEventPic_Camper": "graphics/object_events/pics/people/camper.4bpp",
+    "gObjectEventPic_Picnicker": "graphics/object_events/pics/people/picnicker.4bpp",
+    "gObjectEventPic_PsychicM": "graphics/object_events/pics/people/psychic_m.4bpp",
+    "gObjectEventPic_Maniac": "graphics/object_events/pics/people/maniac.4bpp",
+    "gObjectEventPic_SwimmerM": "graphics/object_events/pics/people/swimmer_m.4bpp",
+    "gObjectEventPic_Scientist1": "graphics/object_events/pics/people/scientist_1.4bpp",
+    "gObjectEventPic_CoolTrainer": "graphics/object_events/pics/people/cooltrainer.4bpp",
+    "gObjectEventPic_Gentleman": "graphics/object_events/pics/people/gentleman.4bpp",
+    "gObjectEventPic_Sailor": "graphics/object_events/pics/people/sailor.4bpp",
+    "gObjectEventPic_RunningTriathleteM": "graphics/object_events/pics/people/running_triathlete_m.4bpp",
+    "gObjectEventPic_RunningTriathleteF": "graphics/object_events/pics/people/running_triathlete_f.4bpp",
+    "gObjectEventPic_TuberF": "graphics/object_events/pics/people/tuber_f.4bpp",
+    "gObjectEventPic_TuberM": "graphics/object_events/pics/people/tuber_m.4bpp",
+    "gObjectEventPic_Hiker": "graphics/object_events/pics/people/hiker.4bpp",
+    "gObjectEventPic_CyclingTriathleteM": "graphics/object_events/pics/people/cycling_triathlete_m.4bpp",
+    "gObjectEventPic_CyclingTriathleteF": "graphics/object_events/pics/people/cycling_triathlete_f.4bpp",
+    "gObjectEventPic_ReporterM": "graphics/object_events/pics/people/reporter_m.4bpp",
+    "gObjectEventPic_ReporterF": "graphics/object_events/pics/people/reporter_f.4bpp",
+    "gObjectEventPic_MauvilleOldMan1": "graphics/object_events/pics/people/mauville_old_man_1.4bpp",
+    "gObjectEventPic_MauvilleOldMan2": "graphics/object_events/pics/people/mauville_old_man_2.4bpp",
+    "gObjectEventPic_RooftopSaleWoman": "graphics/object_events/pics/people/rooftop_sale_woman.4bpp",
+    "gObjectEventPic_Cameraman": "graphics/object_events/pics/people/cameraman.4bpp",
+    "gObjectEventPic_Scientist2": "graphics/object_events/pics/people/scientist_2.4bpp",
+    "gObjectEventPic_DevonEmployee": "graphics/object_events/pics/people/devon_employee.4bpp",
+    "gObjectEventPic_AquaMemberM": "graphics/object_events/pics/people/team_aqua/aqua_member_m.4bpp",
+    "gObjectEventPic_AquaMemberF": "graphics/object_events/pics/people/team_aqua/aqua_member_f.4bpp",
+    "gObjectEventPic_MagmaMemberM": "graphics/object_events/pics/people/team_magma/magma_member_m.4bpp",
+    "gObjectEventPic_MagmaMemberF": "graphics/object_events/pics/people/team_magma/magma_member_f.4bpp",
+    "gObjectEventPic_Sidney": "graphics/object_events/pics/people/elite_four/sidney.4bpp",
+    "gObjectEventPic_Phoebe": "graphics/object_events/pics/people/elite_four/phoebe.4bpp",
+    "gObjectEventPic_Glacia": "graphics/object_events/pics/people/elite_four/glacia.4bpp",
+    "gObjectEventPic_Drake": "graphics/object_events/pics/people/elite_four/drake.4bpp",
+    "gObjectEventPic_Koishi": "graphics/object_events/pics/people/gym_leaders/koishi.4bpp",
+    "gObjectEventPal_Koishi": "graphics/trainers/front_pics/leader_koishi.gbapal",
+    "gObjectEventPic_Hana": "graphics/object_events/pics/people/gym_leaders/hana.4bpp",
+    "gObjectEventPal_Hana": "graphics/trainers/palettes/leader_hana.gbapal",
+    "gObjectEventPic_Yutaka": "graphics/object_events/pics/people/gym_leaders/yutaka.4bpp",
+    "gObjectEventPal_Yutaka": "graphics/trainers/front_pics/leader_yutaka.gbapal",
+    "gObjectEventPic_Flannery": "graphics/object_events/pics/people/gym_leaders/flannery.4bpp",
+    "gObjectEventPic_Norman": "graphics/object_events/pics/people/gym_leaders/norman.4bpp",
+    "gObjectEventPic_Winona": "graphics/object_events/pics/people/gym_leaders/winona.4bpp",
+    "gObjectEventPic_Liza": "graphics/object_events/pics/people/gym_leaders/liza.4bpp",
+    "gObjectEventPic_Tate": "graphics/object_events/pics/people/gym_leaders/tate.4bpp",
+    "gObjectEventPic_Wallace": "graphics/object_events/pics/people/wallace.4bpp",
+    "gObjectEventPic_Steven": "graphics/object_events/pics/people/steven.4bpp",
+    "gObjectEventPic_Wally": "graphics/object_events/pics/people/wally.4bpp",
+    "gObjectEventPic_RubySapphireLittleBoy": "graphics/object_events/pics/people/rs_little_boy.4bpp",
+    "gObjectEventPic_HotSpringsOldWoman": "graphics/object_events/pics/people/hot_springs_old_woman.4bpp",
+    "gObjectEventPic_LatiasLatios": "graphics/object_events/pics/pokemon_old/latias_latios.4bpp",
+    "gObjectEventPic_GameboyKid": "graphics/object_events/pics/people/gameboy_kid.4bpp",
+    "gObjectEventPic_ContestJudge": "graphics/object_events/pics/people/contest_judge.4bpp",
+    "gObjectEventPic_Archie": "graphics/object_events/pics/people/team_aqua/archie.4bpp",
+    "gObjectEventPic_Maxie": "graphics/object_events/pics/people/team_magma/maxie.4bpp",
+    "gObjectEventPic_Regi": "graphics/object_events/pics/pokemon_old/regi.4bpp",
+    "gObjectEventPic_RayquazaStill": "graphics/object_events/pics/pokemon_old/rayquaza_still.4bpp",
+    "gObjectEventPic_TuberMSwimming": "graphics/object_events/pics/people/tuber_m_swimming.4bpp",
+    "gObjectEventPic_BigSister": "graphics/object_events/pics/people/sunrise/big_sister.4bpp",
+    "gObjectEventPal_Kyogre": "graphics/object_events/palettes/kyogre.gbapal",
+    "gObjectEventPal_KyogreReflection": "graphics/object_events/palettes/kyogre_reflection.gbapal",
+    "gObjectEventPal_Groudon": "graphics/object_events/palettes/groudon.gbapal",
+    "gObjectEventPal_GroudonReflection": "graphics/object_events/palettes/groudon_reflection.gbapal",
+    "gObjectEventPic_UnusedMagnemiteDoll": "graphics/object_events/pics/dolls/unused_magnemite_doll.4bpp",
+    "gObjectEventPic_UnusedSquirtleDoll": "graphics/object_events/pics/dolls/unused_squirtle_doll.4bpp",
+    "gObjectEventPic_UnusedPikachuDoll": "graphics/object_events/pics/dolls/unused_pikachu_doll.4bpp",
+    "gObjectEventPic_UnusedPorygon2Doll": "graphics/object_events/pics/dolls/unused_porygon2_doll.4bpp",
+    "gObjectEventPic_PichuDoll": "graphics/object_events/pics/dolls/pichu_doll.4bpp",
+    "gObjectEventPic_PikachuDoll": "graphics/object_events/pics/dolls/pikachu_doll.4bpp",
+    "gObjectEventPic_MarillDoll": "graphics/object_events/pics/dolls/marill_doll.4bpp",
+    "gObjectEventPic_TogepiDoll": "graphics/object_events/pics/dolls/togepi_doll.4bpp",
+    "gObjectEventPic_CyndaquilDoll": "graphics/object_events/pics/dolls/cyndaquil_doll.4bpp",
+    "gObjectEventPic_ChikoritaDoll": "graphics/object_events/pics/dolls/chikorita_doll.4bpp",
+    "gObjectEventPic_TotodileDoll": "graphics/object_events/pics/dolls/totodile_doll.4bpp",
+    "gObjectEventPic_JigglypuffDoll": "graphics/object_events/pics/dolls/jigglypuff_doll.4bpp",
+    "gObjectEventPic_MeowthDoll": "graphics/object_events/pics/dolls/meowth_doll.4bpp",
+    "gObjectEventPic_ClefairyDoll": "graphics/object_events/pics/dolls/clefairy_doll.4bpp",
+    "gObjectEventPic_DittoDoll": "graphics/object_events/pics/dolls/ditto_doll.4bpp",
+    "gObjectEventPic_SmoochumDoll": "graphics/object_events/pics/dolls/smoochum_doll.4bpp",
+    "gObjectEventPic_TreeckoDoll": "graphics/object_events/pics/dolls/treecko_doll.4bpp",
+    "gObjectEventPic_TorchicDoll": "graphics/object_events/pics/dolls/torchic_doll.4bpp",
+    "gObjectEventPic_MudkipDoll": "graphics/object_events/pics/dolls/mudkip_doll.4bpp",
+    "gObjectEventPic_DuskullDoll": "graphics/object_events/pics/dolls/duskull_doll.4bpp",
+    "gObjectEventPic_WynautDoll": "graphics/object_events/pics/dolls/wynaut_doll.4bpp",
+    "gObjectEventPic_BaltoyDoll": "graphics/object_events/pics/dolls/baltoy_doll.4bpp",
+    "gObjectEventPic_KecleonDoll": "graphics/object_events/pics/dolls/kecleon_doll.4bpp",
+    "gObjectEventPic_AzurillDoll": "graphics/object_events/pics/dolls/azurill_doll.4bpp",
+    "gObjectEventPic_SkittyDoll": "graphics/object_events/pics/dolls/skitty_doll.4bpp",
+    "gObjectEventPic_SwabluDoll": "graphics/object_events/pics/dolls/swablu_doll.4bpp",
+    "gObjectEventPic_GulpinDoll": "graphics/object_events/pics/dolls/gulpin_doll.4bpp",
+    "gObjectEventPic_LotadDoll": "graphics/object_events/pics/dolls/lotad_doll.4bpp",
+    "gObjectEventPic_SeedotDoll": "graphics/object_events/pics/dolls/seedot_doll.4bpp",
+    "gObjectEventPic_PikaCushion": "graphics/object_events/pics/cushions/pika_cushion.4bpp",
+    "gObjectEventPic_RoundCushion": "graphics/object_events/pics/cushions/round_cushion.4bpp",
+    "gObjectEventPic_KissCushion": "graphics/object_events/pics/cushions/kiss_cushion.4bpp",
+    "gObjectEventPic_ZigzagCushion": "graphics/object_events/pics/cushions/zigzag_cushion.4bpp",
+    "gObjectEventPic_SpinCushion": "graphics/object_events/pics/cushions/spin_cushion.4bpp",
+    "gObjectEventPic_DiamondCushion": "graphics/object_events/pics/cushions/diamond_cushion.4bpp",
+    "gObjectEventPic_BallCushion": "graphics/object_events/pics/cushions/ball_cushion.4bpp",
+    "gObjectEventPic_GrassCushion": "graphics/object_events/pics/cushions/grass_cushion.4bpp",
+    "gObjectEventPic_FireCushion": "graphics/object_events/pics/cushions/fire_cushion.4bpp",
+    "gObjectEventPic_WaterCushion": "graphics/object_events/pics/cushions/water_cushion.4bpp",
+    "gObjectEventPic_BigSnorlaxDoll": "graphics/object_events/pics/dolls/big_snorlax_doll.4bpp",
+    "gObjectEventPic_BigRhydonDoll": "graphics/object_events/pics/dolls/big_rhydon_doll.4bpp",
+    "gObjectEventPic_BigLaprasDoll": "graphics/object_events/pics/dolls/big_lapras_doll.4bpp",
+    "gObjectEventPic_BigVenusaurDoll": "graphics/object_events/pics/dolls/big_venusaur_doll.4bpp",
+    "gObjectEventPic_BigCharizardDoll": "graphics/object_events/pics/dolls/big_charizard_doll.4bpp",
+    "gObjectEventPic_BigBlastoiseDoll": "graphics/object_events/pics/dolls/big_blastoise_doll.4bpp",
+    "gObjectEventPic_BigWailmerDoll": "graphics/object_events/pics/dolls/big_wailmer_doll.4bpp",
+    "gObjectEventPic_BigRegirockDoll": "graphics/object_events/pics/dolls/big_regirock_doll.4bpp",
+    "gObjectEventPic_BigRegiceDoll": "graphics/object_events/pics/dolls/big_regice_doll.4bpp",
+    "gObjectEventPic_BigRegisteelDoll": "graphics/object_events/pics/dolls/big_registeel_doll.4bpp",
+    "gObjectEventPic_MareepDoll": "graphics/object_events/pics/dolls/mareep_doll.4bpp",
+    "gObjectEventPal_MareepDoll": "graphics/object_events/pics/dolls/mareep_doll.gbapal",
+    "gObjectEventPic_CuttableTree": "graphics/object_events/pics/misc/cuttable_tree.4bpp",
+    "gObjectEventPic_CuttableTreeKuraDojo": "graphics/object_events/pics/misc/cuttable_tree_kura_dojo.4bpp",
+    "gObjectEventPal_CuttableTreeKuraDojo": "graphics/object_events/palettes/cuttable_tree_kura_dojo.gbapal",
+    "gObjectEventPic_BreakableRock": "graphics/object_events/pics/misc/breakable_rock.4bpp",
+    "gObjectEventPic_PushableBoulder": "graphics/object_events/pics/misc/pushable_boulder.4bpp",
+    "gObjectEventPic_ItemBall": "graphics/object_events/pics/misc/item_ball.4bpp",
+    "gObjectEventPic_Lunchbox": "graphics/object_events/pics/misc/lunchbox.4bpp",
+    "gObjectEventPal_HearthOwFoliage": "graphics/object_events/palettes/hearth_ow_foliage.gbapal",
+    "gObjectEventPal_HearthOwItem": "graphics/object_events/palettes/hearth_ow_item.gbapal",
+    "gObjectEventPic_MrBrineysBoat": "graphics/object_events/pics/misc/mr_brineys_boat.4bpp",
+    "gObjectEventPic_Fossil": "graphics/object_events/pics/misc/fossil.4bpp",
+    "gObjectEventPic_SubmarineShadow": "graphics/object_events/pics/misc/submarine_shadow.4bpp",
+    "gObjectEventPal_SubmarineShadow": "graphics/object_events/palettes/submarine_shadow.gbapal",
+    "gObjectEventPic_Truck": "graphics/object_events/pics/misc/truck.4bpp",
+    "gObjectEventPal_Truck": "graphics/object_events/palettes/truck.gbapal",
+    "gObjectEventPal_Vigoroth": "graphics/object_events/palettes/vigoroth.gbapal",
+    "gObjectEventPic_BirchsBag": "graphics/object_events/pics/misc/birchs_bag.4bpp",
+    "gObjectEventPic_EnemyZigzagoon": "graphics/object_events/pics/pokemon_old/enemy_zigzagoon.4bpp",
+    "gObjectEventPal_EnemyZigzagoon": "graphics/object_events/palettes/enemy_zigzagoon.gbapal",
+    "gObjectEventPal_Poochyena": "graphics/object_events/palettes/poochyena.gbapal",
+    "gObjectEventPic_CableCar": "graphics/object_events/pics/misc/cable_car.4bpp",
+    "gObjectEventPal_CableCar": "graphics/object_events/palettes/cable_car.gbapal",
+    "gObjectEventPic_SSTidal": "graphics/object_events/pics/misc/ss_tidal.4bpp",
+    "gObjectEventPal_SSTidal": "graphics/object_events/palettes/ss_tidal.gbapal",
+    "gFieldEffectObjectPic_Sparkle": "graphics/field_effects/pics/sparkle.4bpp",
+    "gObjectEventPic_BerryTreeDirtPile": "graphics/object_events/pics/berry_trees/dirt_pile.4bpp",
+    "gObjectEventPic_BerryTreeSprout": "graphics/object_events/pics/berry_trees/sprout.4bpp",
+    "gObjectEventPal_BerryTreeSprout": "graphics/object_events/pics/berry_trees/sprout.gbapal",
+    "gObjectEventPic_CheriBerryTree": "graphics/object_events/pics/berry_trees/cheri.4bpp",
+    "gObjectEventPal_CheriBerryTree": "graphics/object_events/pics/berry_trees/cheri.gbapal",
+    "gObjectEventPic_ChestoBerryTree": "graphics/object_events/pics/berry_trees/chesto.4bpp",
+    "gObjectEventPal_ChestoBerryTree": "graphics/object_events/pics/berry_trees/chesto.gbapal",
+    "gObjectEventPic_PechaBerryTree": "graphics/object_events/pics/berry_trees/pecha.4bpp",
+    "gObjectEventPal_PechaBerryTree": "graphics/object_events/pics/berry_trees/pecha.gbapal",
+    "gObjectEventPic_RawstBerryTree": "graphics/object_events/pics/berry_trees/rawst.4bpp",
+    "gObjectEventPal_RawstBerryTree": "graphics/object_events/pics/berry_trees/rawst.gbapal",
+    "gObjectEventPic_AspearBerryTree": "graphics/object_events/pics/berry_trees/aspear.4bpp",
+    "gObjectEventPic_LeppaBerryTree": "graphics/object_events/pics/berry_trees/leppa.4bpp",
+    "gObjectEventPal_LeppaBerryTree": "graphics/object_events/pics/berry_trees/leppa.gbapal",
+    "gObjectEventPic_OranBerryTree": "graphics/object_events/pics/berry_trees/oran.4bpp",
+    "gObjectEventPal_OranBerryTree": "graphics/object_events/pics/berry_trees/oran.gbapal",
+    "gObjectEventPic_PersimBerryTree": "graphics/object_events/pics/berry_trees/persim.4bpp",
+    "gObjectEventPal_PersimBerryTree": "graphics/object_events/pics/berry_trees/persim.gbapal",
+    "gObjectEventPic_LumBerryTree": "graphics/object_events/pics/berry_trees/lum.4bpp",
+    "gObjectEventPic_SitrusBerryTree": "graphics/object_events/pics/berry_trees/sitrus.4bpp",
+    "gObjectEventPal_SitrusBerryTree": "graphics/object_events/pics/berry_trees/sitrus.gbapal",
+    "gObjectEventPic_FigyBerryTree": "graphics/object_events/pics/berry_trees/figy.4bpp",
+    "gObjectEventPic_WikiBerryTree": "graphics/object_events/pics/berry_trees/wiki.4bpp",
+    "gObjectEventPic_MagoBerryTree": "graphics/object_events/pics/berry_trees/mago.4bpp",
+    "gObjectEventPic_AguavBerryTree": "graphics/object_events/pics/berry_trees/aguav.4bpp",
+    "gObjectEventPic_IapapaBerryTree": "graphics/object_events/pics/berry_trees/iapapa.4bpp",
+    "gObjectEventPic_RazzBerryTree": "graphics/object_events/pics/berry_trees/razz.4bpp",
+    "gObjectEventPic_WepearBerryTree": "graphics/object_events/pics/berry_trees/wepear.4bpp",
+    "gObjectEventPic_PomegBerryTree": "graphics/object_events/pics/berry_trees/pomeg.4bpp",
+    "gObjectEventPic_KelpsyBerryTree": "graphics/object_events/pics/berry_trees/kelpsy.4bpp",
+    "gObjectEventPic_HondewBerryTree": "graphics/object_events/pics/berry_trees/hondew.4bpp",
+    "gObjectEventPic_GrepaBerryTree": "graphics/object_events/pics/berry_trees/grepa.4bpp",
+    "gObjectEventPic_TamatoBerryTree": "graphics/object_events/pics/berry_trees/tamato.4bpp",
+    "gObjectEventPic_CornnBerryTree": "graphics/object_events/pics/berry_trees/cornn.4bpp",
+    "gObjectEventPic_RabutaBerryTree": "graphics/object_events/pics/berry_trees/rabuta.4bpp",
+    "gObjectEventPic_NomelBerryTree": "graphics/object_events/pics/berry_trees/nomel.4bpp",
+    "gObjectEventPic_SpelonBerryTree": "graphics/object_events/pics/berry_trees/spelon.4bpp",
+    "gObjectEventPic_PamtreBerryTree": "graphics/object_events/pics/berry_trees/pamtre.4bpp",
+    "gObjectEventPic_DurinBerryTree": "graphics/object_events/pics/berry_trees/durin.4bpp",
+    "gObjectEventPic_OccaBerryTree": "graphics/object_events/pics/berry_trees/occa.4bpp",
+    "gObjectEventPic_YacheBerryTree": "graphics/object_events/pics/berry_trees/yache.4bpp",
+    "gObjectEventPic_ChopleBerryTree": "graphics/object_events/pics/berry_trees/chople.4bpp",
+    "gObjectEventPic_KebiaBerryTree": "graphics/object_events/pics/berry_trees/kebia.4bpp",
+    "gObjectEventPic_ShucaBerryTree": "graphics/object_events/pics/berry_trees/shuca.4bpp",
+    "gObjectEventPic_PayapaBerryTree": "graphics/object_events/pics/berry_trees/payapa.4bpp",
+    "gObjectEventPic_TangaBerryTree": "graphics/object_events/pics/berry_trees/tanga.4bpp",
+    "gObjectEventPic_KasibBerryTree": "graphics/object_events/pics/berry_trees/kasib.4bpp",
+    "gObjectEventPic_HabanBerryTree": "graphics/object_events/pics/berry_trees/haban.4bpp",
+    "gObjectEventPic_ColburBerryTree": "graphics/object_events/pics/berry_trees/colbur.4bpp",
+    "gObjectEventPic_RoseliBerryTree": "graphics/object_events/pics/berry_trees/roseli.4bpp",
+    "gObjectEventPic_LiechiBerryTree": "graphics/object_events/pics/berry_trees/liechi.4bpp",
+    "gObjectEventPic_LansatBerryTree": "graphics/object_events/pics/berry_trees/lansat.4bpp",
+    "gObjectEventPic_MicleBerryTree": "graphics/object_events/pics/berry_trees/micle.4bpp",
+    "gObjectEventPic_CustapBerryTree": "graphics/object_events/pics/berry_trees/custap.4bpp",
+    "gObjectEventPic_JabocaBerryTree": "graphics/object_events/pics/berry_trees/jaboca.4bpp",
+    "gObjectEventPic_RowapBerryTree": "graphics/object_events/pics/berry_trees/rowap.4bpp",
+    "gFieldEffectObjectPic_SurfBlob": "graphics/field_effects/pics/surf_blob.4bpp",
+    "gFieldEffectObjectPic_RockClimbBlob": "graphics/field_effects/pics/rock_climb_blob.4bpp",
+    "gFieldEffectObjectPic_RockClimbDust": "graphics/field_effects/pics/rock_climb_dust.4bpp",
+    "gObjectEventPic_QuintyPlump": "graphics/object_events/pics/people/quinty_plump.4bpp",
+    "gObjectEventPal_QuintyPlump": "graphics/object_events/palettes/quinty_plump.gbapal",
+    "gObjectEventPal_QuintyPlumpReflection": "graphics/object_events/palettes/quinty_plump_reflection.gbapal",
+    "gFieldEffectObjectPic_ShadowSmall": "graphics/field_effects/pics/shadow_small.4bpp",
+    "gFieldEffectObjectPic_ShadowMedium": "graphics/field_effects/pics/shadow_medium.4bpp",
+    "gFieldEffectObjectPic_ShadowLarge": "graphics/field_effects/pics/shadow_large.4bpp",
+    "gFieldEffectObjectPic_ShadowExtraLarge": "graphics/field_effects/pics/shadow_extra_large.4bpp",
+    "gFieldEffectObjectPic_BallLight": "graphics/object_events/pics/misc/light.4bpp",
+    "gFieldEffectObjectPic_PokeCenterLight": "graphics/object_events/pics/misc/poke_center_light.4bpp",
+    "gFieldEffectObjectPic_MartLight": "graphics/object_events/pics/misc/mart_light.4bpp",
+    "gFieldEffectPic_CutGrass_Copy": "graphics/field_effects/pics/cut_grass.4bpp",
+    "gFieldEffectPal_CutGrass": "graphics/field_effects/palettes/cut_grass.gbapal",
+    "gFieldEffectObjectPic_Ripple": "graphics/field_effects/pics/ripple.4bpp",
+    "gFieldEffectObjectPic_Ash": "graphics/field_effects/pics/ash.4bpp",
+    "gFieldEffectObjectPic_Arrow": "graphics/field_effects/pics/arrow.4bpp",
+    "gFieldEffectObjectPalette0": "graphics/field_effects/palettes/general_0.gbapal",
+    "gFieldEffectObjectPalette1": "graphics/field_effects/palettes/general_1.gbapal",
+    "gFieldEffectObjectGinkoPalette": "graphics/field_effects/palettes/ginko_woods.gbapal",
+    "gFieldEffectObjectGrassSilveridgePalette": "graphics/field_effects/palettes/tall_grass_silveridge.gbapal",
+    "gFieldEffectObjectPic_GroundImpactDust": "graphics/field_effects/pics/ground_impact_dust.4bpp",
+    "gFieldEffectObjectPic_JumpTallGrass": "graphics/field_effects/pics/jump_tall_grass.4bpp",
+    "gUnusedGrass3": "graphics/field_effects/pics/unused_grass_3.4bpp",
+    "gFieldEffectObjectPic_JumpLongGrass": "graphics/field_effects/pics/jump_long_grass.4bpp",
+    "gFieldEffectObjectPic_Unknown17": "graphics/field_effects/pics/unknown_17.4bpp",
+    "gFieldEffectObjectPic_UnusedGrass2": "graphics/field_effects/pics/unused_grass_2.4bpp",
+    "gFieldEffectObjectPic_LongGrass": "graphics/field_effects/pics/long_grass.4bpp",
+    "gFieldEffectObjectPic_TallGrass": "graphics/field_effects/pics/tall_grass.4bpp",
+    "gFieldEffectObjectPic_ShortGrass": "graphics/field_effects/pics/short_grass.4bpp",
+    "gFieldEffectObjectPic_SandFootprints": "graphics/field_effects/pics/sand_footprints.4bpp",
+    "gFieldEffectObjectPic_CaveFootprints": "graphics/field_effects/pics/cave_footprints.4bpp",
+    "gFieldEffectObjectPic_CaveBugTracks": "graphics/field_effects/pics/cave_footprints.4bpp",
+    "gFieldEffectObjectPic_CaveSpotTracks": "graphics/field_effects/pics/cave_footprints.4bpp",
+    "gFieldEffectObjectPic_CaveBikeTireTracks": "graphics/field_effects/pics/cave_footprints.4bpp",
+    "gFieldEffectObjectPic_CaveSlitherTracks": "graphics/field_effects/pics/cave_footprints.4bpp",
+    "gFieldEffectObjectPic_DeepSandFootprints": "graphics/field_effects/pics/deep_sand_footprints.4bpp",
+    "gFieldEffectObjectPic_BikeTireTracks": "graphics/field_effects/pics/bike_tire_tracks.4bpp",
+    "gFieldEffectObjectPic_SlitherTracks": "graphics/field_effects/pics/slither_tracks.4bpp",
+    "gFieldEffectObjectPic_SpotTracks": "graphics/field_effects/pics/spot_tracks.4bpp",
+    "gFieldEffectObjectPic_BugTracks": "graphics/field_effects/pics/bug_tracks.4bpp",
+    "gFieldEffectObjectPic_UnusedSand": "graphics/field_effects/pics/unused_sand.4bpp",
+    "gFieldEffectObjectPic_SandPile": "graphics/field_effects/pics/sand_pile.4bpp",
+    "gFieldEffectObjectPic_JumpBigSplash": "graphics/field_effects/pics/jump_big_splash.4bpp",
+    "gFieldEffectObjectPic_Splash": "graphics/field_effects/pics/splash.4bpp",
+    "gFieldEffectObjectPic_JumpSmallSplash": "graphics/field_effects/pics/jump_small_splash.4bpp",
+    "gFieldEffectObjectPic_WaterSurfacing": "graphics/field_effects/pics/water_surfacing.4bpp",
+    "gFieldEffectObjectPic_TreeDisguise": "graphics/field_effects/pics/tree_disguise.4bpp",
+    "gFieldEffectObjectPic_MountainDisguise": "graphics/field_effects/pics/mountain_disguise.4bpp",
+    "gFieldEffectObjectPic_SandDisguisePlaceholder": "graphics/field_effects/pics/sand_disguise_placeholder.4bpp",
+    "gFieldEffectObjectPic_HotSpringsWater": "graphics/field_effects/pics/hot_springs_water.4bpp",
+    "gFieldEffectPal_Ash": "graphics/field_effects/palettes/ash.gbapal",
+    "gFieldEffectPal_TallGrass": "graphics/field_effects/palettes/tall_grass.gbapal",
+    "gFieldEffectPal_DustCloud": "graphics/field_effects/palettes/big_dust.gbapal",
+    "gFieldEffectObjectPic_AshPuff": "graphics/field_effects/pics/ash_puff.4bpp",
+    "gFieldEffectObjectPic_AshLaunch": "graphics/field_effects/pics/ash_launch.4bpp",
+    "gFieldEffectObjectPic_Bubbles": "graphics/field_effects/pics/bubbles.4bpp",
+    "gFieldEffectObjectPic_SmallSparkle": "graphics/field_effects/pics/small_sparkle.4bpp",
+    "gFieldEffectPal_SmallSparkle": "graphics/field_effects/palettes/small_sparkle.gbapal",
+    "gFieldEffectObjectPic_Bird": "graphics/field_effects/pics/bird.4bpp",
+    "gObjectEventPic_Juan": "graphics/object_events/pics/people/gym_leaders/juan.4bpp",
+    "gObjectEventPic_Scott": "graphics/object_events/pics/people/scott.4bpp",
+    "gObjectEventPic_Statue": "graphics/object_events/pics/misc/statue.4bpp",
+    "gObjectEventPic_MysteryEventDeliveryman": "graphics/object_events/pics/people/mystery_event_deliveryman.4bpp",
+    "gObjectEventPic_UnionRoomAttendant": "graphics/object_events/pics/people/union_room_attendant.4bpp",
+    "gObjectEventPic_MovingBox": "graphics/object_events/pics/misc/moving_box.4bpp",
+    "gObjectEventPal_MovingBox": "graphics/object_events/palettes/moving_box.gbapal",
+    "gObjectEventPal_RedLeaf": "graphics/object_events/palettes/red_leaf.gbapal",
+    "gObjectEventPic_Red": "graphics/object_events/pics/people/red.4bpp",
+    "gObjectEventPic_Leaf": "graphics/object_events/pics/people/leaf.4bpp",
+    "gObjectEventPal_BirthIslandStone": "graphics/object_events/palettes/birth_island_stone.gbapal",
+    "gObjectEventPic_BirthIslandStone": "graphics/object_events/pics/misc/birth_island_stone.4bpp",
+    "gObjectEventPal_Deoxys": "graphics/object_events/palettes/deoxys.gbapal",
+    "gObjectEventPic_Anabel": "graphics/object_events/pics/people/frontier_brains/anabel.4bpp",
+    "gObjectEventPic_Tucker": "graphics/object_events/pics/people/frontier_brains/tucker.4bpp",
+    "gObjectEventPic_Spenser": "graphics/object_events/pics/people/frontier_brains/spenser.4bpp",
+    "gObjectEventPic_Greta": "graphics/object_events/pics/people/frontier_brains/greta.4bpp",
+    "gObjectEventPic_Noland": "graphics/object_events/pics/people/frontier_brains/noland.4bpp",
+    "gObjectEventPic_Lucy": "graphics/object_events/pics/people/frontier_brains/lucy.4bpp",
+    "gObjectEventPic_Brandon": "graphics/object_events/pics/people/frontier_brains/brandon.4bpp",
+    "gObjectEventPic_PokeBall": "graphics/object_events/pics/misc/ball_poke.4bpp",
+    "gObjectEventPic_DeoxysOld": "graphics/object_events/pics/pokemon_old/deoxys.4bpp",
+    "gObjectEventPic_AzurillOld": "graphics/object_events/pics/pokemon_old/azurill.4bpp",
+    "gObjectEventPic_KecleonOld": "graphics/object_events/pics/pokemon_old/kecleon.4bpp",
+    "gObjectEventPic_WingullOld": "graphics/object_events/pics/pokemon_old/wingull.4bpp",
+    "gObjectEventPic_AzumarillOld": "graphics/object_events/pics/pokemon_old/azumarill.4bpp",
+    "gObjectEventPic_PikachuOld": "graphics/object_events/pics/pokemon_old/pikachu.4bpp",
+    "gObjectEventPic_ZigzagoonOld": "graphics/object_events/pics/pokemon_old/zigzagoon.4bpp",
+    "gObjectEventPic_SkittyOld": "graphics/object_events/pics/pokemon_old/skitty.4bpp",
+    "gObjectEventPic_PoochyenaOld": "graphics/object_events/pics/pokemon_old/poochyena.4bpp",
+    "gObjectEventPic_LugiaOld": "graphics/object_events/pics/pokemon_old/lugia.4bpp",
+    "gObjectEventPic_HoOhOld": "graphics/object_events/pics/pokemon_old/ho_oh.4bpp",
+    "gObjectEventPic_GroudonOld": "graphics/object_events/pics/pokemon_old/groudon.4bpp",
+    "gObjectEventPic_KyogreOld": "graphics/object_events/pics/pokemon_old/kyogre.4bpp",
+    "gObjectEventPic_VigorothMover": "graphics/object_events/pics/pokemon_old/vigoroth_mover.4bpp",
+    "gObjectEventPic_SudowoodoTree": "graphics/object_events/pics/pokemon_old/sudowoodo_tree.4bpp",
+    "gObjectEventPic_RayquazaCutscene": "graphics/object_events/pics/pokemon_old/rayquaza_cutscene.4bpp",
+    "gObjectEventPal_HoOh": "graphics/object_events/palettes/ho_oh.gbapal",
+    "gObjectEventPal_Lugia": "graphics/object_events/palettes/lugia.gbapal",
+    "gObjectEventPaletteLight": "graphics/object_events/palettes/light.gbapal",
+    "gObjectEventPaletteLight2": "graphics/object_events/palettes/light2.gbapal",
+    "gObjectEventPal_Substitute": "graphics/object_events/pics/pokemon_old/substitute.gbapal",
+    "gObjectEventPaletteEmotes": "graphics/misc/emotes.gbapal",
+    "gObjectEventPaletteNeonLight": "graphics/object_events/palettes/neon_light.gbapal",
+    "gObjectEventPic_MasterBall": "graphics/object_events/pics/misc/ball_master.4bpp",
+    "gObjectEventPic_UltraBall": "graphics/object_events/pics/misc/ball_ultra.4bpp",
+    "gObjectEventPic_GreatBall": "graphics/object_events/pics/misc/ball_great.4bpp",
+    "gObjectEventPic_SafariBall": "graphics/object_events/pics/misc/ball_safari.4bpp",
+    "gObjectEventPic_NetBall": "graphics/object_events/pics/misc/ball_net.4bpp",
+    "gObjectEventPic_DiveBall": "graphics/object_events/pics/misc/ball_dive.4bpp",
+    "gObjectEventPic_NestBall": "graphics/object_events/pics/misc/ball_nest.4bpp",
+    "gObjectEventPic_RepeatBall": "graphics/object_events/pics/misc/ball_repeat.4bpp",
+    "gObjectEventPic_TimerBall": "graphics/object_events/pics/misc/ball_timer.4bpp",
+    "gObjectEventPic_LuxuryBall": "graphics/object_events/pics/misc/ball_luxury.4bpp",
+    "gObjectEventPic_PremierBall": "graphics/object_events/pics/misc/ball_premier.4bpp",
+    "gObjectEventPic_DuskBall": "graphics/object_events/pics/misc/ball_dusk.4bpp",
+    "gObjectEventPic_HealBall": "graphics/object_events/pics/misc/ball_heal.4bpp",
+    "gObjectEventPic_QuickBall": "graphics/object_events/pics/misc/ball_quick.4bpp",
+    "gObjectEventPic_CherishBall": "graphics/object_events/pics/misc/ball_cherish.4bpp",
+    "gObjectEventPic_ParkBall": "graphics/object_events/pics/misc/ball_park.4bpp",
+    "gObjectEventPic_FastBall": "graphics/object_events/pics/misc/ball_fast.4bpp",
+    "gObjectEventPic_LevelBall": "graphics/object_events/pics/misc/ball_level.4bpp",
+    "gObjectEventPic_LureBall": "graphics/object_events/pics/misc/ball_lure.4bpp",
+    "gObjectEventPic_HeavyBall": "graphics/object_events/pics/misc/ball_heavy.4bpp",
+    "gObjectEventPic_LoveBall": "graphics/object_events/pics/misc/ball_love.4bpp",
+    "gObjectEventPic_FriendBall": "graphics/object_events/pics/misc/ball_friend.4bpp",
+    "gObjectEventPic_MoonBall": "graphics/object_events/pics/misc/ball_moon.4bpp",
+    "gObjectEventPic_SportBall": "graphics/object_events/pics/misc/ball_sport.4bpp",
+    "gObjectEventPic_DreamBall": "graphics/object_events/pics/misc/ball_dream.4bpp",
+    "gObjectEventPic_BeastBall": "graphics/object_events/pics/misc/ball_beast.4bpp",
+    "gObjectEventPic_StrangeBall": "graphics/object_events/pics/misc/ball_strange.4bpp",
+    "gObjectEventPal_MasterBall": "graphics/object_events/pics/misc/ball_master.gbapal",
+    "gObjectEventPal_UltraBall": "graphics/object_events/pics/misc/ball_ultra.gbapal",
+    "gObjectEventPal_GreatBall": "graphics/object_events/pics/misc/ball_great.gbapal",
+    "gObjectEventPal_SafariBall": "graphics/object_events/pics/misc/ball_safari.gbapal",
+    "gObjectEventPal_NetBall": "graphics/object_events/pics/misc/ball_net.gbapal",
+    "gObjectEventPal_DiveBall": "graphics/object_events/pics/misc/ball_dive.gbapal",
+    "gObjectEventPal_NestBall": "graphics/object_events/pics/misc/ball_nest.gbapal",
+    "gObjectEventPal_RepeatBall": "graphics/object_events/pics/misc/ball_repeat.gbapal",
+    "gObjectEventPal_TimerBall": "graphics/object_events/pics/misc/ball_timer.gbapal",
+    "gObjectEventPal_LuxuryBall": "graphics/object_events/pics/misc/ball_luxury.gbapal",
+    "gObjectEventPal_PremierBall": "graphics/object_events/pics/misc/ball_premier.gbapal",
+    "gObjectEventPal_DuskBall": "graphics/object_events/pics/misc/ball_dusk.gbapal",
+    "gObjectEventPal_HealBall": "graphics/object_events/pics/misc/ball_heal.gbapal",
+    "gObjectEventPal_QuickBall": "graphics/object_events/pics/misc/ball_quick.gbapal",
+    "gObjectEventPal_CherishBall": "graphics/object_events/pics/misc/ball_cherish.gbapal",
+    "gObjectEventPal_ParkBall": "graphics/object_events/pics/misc/ball_park.gbapal",
+    "gObjectEventPal_FastBall": "graphics/object_events/pics/misc/ball_fast.gbapal",
+    "gObjectEventPal_LevelBall": "graphics/object_events/pics/misc/ball_level.gbapal",
+    "gObjectEventPal_LureBall": "graphics/object_events/pics/misc/ball_lure.gbapal",
+    "gObjectEventPal_HeavyBall": "graphics/object_events/pics/misc/ball_heavy.gbapal",
+    "gObjectEventPal_LoveBall": "graphics/object_events/pics/misc/ball_love.gbapal",
+    "gObjectEventPal_FriendBall": "graphics/object_events/pics/misc/ball_friend.gbapal",
+    "gObjectEventPal_MoonBall": "graphics/object_events/pics/misc/ball_moon.gbapal",
+    "gObjectEventPal_SportBall": "graphics/object_events/pics/misc/ball_sport.gbapal",
+    "gObjectEventPal_DreamBall": "graphics/object_events/pics/misc/ball_dream.gbapal",
+    "gObjectEventPal_BeastBall": "graphics/object_events/pics/misc/ball_beast.gbapal",
+    "gObjectEventPal_StrangeBall": "graphics/object_events/pics/misc/ball_strange.gbapal",
+    "gFieldEffectObjectPic_CaveDust": "graphics/field_effects/pics/cave_dust.4bpp",
+    "gFieldEffectObjectPalette_CaveDust": "graphics/field_effects/palettes/cave_dust.gbapal",
+    "gObjectEventPic_Campfire": "graphics/object_events/pics/misc/campfire.4bpp",
+    "gObjectEventPal_Campfire": "graphics/object_events/pics/misc/campfire.gbapal",
+    "gObjectEventPic_WingullGrounded": "graphics/object_events/pics/pokemon_special/wingull.4bpp",
+    "gObjectEventPic_ApricornTree": "graphics/object_events/pics/misc/apricorn_tree.4bpp"
+  },
+  "counts": {
+    "mugshot_types": 146,
+    "emote_types": 2,
+    "entries": 133,
+    "graphics_symbols": 137,
+    "palette_symbols": 564
+  }
+}

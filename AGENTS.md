@@ -41,19 +41,26 @@ A fast orientation for coding assistants who need to touch `porydex` without por
 5. **Mind warnings**: the move exporter currently logs missing Showdown type mappings for moves whose `type` token is `none`. They are noisy but expected—only treat new warnings as regressions.
 
 ## Architecture Notes
-- Parsers typically read Expansion headers from `../pokeemerald-expansion/include/…` using regex/AST helpers. When adding new data:
-  - Update or add helper builders (e.g., `build_item_constant_lookup`) instead of sprinkling ad-hoc parsing inline.
+- Parsers typically read Expansion headers from `../pokeemerald-expansion/include/…` using AST helpers or targeted regex.
+- **Generic Parser Infrastructure** (recommended): Use `parse/generic_table.py` utilities for new parsers instead of writing domain-specific AST walking code. See `parse/mugshots.py` for a working example (~60 lines vs typical 200-400). Read `ADDING_NEW_PARSERS.md` for templates and patterns.
+- When adding new data:
+  - **Prefer generic utilities** from `parse/generic_table.py` for common patterns (enums, designated initializers, struct extraction)
+  - Only write domain-specific code when truly necessary (unusual macros, complex expressions)
   - Keep parsers deterministic—avoid filesystem writes there; let `generate.py` handle serialization.
-- Caches live under `.cache/` (managed automatically). Delete or use `--reload` if results look stale.
+- Caches live under `.pickled/` (managed automatically). Delete or use `--reload` if results look stale.
 - Export order:
   1. `data_loader` aggregates.
   2. `generate.py` writes JSON and Showdown assets.
   3. `site/` hosts the static Pokédex (mdBook not required unless editing docs).
 
 ## Common Tasks Cheat Sheet
+- **Add new parser for C data file**: Use `parse/generic_table.py` utilities. See `ADDING_NEW_PARSERS.md` for step-by-step guide and templates. Example: `parse/mugshots.py` is 104 lines including docs.
+
 - **Add new item attributes**: edit `parse/items.py`, ensure the dict returned includes the new fields, and update consumers in `generate.py` if needed.
 
 - **Inspect outputs quickly**: `jq`, `ripgrep`, or `python -m json.tool` against `site/data/*.json`.
+
+- **Test a parser in isolation**: Create a test script like `test_mugshots.py` to run the parser independently and inspect output.
 
 ## Troubleshooting
 | Symptom | Likely fix |
