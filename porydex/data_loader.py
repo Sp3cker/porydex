@@ -6,7 +6,7 @@ from porydex.common import name_key
 from porydex.parse.abilities import parse_abilities
 from porydex.parse.form_change_tables import parse_form_change_tables
 from porydex.parse.form_tables import parse_form_tables
-from porydex.parse.items import get_item_names_list, parse_items
+from porydex.parse.items import get_item_names_list, parse_items, parse_teachables
 from porydex.parse.learnsets import parse_level_up_learnsets, parse_teachable_learnsets
 from porydex.parse.maps import parse_maps
 from porydex.parse.moves import parse_constants_from_header, parse_moves
@@ -75,6 +75,9 @@ def load_all_data(
     items = get_item_names_list(items_data)
     items_full = items_data  # Keep the full item data with prices and descriptions
     moves = parse_moves(expansion_data / "moves_info.h")
+
+    # Parse teachables (TMs/HMs) - pass moves data to avoid re-parsing
+    teachables = parse_teachables(expansion_data / "items.h", moves_data=moves)
 
     # Build move names list
     max_move_id = max(move.get("moveId", move["num"]) for move in moves.values())
@@ -191,6 +194,7 @@ def load_all_data(
         'abilities': abilities,
         'items': items,
         'items_full': items_full,  # Full item data with prices and descriptions
+        'teachables': teachables,  # TM/HM items with move information
         'moves': moves,
         'move_names': move_names,
         'forms': forms,

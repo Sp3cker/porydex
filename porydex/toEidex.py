@@ -90,6 +90,7 @@ def eiDex(
     abilities=None,
     items=None,
     items_full=None,
+    teachables=None,
     move_names=None,
     forms=None,
     form_changes=None,
@@ -259,6 +260,15 @@ def eiDex(
             print(f"Writing {len(items)} items (names only) to {items_path}")
         else:
             print("WARNING: No items data available to export")
+
+        # TEACHABLES (TMs/HMs)
+        if teachables is not None:
+            teachables_path = porydex.config.output / "teachables.json"
+            with open(teachables_path, "w+", encoding="utf-8") as outf:
+                json.dump(teachables, outf, indent=4, ensure_ascii=False)
+            print(f"Writing {len(teachables)} teachables to {teachables_path}")
+        else:
+            print("WARNING: No teachables data available to export")
 
         # Write move constants file
         constants_path = porydex.config.output / "move_constants.json"

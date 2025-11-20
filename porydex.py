@@ -172,6 +172,7 @@ def extract(args: argparse.Namespace):
         abilities=all_data['abilities'],
         items=all_data['items'],
         items_full=all_data['items_full'],
+        teachables=all_data['teachables'],
         move_names=all_data['move_names'],
         forms=all_data['forms'],
         form_changes=all_data['form_changes'],
